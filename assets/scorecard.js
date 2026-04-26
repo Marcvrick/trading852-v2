@@ -20,13 +20,13 @@
   var STOP_LOSS_PCT = -10;                  // −10% below entry, intraday trigger
 
   var RECOS = [
-    { t: "0113.HK", company: "Dickson Concepts",  eyebrow: "Special Situation", slug: "0113-dickson-concepts" },
-    { t: "1913.HK", company: "Prada",             eyebrow: "Luxury",            slug: "1913-prada" },
-    { t: "1167.HK", company: "Jacobio",           eyebrow: "Biotech",           slug: "1167-jacobio" },
-    { t: "1585.HK", company: "Yadea",             eyebrow: "Electric Vehicles", slug: "1585-yadea" },
-    { t: "9988.HK", company: "Alibaba",           eyebrow: "Technology",        slug: "9988-alibaba" },
-    { t: "2800.HK", company: "Tracker Fund (HSI)", eyebrow: "Market Thesis",    slug: "hsi-35-year-trendline" },
-    { t: "6690.HK", company: "Haier Smart Home",  eyebrow: "Consumer Discretionary", slug: "6690-haier" },
+    { t: "0113.HK", company: "Dickson Concepts",   eyebrow: "Special Situation",       slug: "0113-dickson-concepts",   pubDate: Date.UTC(2026, 3, 10) },
+    { t: "1913.HK", company: "Prada",              eyebrow: "Luxury",                  slug: "1913-prada",              pubDate: Date.UTC(2026, 3, 10) },
+    { t: "1167.HK", company: "Jacobio",            eyebrow: "Biotech",                 slug: "1167-jacobio",            pubDate: Date.UTC(2026, 3, 10) },
+    { t: "1585.HK", company: "Yadea",              eyebrow: "Electric Vehicles",       slug: "1585-yadea",              pubDate: Date.UTC(2026, 3, 10) },
+    { t: "9988.HK", company: "Alibaba",            eyebrow: "Technology",              slug: "9988-alibaba",            pubDate: Date.UTC(2026, 3, 10) },
+    { t: "2800.HK", company: "Tracker Fund (HSI)", eyebrow: "Market Thesis",           slug: "hsi-35-year-trendline",   pubDate: Date.UTC(2026, 3, 10) },
+    { t: "6690.HK", company: "Haier Smart Home",   eyebrow: "Consumer Discretionary",  slug: "6690-haier",              pubDate: Date.UTC(2026, 3, 25) },
   ];
 
   var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
@@ -44,11 +44,12 @@
         var closes = quote.close || [];
         var lows = quote.low || [];
 
-        // Find entry: first valid close strictly after pub date
+        // Find entry: first valid close strictly after this reco's pub date
+        var recoPubDate = rec.pubDate || PUB_DATE_UTC;
         var entry = null, entryDate = null, entryIdx = -1;
         for (var i = 0; i < ts.length; i++) {
           if (closes[i] == null) continue;
-          if (ts[i] * 1000 > PUB_DATE_UTC) {
+          if (ts[i] * 1000 > recoPubDate) {
             entry = closes[i];
             entryDate = new Date(ts[i] * 1000);
             entryIdx = i;
