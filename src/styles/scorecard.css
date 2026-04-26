@@ -1,0 +1,197 @@
+/* Scorecard page ─────────────────────────────────────────────────────────────── */
+
+html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
+
+/* ── Hero ─────────────────────────────────────────────────────────────────────── */
+.page-hero {
+  background-color: var(--dp-c-black);
+  background-image:
+    radial-gradient(ellipse 110% 55% at 53% 0%, rgba(71, 96, 255, 0.28) 0%, rgba(24, 6, 255, 0.12) 45%, transparent 75%),
+    radial-gradient(ellipse 60% 40% at 88% 8%, rgba(119, 246, 255, 0.09) 0%, transparent 60%);
+  background-repeat: no-repeat;
+  padding-top: 5.5rem;
+  padding-bottom: 4rem;
+  color: var(--dp-c-white);
+}
+
+.hero-eyebrow {
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-family: var(--ff-serif);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.1;
+  max-width: 54rem;
+  margin-bottom: 1.25rem;
+}
+
+.hero-lede {
+  font-size: var(--fs-18);
+  color: rgba(255,255,255,0.78);
+  max-width: 48rem;
+  line-height: 1.55;
+}
+
+#scorecard-summary {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  font-size: var(--fs-14);
+  color: rgba(255,255,255,0.7);
+}
+
+#scorecard-summary strong { font-weight: 700; font-size: var(--fs-18); margin-left: 0.35rem; }
+#scorecard-summary .pos { color: var(--pos); }
+#scorecard-summary .neg { color: var(--neg); }
+
+/* ── Table ────────────────────────────────────────────────────────────────────── */
+.page-body { padding: 4rem 0 6rem 0; }
+
+.sc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-14);
+}
+
+.sc-table thead th {
+  text-align: left;
+  font-size: var(--fs-12);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dp-c-gray-2);
+  border-bottom: 1px solid var(--dp-c-gray-border);
+  padding: 0.75rem 1rem;
+  vertical-align: bottom;
+}
+
+.sc-table thead th.num { text-align: right; }
+
+.sc-table thead th .th-sub {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--dp-c-gray-2);
+  margin-top: 0.15rem;
+}
+
+.sc-table tbody td {
+  padding: 1rem;
+  border-bottom: 1px solid #ececef;
+  vertical-align: middle;
+}
+
+.sc-table tbody tr:hover { background: #fafafb; }
+
+.sc-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--ff-sans);
+}
+
+.sc-table td.pos { color: #0f9d66; font-weight: 700; }
+.sc-table td.neg { color: #c93338; font-weight: 700; }
+
+.sc-ticker a {
+  color: var(--dp-c-black);
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.sc-ticker a:hover { border-bottom-color: currentColor; }
+
+.sc-eyebrow {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dp-c-gray-2);
+  margin-bottom: 0.15rem;
+}
+
+.sc-table tr.sc-row-stopped td { opacity: 0.52; }
+.sc-table tr.sc-row-stopped:hover td { opacity: 0.72; }
+
+.sc-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.sc-badge-stopped {
+  background: #ffe2e3;
+  color: #b91e23;
+  border: 1px solid #f3b7ba;
+}
+
+.sc-table .sc-row-stopped .sc-badge-stopped { opacity: 1; }
+.sc-last-stop { text-decoration: line-through; color: var(--dp-c-gray-2); }
+
+.sc-stop-date {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #b91e23;
+  margin-top: 0.15rem;
+  letter-spacing: 0.02em;
+}
+
+.sc-loading {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--dp-c-gray-2);
+  font-size: var(--fs-14);
+}
+
+/* ── Methodology ──────────────────────────────────────────────────────────────── */
+.methodology {
+  margin-top: 3.5rem;
+  padding: 2rem;
+  background: #f7f7f9;
+  border-left: 3px solid var(--dp-c-black);
+  max-width: 56rem;
+}
+
+.methodology h2 {
+  font-family: var(--ff-sans);
+  font-size: var(--fs-14);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.methodology p {
+  font-family: var(--ff-serif);
+  font-size: var(--fs-16);
+  line-height: 1.65;
+  color: #333;
+}
+
+.methodology p + p { margin-top: 0.75rem; }
+
+/* ── Responsive ───────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .sc-table thead th.num .th-sub { display: none; }
+  .sc-table tbody td, .sc-table thead th { padding: 0.75rem 0.5rem; }
+  .hero-lede { font-size: var(--fs-16); }
+}

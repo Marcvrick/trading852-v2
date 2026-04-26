@@ -1,0 +1,57 @@
+<!-- CONFIG
+{
+  "layout": "scorecard",
+  "title": "Scorecard — Trading852",
+  "ogTitle": "Scorecard — Trading852",
+  "description": "Live performance of Trading852 recommendations since the April 10, 2026 issue. Entry price, last close, and % change for each ticker.",
+  "canonical": "https://trading852.com/scorecard",
+  "ogType": "website",
+  "ogImage": "https://trading852.com/assets/og-image.png"
+}
+-->
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="hero-eyebrow">Scorecard &middot; April 10, 2026 issue</div>
+      <h1 class="hero-title">Five convictions. The Hang Seng as benchmark. One entry date. Live performance.</h1>
+      <p class="hero-lede">
+        Every recommendation published in the inaugural April 10 issue, tracked from
+        the first trading session after publication. Prices refresh on page load.
+      </p>
+      <div id="scorecard-summary"></div>
+    </div>
+  </section>
+
+  <section class="page-body">
+    <div class="container">
+
+      <div id="scorecard-table">
+        <div class="sc-loading">Fetching latest prices&hellip;</div>
+      </div>
+
+      <aside class="methodology">
+        <h2>Methodology</h2>
+        <p>
+          <strong>Entry price</strong> is the close of the first trading session
+          after the April 10, 2026 publication date &mdash; Monday, April 13, 2026 for
+          each ticker. This is the earliest price a reader could realistically
+          transact at after reading the issue.
+        </p>
+        <p>
+          <strong>Last price</strong> is the most recent daily close available
+          from Yahoo Finance, fetched live when you open this page.
+        </p>
+        <p>
+          <strong>Stop loss at &minus;10%.</strong> If the price drops 10% below entry
+          at any point after publication, the position is closed. The return is
+          locked at &minus;10% and the row is grayed out with the exit date, even if
+          the stock keeps falling.
+        </p>
+        <p>
+          The scorecard is an honest accountability log, not investment advice.
+          Past performance on a three-figure sample is not a track record.
+        </p>
+      </aside>
+
+    </div>
+  </section>

@@ -1,0 +1,26 @@
+{
+  "buildCommand": "node build.js",
+  "outputDirectory": "dist",
+  "installCommand": "",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/about",        "destination": "/static/about" },
+    { "source": "/scorecard",    "destination": "/static/scorecard" },
+    { "source": "/disclaimer",   "destination": "/static/disclaimer" },
+    { "source": "/legal-notice", "destination": "/static/legal-notice" },
+    { "source": "/robots.txt",   "destination": "/static/robots.txt" },
+    { "source": "/sitemap.xml",  "destination": "/static/sitemap.xml" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options",  "value": "nosniff" },
+        { "key": "X-Frame-Options",          "value": "DENY" },
+        { "key": "Referrer-Policy",          "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy",       "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    }
+  ]
+}

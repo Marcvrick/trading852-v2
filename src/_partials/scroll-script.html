@@ -1,0 +1,8 @@
+  <script>
+    (function () {
+      var h = document.getElementById('site-header');
+      var t = function () { h.classList.toggle('is-scrolled', window.scrollY > 20); };
+      window.addEventListener('scroll', t, { passive: true });
+      t();
+    })();
+  </script>

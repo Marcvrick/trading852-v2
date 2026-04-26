@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Trading852</title>
+    <link>https://trading852.com</link>
+    <description>Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.</description>
+    <language>en</language>
+    <lastBuildDate>Sat, 25 Apr 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://trading852.com/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>Haier Smart Home (6690.HK): Midea at 12×. Electrolux at 14×. The World's Largest Appliance Maker Trades at 6.85×.</title>
+      <link>https://trading852.com/analyses/6690-haier</link>
+      <guid>https://trading852.com/analyses/6690-haier</guid>
+      <pubDate>Sat, 25 Apr 2026 00:00:00 +0800</pubDate>
+      <description>Haier Smart Home is the world's largest home appliance manufacturer by revenue. ROIC 19.3%. FCF CNY 17.2 billion. Net cash balance sheet. Active buyback. The stock is down 26% from its 52-week high on a weak Q4 and Liberation Day tariffs — and trades at 6.85× EV/EBIT against a peer average of 11×.</description>
+    </item>
+
+    <item>
+      <title>Alibaba (9988.HK): EBITA Down 57%. Cloud Up 36%. This Is What Amazon Looked Like in 2014.</title>
+      <link>https://trading852.com/analyses/9988-alibaba</link>
+      <guid>https://trading852.com/analyses/9988-alibaba</guid>
+      <pubDate>Mon, 14 Apr 2026 00:00:00 +0800</pubDate>
+      <description>Alibaba's adjusted EBITA fell 57% in Q3 FY2026. Cloud grew 36%. At HK$122.90, EV/EBIT is 10.8x while Tencent trades at 15x and Amazon at 35x. The EBITA drop is deliberate.</description>
+    </item>
+
+    <item>
+      <title>Yadea (1585.HK): Profit +129%. EV/EBIT 6.1x. The Market Sees a Bicycle Company.</title>
+      <link>https://trading852.com/analyses/1585-yadea</link>
+      <guid>https://trading852.com/analyses/1585-yadea</guid>
+      <pubDate>Mon, 14 Apr 2026 00:00:00 +0800</pubDate>
+      <description>Yadea's net profit grew +129% in FY2025. EV/EBIT is 6.1x against a peer range of 10-13x. The market's largest electric two-wheeler maker trades at roughly half its peer multiple.</description>
+    </item>
+
+    <item>
+      <title>Jacobio Pharmaceuticals (1167.HK): AstraZeneca Paid US$100M for One Molecule. The Rest Trades at US$507M.</title>
+      <link>https://trading852.com/analyses/1167-jacobio</link>
+      <guid>https://trading852.com/analyses/1167-jacobio</guid>
+      <pubDate>Mon, 14 Apr 2026 00:00:00 +0800</pubDate>
+      <description>AstraZeneca paid US$100M for one Jacobio molecule still in Phase I. The entire company trades at US$730M. Subtract net cash, the market values the rest at US$507M.</description>
+    </item>
+
+    <item>
+      <title>Prada (1913.HK): EPS Down 74%. Revenue Up 9%. One of These Numbers Is a Distraction.</title>
+      <link>https://trading852.com/analyses/1913-prada</link>
+      <guid>https://trading852.com/analyses/1913-prada</guid>
+      <pubDate>Sun, 12 Apr 2026 00:00:00 +0800</pubDate>
+      <description>Prada reported a -74% EPS miss in February 2026. The business grew 9%. At HKD 38.40, EV/EBIT is 9.2x against luxury peers at 15-30x.</description>
+    </item>
+
+    <item>
+      <title>Dickson Concepts (0113.HK): The Market Is Paying You HKD 375 Million to Buy This Company</title>
+      <link>https://trading852.com/analyses/0113-dickson-concepts</link>
+      <guid>https://trading852.com/analyses/0113-dickson-concepts</guid>
+      <pubDate>Fri, 11 Apr 2026 00:00:00 +0800</pubDate>
+      <description>Dickson Concepts holds HKD 2,729M in net cash against a HKD 2,354M market cap. A negative EV special situation with an asymmetric payoff.</description>
+    </item>
+
+    <item>
+      <title>Six Bounces. One Break. Now the Retest.</title>
+      <link>https://trading852.com/analyses/hsi-35-year-trendline</link>
+      <guid>https://trading852.com/analyses/hsi-35-year-trendline</guid>
+      <pubDate>Fri, 11 Apr 2026 00:00:00 +0800</pubDate>
+      <description>The Hang Seng's 35-year trendline held six times. The seventh touch broke it. Now price is retesting the line from below.</description>
+    </item>
+
+  </channel>
+</rss>
