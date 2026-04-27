@@ -42,20 +42,26 @@
         if (!result) throw new Error("no_data");
         var ts = result.timestamp || [];
         var quote = (result.indicators && result.indicators.quote && result.indicators.quote[0]) || {};
+        var opens = quote.open || [];
         var closes = quote.close || [];
         var lows = quote.low || [];
 
-        // Find entry: first valid close strictly after this reco's pub date
+        // Weekday pub → entry = first close strictly after pub date
+        // Weekend pub  → entry = next Monday open
         var recoPubDate = rec.pubDate || PUB_DATE_UTC;
-        var entry = null, entryDate = null, entryIdx = -1;
+        var pubDay = new Date(recoPubDate).getUTCDay(); // 0=Sun, 6=Sat
+        var isWeekendPub = (pubDay === 0 || pubDay === 6);
+
+        var entry = null, entryDate = null, entryIdx = -1, entryIsOpen = false;
         for (var i = 0; i < ts.length; i++) {
-          if (closes[i] == null) continue;
-          if (ts[i] * 1000 > recoPubDate) {
-            entry = closes[i];
-            entryDate = new Date(ts[i] * 1000);
-            entryIdx = i;
-            break;
-          }
+          if (ts[i] * 1000 <= recoPubDate) continue;
+          var entryVal = isWeekendPub ? opens[i] : closes[i];
+          if (entryVal == null) continue;
+          entry = entryVal;
+          entryDate = new Date(ts[i] * 1000);
+          entryIdx = i;
+          entryIsOpen = isWeekendPub;
+          break;
         }
         if (entry == null) throw new Error("no_entry_bar");
 
@@ -84,6 +90,7 @@
         return Object.assign({}, rec, {
           entry: entry,
           entryDate: entryDate,
+          entryIsOpen: entryIsOpen,
           last: stopped ? stopLevel : last,
           lastDate: stopped ? stopDate : lastDate,
           pct: pct,
