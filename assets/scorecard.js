@@ -3,7 +3,7 @@
  *
  * Fetches the daily HK OHLC series for each blog recommendation via the
  * yahoo-proxy Cloudflare worker. Computes:
- *   - entry price = first close after the April 10 pub date
+ *   - entry price = pub-date close (weekday) or next Monday open (weekend pub)
  *   - stop loss   = −10% from entry, triggered on the intraday low
  *   - return      = pct change from entry to last close, OR −10% if stopped
  *
@@ -14,8 +14,8 @@
 (function () {
   "use strict";
 
-  // Pub date for the inaugural issue. Entry price = first trading session close
-  // strictly AFTER this date (Monday Apr 13 for a Friday Apr 10 publish).
+  // Pub date for the inaugural issue. Entry price = pub-date close (weekday)
+  // or next Monday open (weekend pub, e.g. Saturday Apr 25 → Monday Apr 28 open).
   var PUB_DATE_UTC = Date.UTC(2026, 3, 10); // months are 0-indexed
   var STOP_LOSS_PCT = -10;                  // −10% below entry, intraday trigger
 
@@ -52,7 +52,7 @@
 
         var entry = null, entryDate = null, entryIdx = -1, entryIsOpen = false;
         for (var i = 0; i < ts.length; i++) {
-          if (ts[i] * 1000 <= recoPubDate) continue;
+          if (ts[i] * 1000 < recoPubDate) continue;
           var entryVal = isWeekendPub ? opens[i] : closes[i];
           if (entryVal == null) continue;
           entry = entryVal;
