@@ -11,7 +11,7 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
     radial-gradient(ellipse 70% 30% at 15% 85%, rgba(24, 6, 255, 0.06) 0%, transparent 70%);
   background-repeat: no-repeat;
   padding-top: var(--spacing-22);
-  padding-bottom: var(--spacing-20);
+  padding-bottom: 3.5rem;
 }
 
 /* ── Homepage tagline ─────────────────────────────────────────────────────────── */
@@ -363,7 +363,7 @@ a.our-work__link:focus .verdict-tag {
 }
 
 /* ── Browse by sector ─────────────────────────────────────────────────────────── */
-.block--sectors { margin-bottom: var(--spacing-22); }
+.block--sectors { margin-bottom: 3.85rem; }
 
 .sector-grid {
   display: flex;
