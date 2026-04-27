@@ -50,14 +50,15 @@ function buildHead(config, jsonld, cssFiles) {
   const cssLinks = cssFiles.map(f => `  <link rel="stylesheet" href="/styles/${f}.css">`).join('\n');
 
   const subs = {
-    '{{TITLE}}':        config.title       || 'Trading852',
-    '{{OG_TITLE}}':     ogTitle,
-    '{{DESCRIPTION}}':  config.description || '',
-    '{{CANONICAL}}':    canonical,
-    '{{OG_TYPE}}':      ogType,
-    '{{OG_IMAGE}}':     ogImg,
-    '{{ARTICLE_META}}': articleMeta,
-    '{{JSONLD}}':       jsonldBlock,
+    '{{TITLE}}':           config.title          || 'Trading852',
+    '{{OG_TITLE}}':        ogTitle,
+    '{{DESCRIPTION}}':     config.description    || '',
+    '{{OG_DESCRIPTION}}':  config.ogDescription  || config.description || '',
+    '{{CANONICAL}}':       canonical,
+    '{{OG_TYPE}}':         ogType,
+    '{{OG_IMAGE}}':        ogImg,
+    '{{ARTICLE_META}}':    articleMeta,
+    '{{JSONLD}}':          jsonldBlock,
   };
 
   let head = partials.head;

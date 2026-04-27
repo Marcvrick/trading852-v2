@@ -381,6 +381,8 @@ a.our-work__link:focus .verdict-tag {
 
 /* ── Responsive ───────────────────────────────────────────────────────────────── */
 @media (max-width: 48rem) {
+  .block-scorecard-strip .strip-sep { display: none; }
+  .block-scorecard-strip .strip-link { gap: 0.5rem; }
   .field-name--field_recent_updates { flex-direction: column; }
   .node-mode-recent_update--featured { flex: 0 0 auto; min-height: 18rem; }
   .card-stack { flex: 0 0 auto; gap: 1rem; }
