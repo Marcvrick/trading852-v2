@@ -45,14 +45,15 @@
         var closes = quote.close || [];
         var lows = quote.low || [];
 
-        // Weekend pub → entry = Monday open; weekday pub → entry = first close
+        // Weekend pub → entry = Monday open; weekday pub → entry = pub-date close
         var recoPubDate = rec.pubDate || PUB_DATE_UTC;
         var pubDay = new Date(recoPubDate).getUTCDay(); // 0=Sun, 6=Sat
         var isWeekendPub = (pubDay === 0 || pubDay === 6);
+        var pubDateHKT = toHKTDateStr(recoPubDate);
 
         var entry = null, entryDate = null, entryIdx = -1, entryIsOpen = false;
         for (var i = 0; i < ts.length; i++) {
-          if (ts[i] * 1000 < recoPubDate) continue;
+          if (toHKTDateStr(ts[i] * 1000) < pubDateHKT) continue;
           var entryVal = isWeekendPub ? opens[i] : closes[i];
           if (entryVal == null) continue;
           entry = entryVal;
@@ -100,6 +101,13 @@
       .catch(function (e) {
         return Object.assign({}, rec, { error: String(e) });
       });
+  }
+
+  // Yahoo Finance HKEX daily timestamps may be midnight HKT (UTC+8), not midnight UTC.
+  // Compare dates in HKT to avoid off-by-one skipping of the pub-date bar.
+  function toHKTDateStr(ms) {
+    var d = new Date(ms + 8 * 3600 * 1000);
+    return d.toISOString().slice(0, 10);
   }
 
   function fmtPrice(v) { return (v == null ? "—" : v.toFixed(2)); }
