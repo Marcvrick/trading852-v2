@@ -41,20 +41,25 @@
         if (!result) throw new Error("no_data");
         var ts = result.timestamp || [];
         var quote = (result.indicators && result.indicators.quote && result.indicators.quote[0]) || {};
+        var opens = quote.open || [];
         var closes = quote.close || [];
         var lows = quote.low || [];
 
-        // Find entry: first valid close strictly after this reco's pub date
+        // Weekend pub → entry = Monday open; weekday pub → entry = first close
         var recoPubDate = rec.pubDate || PUB_DATE_UTC;
-        var entry = null, entryDate = null, entryIdx = -1;
+        var pubDay = new Date(recoPubDate).getUTCDay(); // 0=Sun, 6=Sat
+        var isWeekendPub = (pubDay === 0 || pubDay === 6);
+
+        var entry = null, entryDate = null, entryIdx = -1, entryIsOpen = false;
         for (var i = 0; i < ts.length; i++) {
-          if (closes[i] == null) continue;
-          if (ts[i] * 1000 > recoPubDate) {
-            entry = closes[i];
-            entryDate = new Date(ts[i] * 1000);
-            entryIdx = i;
-            break;
-          }
+          if (ts[i] * 1000 <= recoPubDate) continue;
+          var entryVal = isWeekendPub ? opens[i] : closes[i];
+          if (entryVal == null) continue;
+          entry = entryVal;
+          entryDate = new Date(ts[i] * 1000);
+          entryIdx = i;
+          entryIsOpen = isWeekendPub;
+          break;
         }
         if (entry == null) throw new Error("no_entry_bar");
 
@@ -83,6 +88,7 @@
         return Object.assign({}, rec, {
           entry: entry,
           entryDate: entryDate,
+          entryIsOpen: entryIsOpen,
           last: stopped ? stopLevel : last,
           lastDate: stopped ? stopDate : lastDate,
           pct: pct,
@@ -163,7 +169,7 @@
         '<thead><tr>' +
           '<th>Ticker</th>' +
           '<th>Company</th>' +
-          '<th class="num">Entry<br><span class="th-sub">First close after Apr 10</span></th>' +
+          '<th class="num">Entry<br><span class="th-sub">Close (or Mon open for weekend pub)</span></th>' +
           '<th class="num">Last / Stop</th>' +
           '<th class="num">% since</th>' +
         '</tr></thead><tbody>';
@@ -181,7 +187,7 @@
         '<tr class="' + rowCls + '">' +
           '<td class="sc-ticker"><a href="/analyses/' + r.slug + '">' + r.t + '</a>' + badge + '</td>' +
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
-          '<td class="num">' + fmtPrice(r.entry) + '</td>' +
+          '<td class="num">' + fmtPrice(r.entry) + (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') + '</td>' +
           '<td class="num">' + lastCell + '</td>' +
           '<td class="num ' + pctCls + '">' + fmtPct(r.pct) + '</td>' +
         '</tr>';
