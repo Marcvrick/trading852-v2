@@ -14,6 +14,16 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   padding-bottom: var(--spacing-20);
 }
 
+/* ── Homepage tagline ─────────────────────────────────────────────────────────── */
+.homepage-tagline {
+  font-family: var(--ff-serif);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  line-height: 1.6;
+  color: rgba(255,255,255,0.55);
+  max-width: 44rem;
+  margin-bottom: var(--spacing-12);
+}
+
 /* ── Scorecard strip ──────────────────────────────────────────────────────────── */
 .block-scorecard-strip {
   margin-bottom: var(--spacing-12);
