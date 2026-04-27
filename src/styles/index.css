@@ -334,7 +334,7 @@ a.our-work__link:focus .verdict-tag {
   gap: 1.5rem;
   margin-bottom: 1.75rem;
   font-family: var(--ff-serif);
-  font-size: var(--fs-24);
+  font-size: var(--fs-20);
   line-height: 1.334;
   font-weight: 400;
   color: var(--dp-c-white);
