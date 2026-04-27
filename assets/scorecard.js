@@ -25,7 +25,7 @@
     { t: "1167.HK", company: "Jacobio",            eyebrow: "Biotech",                 slug: "1167-jacobio",            pubDate: Date.UTC(2026, 3, 10) },
     { t: "1585.HK", company: "Yadea",              eyebrow: "Electric Vehicles",       slug: "1585-yadea",              pubDate: Date.UTC(2026, 3, 10) },
     { t: "9988.HK", company: "Alibaba",            eyebrow: "Technology",              slug: "9988-alibaba",            pubDate: Date.UTC(2026, 3, 10) },
-    { t: "2800.HK", company: "Tracker Fund (HSI)", eyebrow: "Market Thesis",           slug: "hsi-35-year-trendline",   pubDate: Date.UTC(2026, 3, 10) },
+    { t: "2800.HK", company: "Tracker Fund (HSI)", eyebrow: "Benchmark",               slug: "hsi-35-year-trendline",   pubDate: Date.UTC(2026, 3, 10), isBenchmark: true },
     { t: "6690.HK", company: "Haier Smart Home",   eyebrow: "Consumer Discretionary",  slug: "6690-haier",              pubDate: Date.UTC(2026, 3, 25) },
   ];
 
@@ -175,7 +175,7 @@
         '</tr></thead><tbody>';
     rows.forEach(function (r) {
       var pctCls = r.pct == null ? "" : r.pct >= 0 ? "pos" : "neg";
-      var rowCls = r.stopped ? "sc-row-stopped" : "";
+      var rowCls = r.stopped ? "sc-row-stopped" : r.isBenchmark ? "sc-row-benchmark" : "";
       var badge = r.stopped
         ? ' <span class="sc-badge sc-badge-stopped">Stopped</span>'
         : '';
@@ -198,6 +198,12 @@
 
   function boot() {
     Promise.all(RECOS.map(fetchOne)).then(function (rows) {
+      // Benchmark always last
+      rows.sort(function (a, b) {
+        if (a.isBenchmark) return 1;
+        if (b.isBenchmark) return -1;
+        return 0;
+      });
       renderStrip(rows);
       renderTable(rows);
     });
