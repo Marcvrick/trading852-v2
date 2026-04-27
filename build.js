@@ -21,11 +21,11 @@ const partials = {
 function parseSource(src) {
   let text = src;
 
-  const cfgMatch = text.match(/<!--\s*CONFIG\s*\n([\s\S]*?)\n\s*-->/);
+  const cfgMatch = text.match(/<!--\s*CONFIG\s*(\{[\s\S]*?\})\s*-->/);
   const config   = cfgMatch ? JSON.parse(cfgMatch[1]) : {};
   if (cfgMatch) text = text.replace(cfgMatch[0], '');
 
-  const jldMatch = text.match(/<!--\s*JSONLD\s*\n([\s\S]*?)\n\s*-->/);
+  const jldMatch = text.match(/<!--\s*JSONLD\s*(\{[\s\S]*?\})\s*-->/);
   const jsonld   = jldMatch ? jldMatch[1].trim() : '';
   if (jldMatch) text = text.replace(jldMatch[0], '');
 
