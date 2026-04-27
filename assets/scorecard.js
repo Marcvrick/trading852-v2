@@ -78,10 +78,18 @@
           }
         }
 
-        // Last close (current state) — only used when still open
+        // Last price: meta.regularMarketPrice is always current (no OHLC lag);
+        // fall back to OHLC scan if meta is absent or pre-entry.
         var last = null, lastDate = null;
-        for (var m = closes.length - 1; m >= 0; m--) {
-          if (closes[m] != null) { last = closes[m]; lastDate = new Date(ts[m] * 1000); break; }
+        var metaPrice = result.meta && result.meta.regularMarketPrice;
+        var metaTime  = result.meta && result.meta.regularMarketTime;
+        if (metaPrice != null && metaTime != null && metaTime * 1000 > entryDate.getTime()) {
+          last = metaPrice;
+          lastDate = new Date(metaTime * 1000);
+        } else {
+          for (var m = closes.length - 1; m >= 0; m--) {
+            if (closes[m] != null) { last = closes[m]; lastDate = new Date(ts[m] * 1000); break; }
+          }
         }
         if (last == null) throw new Error("no_close");
 
