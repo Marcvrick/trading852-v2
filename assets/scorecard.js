@@ -76,9 +76,9 @@
           }
         }
 
-        // Last close (current state) — only used when still open
+        // Last close (current state) — must be on or after the entry bar
         var last = null, lastDate = null;
-        for (var m = closes.length - 1; m >= 0; m--) {
+        for (var m = closes.length - 1; m >= entryIdx; m--) {
           if (closes[m] != null) { last = closes[m]; lastDate = new Date(ts[m] * 1000); break; }
         }
         if (last == null) throw new Error("no_close");
