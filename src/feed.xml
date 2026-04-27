@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Trading852</title>
     <link>https://trading852.com</link>
     <description>Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.</description>
     <language>en</language>
-    <lastBuildDate>Sat, 25 Apr 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 27 Apr 2026 00:00:00 +0800</lastBuildDate>
     <atom:link href="https://trading852.com/feed.xml" rel="self" type="application/rss+xml"/>
 
     <item>
@@ -14,6 +14,19 @@
       <guid>https://trading852.com/analyses/6690-haier</guid>
       <pubDate>Sat, 25 Apr 2026 00:00:00 +0800</pubDate>
       <description>Haier Smart Home is the world's largest home appliance manufacturer by revenue. ROIC 19.3%. FCF CNY 17.2 billion. Net cash balance sheet. Active buyback. The stock is down 26% from its 52-week high on a weak Q4 and Liberation Day tariffs — and trades at 6.85× EV/EBIT against a peer average of 11×.</description>
+      <content:encoded><![CDATA[
+        <p><strong>Key Takeaway:</strong> Haier Smart Home (6690.HK) is the world's largest home appliance manufacturer by volume. It owns GE Appliances, Fisher &amp; Paykel, and the number one brand in China. The stock fell −26% from its 52-week high and now trades at 6.85× EV/EBIT, cheaper than every direct competitor in the peer group. ROIC was 19.3% in FY2025. Free cash flow was CNY 17.2 billion. The balance sheet is net cash. The company is running an active buyback programme.</p>
+
+        <p>Three things happened simultaneously: a weak Q4 2025 result driven by a product mix shift in China, a US tariff announcement on April 2, 2026 that raised effective rates on Chinese goods to 31.6%, and a wave of analyst target cuts that followed both. All three drove the stock price lower. Not all three changed the business.</p>
+
+        <p>GE Appliances manufactures in the United States. Its finished products do not cross the tariff line. Some of its components are sourced from China — compressors, electronics, mechanical parts. Management has not disclosed the exact exposure. The market priced a confirmed margin impairment. The filing shows an unquantified one. Those are not the same thing.</p>
+
+        <p>The valuation: EV/EBIT of 6.85× against Midea at 12×, Electrolux at 14×, and Whirlpool at 8×. On a sum-of-parts basis, the H-share trades at a 25% discount to the A-share on the Shanghai exchange, which itself trades at a discount to global peers. The discount has three layers. Only one of them is justified by the tariff uncertainty.</p>
+
+        <p>The thesis: the tariff discount is priced, the Q4 weakness is temporary, and the business fundamental has not changed. Catalyst: H1 FY2026 results (August 2026) resolving tariff exposure.</p>
+
+        <p><a href="https://trading852.com/analyses/6690-haier">Read the full analysis on Trading852 →</a></p>
+      ]]></content:encoded>
     </item>
 
     <item>
@@ -22,6 +35,17 @@
       <guid>https://trading852.com/analyses/9988-alibaba</guid>
       <pubDate>Mon, 14 Apr 2026 00:00:00 +0800</pubDate>
       <description>Alibaba's adjusted EBITA fell 57% in Q3 FY2026. Cloud grew 36%. At HK$122.90, EV/EBIT is 10.8x while Tencent trades at 15x and Amazon at 35x. The EBITA drop is deliberate.</description>
+      <content:encoded><![CDATA[
+        <p><strong>Key Takeaway:</strong> Alibaba's adjusted EBITA fell 57% in Q3 FY2026 because the company is building data centers, buying GPUs, and constructing the infrastructure for China's largest cloud platform. Cloud Intelligence Group revenue grew 36% year-over-year. At HK$122.90, EV/EBIT is 10.8× against Tencent at 15× and Amazon at 35×. The company holds approximately US$40 billion in net cash (13% of market cap) with over US$12 billion in active buyback authorization. The market has priced the EBITA decline. It has not priced the cloud trajectory.</p>
+
+        <p>The comparison to Amazon in 2014 is precise: Amazon reported its first operating loss in years as it invested in AWS infrastructure. Analysts cut targets. The stock was cheap on near-term earnings and expensive on anything longer. Cloud Intelligence Group is at a similar inflection — growing 36% from a material revenue base with improving margins.</p>
+
+        <p>The valuation: EV/EBIT of 10.8× on depressed earnings that include a full cycle of infrastructure investment. Strip out the cloud capex drag and the multiple compresses further. Net cash of US$40 billion represents 13% of market cap. The buyback is active and ongoing.</p>
+
+        <p>The 52-week range: HK$95.70 to HK$186.20. At HK$122.90, the stock sits in the lower third of that range while the cloud business posts its strongest growth in three years. The fears are in the price. The growth rate is not.</p>
+
+        <p><a href="https://trading852.com/analyses/9988-alibaba">Read the full analysis on Trading852 →</a></p>
+      ]]></content:encoded>
     </item>
 
     <item>
@@ -30,6 +54,17 @@
       <guid>https://trading852.com/analyses/1585-yadea</guid>
       <pubDate>Mon, 14 Apr 2026 00:00:00 +0800</pubDate>
       <description>Yadea's net profit grew +129% in FY2025. EV/EBIT is 6.1x against a peer range of 10-13x. The market's largest electric two-wheeler maker trades at roughly half its peer multiple.</description>
+      <content:encoded><![CDATA[
+        <p><strong>Key Takeaway:</strong> Net profit grew +129% in FY2025 to RMB 2,912 million. Net cash of RMB 12.7 billion covers 36% of market capitalisation. The stock trades at 6.1× EV/EBIT against a peer range of 10–13×.</p>
+
+        <p>Yadea is the world's largest electric two-wheeler manufacturer by unit volume. The China market went through a regulatory transition in 2024 — a new national standard requiring upgraded battery and safety specifications. The transition compressed industry volumes for 18 months as consumers delayed purchases. Yadea's margins fell with volumes. The market re-rated the stock as a cyclical commodity manufacturer.</p>
+
+        <p>The transition is complete. FY2025 results confirm the recovery: revenue up, margins expanding, net profit +129%, and the new Vietnam manufacturing facility providing export market diversification ahead of potential tariff escalation. The company now has a manufacturing base outside China for the first time.</p>
+
+        <p>The valuation gap: Hero MotoCorp (India, comparable business model) trades at 13× EV/EBIT. Niu Technologies at 10×. Yadea at 6.1×. The discount exists because the market sees a China-only bicycle company. The filing describes a diversified manufacturer with the world's largest installed base and a growing international footprint.</p>
+
+        <p><a href="https://trading852.com/analyses/1585-yadea">Read the full analysis on Trading852 →</a></p>
+      ]]></content:encoded>
     </item>
 
     <item>
@@ -38,6 +73,17 @@
       <guid>https://trading852.com/analyses/1167-jacobio</guid>
       <pubDate>Mon, 14 Apr 2026 00:00:00 +0800</pubDate>
       <description>AstraZeneca paid US$100M for one Jacobio molecule still in Phase I. The entire company trades at US$730M. Subtract net cash, the market values the rest at US$507M.</description>
+      <content:encoded><![CDATA[
+        <p><strong>Key Takeaway:</strong> AstraZeneca paid US$100 million in upfront cash for a single Jacobio molecule still in Phase I. The entire company trades at approximately US$730 million. Subtract HK$1.73 billion in net cash, and the market values everything else at US$507 million: an approved cancer drug, an ongoing Phase III trial, and up to US$1.9 billion in potential AstraZeneca milestone payments.</p>
+
+        <p>The approved drug (JAB-21822, a SOS1 inhibitor) is already generating revenue — RMB 45.7 million in H1 2025, up 100% year-over-year. It has NRDL reimbursement. It is growing. The market is valuing it near zero because the company is still pre-profit at the consolidated level.</p>
+
+        <p>The AstraZeneca deal is a third-party validation event. A well-resourced global pharma with access to every early-stage oncology asset in China chose to pay US$100 million upfront for one molecule from Jacobio. The deal included up to US$1.9 billion in milestone payments, tiered royalties, and co-development rights. The market priced none of the milestone pathway. It priced an unproven pre-revenue biotech.</p>
+
+        <p>The net loss narrowed 65% in H1 2025. Revenue grew 100%. The cash runway is sufficient for multiple years of operations. The thesis does not require Jacobio to reach profitability — it requires the milestone pathway to become visible.</p>
+
+        <p><a href="https://trading852.com/analyses/1167-jacobio">Read the full analysis on Trading852 →</a></p>
+      ]]></content:encoded>
     </item>
 
     <item>
@@ -46,6 +92,17 @@
       <guid>https://trading852.com/analyses/1913-prada</guid>
       <pubDate>Sun, 12 Apr 2026 00:00:00 +0800</pubDate>
       <description>Prada reported a -74% EPS miss in February 2026. The business grew 9%. At HKD 38.40, EV/EBIT is 9.2x against luxury peers at 15-30x.</description>
+      <content:encoded><![CDATA[
+        <p><strong>Key Takeaway:</strong> Prada's February 2026 reported earnings fell −74%. That figure is driven entirely by accounting charges from the Versace acquisition. The underlying business, stripped of those charges, fell just −5%. The Prada and Miu Miu brands grew +9% for the twentieth consecutive quarter. At HKD 38.40, the stock trades at 9.2× EV/EBIT against luxury peers at 15–30×. The discount is documentable. The reason it exists is accounting, not deterioration.</p>
+
+        <p>The Versace acquisition (announced December 2025) required an immediate write-down of acquired assets under IFRS. That write-down ran through the P&amp;L and compressed reported EPS by 74%. The underlying business — Prada brand, Miu Miu, Church's — was largely unaffected. Miu Miu grew double digits for the eighth consecutive quarter.</p>
+
+        <p>The valuation: LVMH trades at 16× EV/EBIT. Kering at 12×. Hermès at 30×. Prada at 9.2×. The company has twenty consecutive quarters of brand revenue growth, a net cash balance sheet entering the Versace deal, and a Miu Miu brand that is in the early stages of a global positioning shift from niche to mainstream luxury. None of that is in the price.</p>
+
+        <p>Catalyst: H1 2026 results will show the Versace charge has passed through and the underlying Prada/Miu Miu trajectory resumed. The accounting distortion is finite and dated. The underlying growth record is two decades long.</p>
+
+        <p><a href="https://trading852.com/analyses/1913-prada">Read the full analysis on Trading852 →</a></p>
+      ]]></content:encoded>
     </item>
 
     <item>
@@ -54,6 +111,17 @@
       <guid>https://trading852.com/analyses/0113-dickson-concepts</guid>
       <pubDate>Fri, 11 Apr 2026 00:00:00 +0800</pubDate>
       <description>Dickson Concepts holds HKD 2,729M in net cash against a HKD 2,354M market cap. A negative EV special situation with an asymmetric payoff.</description>
+      <content:encoded><![CDATA[
+        <p><strong>Key Takeaway:</strong> Dickson Concepts holds HKD 2,729M in net cash against a HKD 2,354M market cap. The controlling shareholder offered HKD 7.20 per share in April 2025, 18% above today's price. The scheme failed on procedure, not substance: 82% of independent shareholders had already said yes.</p>
+
+        <p>The arithmetic: HKD 2,729M net cash minus HKD 2,354M market cap equals HKD 375M that the market is paying you to own the operating business. The operating business generated HKD 150M in profit last half. You are buying the cash at a discount and receiving the operating company for free.</p>
+
+        <p>The privatisation history: the Poon family made an offer at HKD 7.20 per share in April 2025. 82% of independent shareholders voted in favour. The scheme failed on a procedural technicality — the requisite thresholds were not met under Hong Kong scheme-of-arrangement rules. The Poon family did not withdraw or reduce the offer. They refiled. The intent is documented.</p>
+
+        <p>What this is not: a leveraged buyout speculation, a turnaround play, or a bet on management. It is a documented negative EV situation with a controlling shareholder who has publicly stated the intention to take the company private at a price 18% above the current market. The downside is bounded by the balance sheet. The upside is the offer price — if and when the scheme re-succeeds.</p>
+
+        <p><a href="https://trading852.com/analyses/0113-dickson-concepts">Read the full analysis on Trading852 →</a></p>
+      ]]></content:encoded>
     </item>
 
     <item>
@@ -62,6 +130,17 @@
       <guid>https://trading852.com/analyses/hsi-35-year-trendline</guid>
       <pubDate>Fri, 11 Apr 2026 00:00:00 +0800</pubDate>
       <description>The Hang Seng's 35-year trendline held six times. The seventh touch broke it. Now price is retesting the line from below.</description>
+      <content:encoded><![CDATA[
+        <p><strong>Key Takeaway:</strong> In October 2022, the Hang Seng broke its 35-year trendline for the first time, collapsing to 14,604. It has since recovered +77% to 25,893, pushing back against the underside of that same line. The break was caused by identifiable, temporary disruptions. They have reversed. The recovery is real. The question now is how far it goes.</p>
+
+        <p>Draw a line from the Hang Seng's floor in 1987 through every major crisis bottom: 1998, 2003, 2009, 2016. The line rises at a consistent angle across four decades. It held for 35 years. Then, in October 2022, the index broke below it for the first time, collapsing to 14,604.</p>
+
+        <p>Three things caused the break: China's regulatory crackdown on technology companies (2021–2022), the property sector debt crisis (Evergrande, 2021–2022), and the US rate cycle driving capital out of emerging markets. All three were temporary. The tech regulatory cycle has peaked. The property sector has been partially recapitalised. The rate cycle is reversing.</p>
+
+        <p>The current level — 25,893 — is precisely where the 35-year trendline sits when measured from below. The recovery has pushed price back to the line. Six prior tests of this line over 35 years all resulted in bounces. The seventh test broke it. The question is whether this retest from below is a failed retest (price rejects the line and falls back) or a successful recapture.</p>
+
+        <p><a href="https://trading852.com/analyses/hsi-35-year-trendline">Read the full analysis on Trading852 →</a></p>
+      ]]></content:encoded>
     </item>
 
   </channel>
