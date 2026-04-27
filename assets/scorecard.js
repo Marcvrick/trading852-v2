@@ -3,7 +3,7 @@
  *
  * Fetches the daily HK OHLC series for each blog recommendation via the
  * yahoo-proxy Cloudflare worker. Computes:
- *   - entry price = pub-date close (weekday) or next Monday open (weekend pub)
+ *   - entry price = first close after the pub date
  *   - stop loss   = −10% from entry, triggered on the intraday low
  *   - return      = pct change from entry to last close, OR −10% if stopped
  *
@@ -14,8 +14,8 @@
 (function () {
   "use strict";
 
-  // Pub date for the inaugural issue. Entry price = pub-date close (weekday)
-  // or next Monday open (weekend pub, e.g. Saturday Apr 25 → Monday Apr 28 open).
+  // Pub date for the inaugural issue. Entry price = first trading session close
+  // strictly AFTER this date (Monday Apr 13 for a Friday Apr 10 publish).
   var PUB_DATE_UTC = Date.UTC(2026, 3, 10); // months are 0-indexed
   var STOP_LOSS_PCT = -10;                  // −10% below entry, intraday trigger
 
@@ -27,6 +27,7 @@
     { t: "9988.HK", company: "Alibaba",            eyebrow: "Technology",              slug: "9988-alibaba",            pubDate: Date.UTC(2026, 3, 10) },
     { t: "2800.HK", company: "Tracker Fund (HSI)", eyebrow: "Benchmark",               slug: "hsi-35-year-trendline",   pubDate: Date.UTC(2026, 3, 10), isBenchmark: true },
     { t: "6690.HK", company: "Haier Smart Home",   eyebrow: "Consumer Discretionary",  slug: "6690-haier",              pubDate: Date.UTC(2026, 3, 25) },
+    { t: "0027.HK", company: "Galaxy Entertainment", eyebrow: "Macau Gaming",           slug: "0027-galaxy",             pubDate: Date.UTC(2026, 3,  9), noLink: true },
   ];
 
   var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
@@ -41,26 +42,20 @@
         if (!result) throw new Error("no_data");
         var ts = result.timestamp || [];
         var quote = (result.indicators && result.indicators.quote && result.indicators.quote[0]) || {};
-        var opens = quote.open || [];
         var closes = quote.close || [];
         var lows = quote.low || [];
 
-        // Weekend pub → entry = Monday open; weekday pub → entry = pub-date close
+        // Find entry: first valid close strictly after this reco's pub date
         var recoPubDate = rec.pubDate || PUB_DATE_UTC;
-        var pubDay = new Date(recoPubDate).getUTCDay(); // 0=Sun, 6=Sat
-        var isWeekendPub = (pubDay === 0 || pubDay === 6);
-        var pubDateHKT = toHKTDateStr(recoPubDate);
-
-        var entry = null, entryDate = null, entryIdx = -1, entryIsOpen = false;
+        var entry = null, entryDate = null, entryIdx = -1;
         for (var i = 0; i < ts.length; i++) {
-          if (toHKTDateStr(ts[i] * 1000) < pubDateHKT) continue;
-          var entryVal = isWeekendPub ? opens[i] : closes[i];
-          if (entryVal == null) continue;
-          entry = entryVal;
-          entryDate = new Date(ts[i] * 1000);
-          entryIdx = i;
-          entryIsOpen = isWeekendPub;
-          break;
+          if (closes[i] == null) continue;
+          if (ts[i] * 1000 > recoPubDate) {
+            entry = closes[i];
+            entryDate = new Date(ts[i] * 1000);
+            entryIdx = i;
+            break;
+          }
         }
         if (entry == null) throw new Error("no_entry_bar");
 
@@ -77,9 +72,9 @@
           }
         }
 
-        // Last close (current state) — must be on or after the entry bar
+        // Last close (current state) — only used when still open
         var last = null, lastDate = null;
-        for (var m = closes.length - 1; m >= entryIdx; m--) {
+        for (var m = closes.length - 1; m >= 0; m--) {
           if (closes[m] != null) { last = closes[m]; lastDate = new Date(ts[m] * 1000); break; }
         }
         if (last == null) throw new Error("no_close");
@@ -89,7 +84,6 @@
         return Object.assign({}, rec, {
           entry: entry,
           entryDate: entryDate,
-          entryIsOpen: entryIsOpen,
           last: stopped ? stopLevel : last,
           lastDate: stopped ? stopDate : lastDate,
           pct: pct,
@@ -101,13 +95,6 @@
       .catch(function (e) {
         return Object.assign({}, rec, { error: String(e) });
       });
-  }
-
-  // Yahoo Finance HKEX daily timestamps may be midnight HKT (UTC+8), not midnight UTC.
-  // Compare dates in HKT to avoid off-by-one skipping of the pub-date bar.
-  function toHKTDateStr(ms) {
-    var d = new Date(ms + 8 * 3600 * 1000);
-    return d.toISOString().slice(0, 10);
   }
 
   function fmtPrice(v) { return (v == null ? "—" : v.toFixed(2)); }
@@ -193,7 +180,7 @@
         : fmtPrice(r.last);
       html +=
         '<tr class="' + rowCls + '">' +
-          '<td class="sc-ticker"><a href="/analyses/' + r.slug + '">' + r.t + '</a>' + badge + '</td>' +
+          '<td class="sc-ticker">' + (r.noLink ? r.t : '<a href="/analyses/' + r.slug + '">' + r.t + '</a>') + badge + '</td>' +
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) + (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') + '</td>' +
           '<td class="num">' + lastCell + '</td>' +
