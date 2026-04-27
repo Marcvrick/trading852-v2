@@ -317,13 +317,17 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 3. Script computes entry = first close strictly after `pubDate`, scans intraday lows for the −10% stop, renders the table.
 4. Same `scorecard.js` powers the homepage strip teaser (`<div id="scorecard-strip">`).
 
-**Entry price rule**: weekday pub → first close strictly after `pubDate`. Weekend pub (Sat/Sun) → opening price of the next trading day (Monday open). The "open" label appears in the Entry column for weekend publications.
+**Entry price rule**: weekday pub → first close strictly after `pubDate` (uses `ts * 1000 > recoPubDate`). Weekend pub (Sat/Sun) → opening price of the next trading day (Monday open). The "open" label appears in the Entry column for weekend publications.
+
+**Last price**: `meta.regularMarketPrice` from the Yahoo Finance response is used as the primary source (always current, no OHLC lag). Falls back to the close array scan only if the meta field is absent or pre-entry. This prevents thinly traded HK stocks (e.g. 0113.HK) from showing a stale entry-day close in the Last column.
 
 **Stop-loss rule**: intraday low ≤ entry × 0.90 closes the position at −10%. Return frozen at −10%, row grayed, "Stopped" badge + exit date.
 
 **Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick — it is the market reference since the April 10 inaugural issue. Do not reorder it.
 
-**To add a reco**: edit the `RECOS` array. Set `pubDate: Date.UTC(YYYY, M-1, DD)` per entry. Weekend publications (Sat/Sun) automatically use Monday open as entry. No rebuild — commit and push.
+**Tracking-only tickers** (no analysis page): set `noLink: true` in the RECOS entry. The ticker appears in the table as plain text with no link. Example: 0027.HK Galaxy Entertainment (`pubDate: Apr 9`).
+
+**To add a reco**: edit the `RECOS` array. Set `pubDate: Date.UTC(YYYY, M-1, DD)` per entry (months are 0-indexed: 3 = April). Weekend publications (Sat/Sun) automatically use Monday open as entry. No rebuild needed — commit and push.
 
 ---
 
@@ -422,6 +426,30 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### Apr 27, 2026 — Scorecard engine, SEO fixes, category pages, Galaxy
+
+**Scorecard engine**
+- Entry price: first close strictly AFTER `pubDate` (`ts * 1000 > recoPubDate`). Weekend pub (Sat/Sun) → Monday open instead of close. Haier (Apr 25 = Saturday) uses Apr 28 open.
+- Last price: `meta.regularMarketPrice` used as primary source; OHLC close array as fallback. Fixes thinly traded stocks (e.g. 0113.HK) where the OHLC array lags and returns the entry-day close as "last".
+- 0027.HK Galaxy Entertainment added to RECOS tracking (`pubDate: Apr 9`, `noLink: true` — no analysis page yet).
+
+**SEO — high priority**
+- Homepage H1 added (visually hidden) for correct heading hierarchy.
+- Mobile hamburger menu added: button, CSS `.is-open` panel, JS toggle with `aria-expanded` and click-outside close.
+- About page expanded from 253 to ~600 words: Who I am / Why Hong Kong / How I work / What this is not. Person JSON-LD schema added.
+- All article source citations hyperlinked (previously plain text) using HKEX News search URLs + IR pages.
+
+**SEO — medium priority**
+- `/legal-notice` added to `sitemap.xml`.
+- 7 sector/category pages created in `src/analyses/`: `luxury`, `special-situations`, `biotech`, `technology`, `consumer-discretionary`, `electric-vehicles`, `market-thesis`. Each has a hero H1, sector intro paragraph, and `.category-article-card` components linking to published analyses.
+- Article breadcrumb labels made into links pointing to their category page.
+- RSS `feed.xml` upgraded with `xmlns:content` namespace and `<content:encoded>` full-text blocks for AI aggregator indexing.
+- "Browse by sector" pill grid added to homepage.
+
+**Editorial**
+- Dickson Concepts (0113.HK) classified in both Luxury and Special Situations category pages.
+- Manifesto: "public filings" → "public sources".
 
 ### Apr 27, 2026 — Scorecard rules, nav rename, image fix, OG tags
 
