@@ -20,7 +20,7 @@
   var STOP_LOSS_PCT = -10;                  // −10% below entry, intraday trigger
 
   var RECOS = [
-    { t: "0113.HK", company: "Dickson Concepts",   eyebrow: "Special Situation",       slug: "0113-dickson-concepts",   pubDate: Date.UTC(2026, 3, 10) },
+    { t: "0113.HK", company: "Dickson Concepts",   eyebrow: "Luxury",                  slug: "0113-dickson-concepts",   pubDate: Date.UTC(2026, 3, 10) },
     { t: "1913.HK", company: "Prada",              eyebrow: "Luxury",                  slug: "1913-prada",              pubDate: Date.UTC(2026, 3, 10) },
     { t: "1167.HK", company: "Jacobio",            eyebrow: "Biotech",                 slug: "1167-jacobio",            pubDate: Date.UTC(2026, 3, 10) },
     { t: "1585.HK", company: "Yadea",              eyebrow: "Electric Vehicles",       slug: "1585-yadea",              pubDate: Date.UTC(2026, 3, 10) },
