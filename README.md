@@ -321,7 +321,9 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 
 **Stop-loss rule**: intraday low ≤ entry × 0.90 closes the position at −10%. Return frozen at −10%, row grayed, "Stopped" badge + exit date.
 
-**To add a reco**: edit the `RECOS` array. Set `pubDate: Date.UTC(YYYY, M-1, DD)` per entry. No rebuild — commit and push.
+**Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick — it is the market reference since the April 10 inaugural issue. Do not reorder it.
+
+**To add a reco**: edit the `RECOS` array. Set `pubDate: Date.UTC(YYYY, M-1, DD)` per entry. Weekend publications (Sat/Sun) automatically use Monday open as entry. No rebuild — commit and push.
 
 ---
 
@@ -330,7 +332,7 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 ### Header nav — 4 items, identical on every page
 
 ```
-Analyses · Scorecard · Hong Kong · About
+Analyses · Scorecard · HSI · About
 ```
 
 Defined once in [src/_partials/navbar.html](src/_partials/navbar.html). Footer Explore column mirrors it in each `footer-*.html` partial.
@@ -420,6 +422,16 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### Apr 27, 2026 — Scorecard rules, nav rename, image fix, OG tags
+
+- **Scorecard — weekend pub entry**: weekday pub → first close after `pubDate`; weekend pub (Sat/Sun) → Monday open price. Haier (Apr 25 = Sat) was the first case. Entry cell shows "open" label when applicable.
+- **Scorecard — benchmark row**: 2800.HK pinned to bottom via `isBenchmark: true` + `sort()`. Grey background (`sc-row-benchmark`). Eyebrow changed to "Benchmark".
+- **Scorecard — copy**: "recommendation" replaced by "article" everywhere in scorecard page and meta description.
+- **Navbar**: "Hong Kong" renamed to "HSI". Footer: "Hong Kong" renamed to "Hang Seng Index".
+- **Article images**: `max-width: 100%; height: auto` added to `.article-body img` — prevents 1280px images from overflowing the 46rem content column.
+- **OG image**: added `og:image:width`, `og:image:height`, `og:image:type` to `head.html` — required by WhatsApp for link preview thumbnail.
+- **Git**: `Trading852-v2/.git` was a broken ghost (no config/objects). Re-initialized and connected to `Marcvrick/trading852-v2`. `git push` from this folder now triggers Vercel auto-deploy.
 
 ### Apr 26, 2026 — README v2 created
 
