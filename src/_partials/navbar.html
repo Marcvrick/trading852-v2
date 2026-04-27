@@ -2,12 +2,19 @@
     <div class="container region-header">
       <a href="/" class="site-logo">Trading852</a>
       <nav aria-label="Main navigation">
-        <ul class="menu-list--main">
+        <ul class="menu-list--main" id="main-nav">
           <li class="menu-item"><a href="/">Analyses</a></li>
           <li class="menu-item"><a href="/scorecard">Scorecard</a></li>
           <li class="menu-item"><a href="/analyses/hsi-35-year-trendline">HSI</a></li>
           <li class="menu-item"><a href="/about">About</a></li>
         </ul>
       </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect y="0" width="20" height="2" fill="currentColor"/>
+          <rect y="6" width="20" height="2" fill="currentColor"/>
+          <rect y="12" width="20" height="2" fill="currentColor"/>
+        </svg>
+      </button>
     </div>
   </header>

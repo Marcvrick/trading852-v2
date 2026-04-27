@@ -4,5 +4,22 @@
       var t = function () { h.classList.toggle('is-scrolled', window.scrollY > 20); };
       window.addEventListener('scroll', t, { passive: true });
       t();
+
+      var btn = document.getElementById('nav-toggle');
+      var nav = document.getElementById('main-nav');
+      if (btn && nav) {
+        btn.addEventListener('click', function () {
+          var open = nav.classList.toggle('is-open');
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+        document.addEventListener('click', function (e) {
+          if (!h.contains(e.target) && nav.classList.contains('is-open')) {
+            nav.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+            btn.setAttribute('aria-label', 'Open menu');
+          }
+        });
+      }
     })();
   </script>

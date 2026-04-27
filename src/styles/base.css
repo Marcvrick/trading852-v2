@@ -222,7 +222,53 @@ ul.menu-list--footer {
   text-decoration: none;
 }
 
+/* ── Visually hidden utility ──────────────────────────────────────────────────── */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Hamburger toggle button ──────────────────────────────────────────────────── */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: var(--dp-c-white);
+  line-height: 1;
+  margin-left: auto;
+}
+.page-header--scrolls-light.is-scrolled .nav-toggle { color: var(--dp-c-black); }
+
 /* ── Responsive ───────────────────────────────────────────────────────────────── */
 @media (max-width: 48rem) {
-  .menu-list--main { display: none; }
+  .nav-toggle { display: flex; align-items: center; justify-content: center; }
+
+  .menu-list--main {
+    display: none;
+    position: fixed;
+    top: 3rem; left: 0; right: 0;
+    background: var(--dp-c-black);
+    padding: 0.5rem var(--gutter) 1rem;
+    flex-direction: column;
+    gap: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    z-index: 29;
+  }
+  .menu-list--main.is-open { display: flex; }
+
+  .menu-list--main li { border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .menu-list--main li:last-child { border-bottom: none; }
+  .menu-list--main a {
+    display: block;
+    padding: 0.875rem 0;
+    font-size: 1rem;
+    background-image: none;
+  }
 }
