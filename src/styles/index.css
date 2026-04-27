@@ -151,10 +151,6 @@ a.recent-update__link:focus .card-key-number { color: rgba(0,0,0,0.22); }
 
 .node-mode-recent_update--small h3 {
   font-size: 0.9375rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .recent-update__see-update {
@@ -351,7 +347,7 @@ a.our-work__link:focus .verdict-tag {
   .field-name--field_recent_updates { flex-direction: column; }
   .node-mode-recent_update--featured { flex: 0 0 auto; min-height: 18rem; }
   .card-stack { flex: 0 0 auto; gap: 1rem; }
-  .node-mode-recent_update--small { flex: 0 0 auto; min-height: 13rem; }
+  .node-mode-recent_update--small { flex: 0 0 auto; min-height: 15rem; }
   .work-index, .verdict-tag { display: none; }
   .our-work__link .field-name--field_snippet { padding-right: 0.5rem; }
   .block--our-work { padding-left: 0; }
