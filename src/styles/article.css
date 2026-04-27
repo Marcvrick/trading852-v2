@@ -116,6 +116,8 @@
 
 .article-body .container > * { grid-column: 2; }
 
+.article-body img { max-width: 100%; height: auto; display: block; }
+
 /* Key takeaway */
 .key-takeaway {
   grid-column: 2;
