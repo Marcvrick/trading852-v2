@@ -325,7 +325,7 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 
 **Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick — it is the market reference since the April 10 inaugural issue. Do not reorder it.
 
-**Tracking-only tickers** (no analysis page): set `noLink: true` in the RECOS entry. The ticker appears in the table as plain text with no link. Example: 0027.HK Galaxy Entertainment (`pubDate: Apr 9`).
+**Rule — article and scorecard entry are inseparable**: never add a ticker to `RECOS` without a published article in `src/analyses/`. No article = no scorecard entry, regardless of `noLink`. The two ship together or not at all.
 
 **To add a reco**: edit the `RECOS` array. Set `pubDate: Date.UTC(YYYY, M-1, DD)` per entry (months are 0-indexed: 3 = April). Weekend publications (Sat/Sun) automatically use Monday open as entry. No rebuild needed — commit and push.
 
@@ -387,7 +387,7 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 - Section title as a teaser: "What's next?", "The bottom line"
 - A number without its source date or document
 - A risk framed as hypothetical when it is documented
-- Any em dash (—). Anti-slop rule, applies everywhere.
+- **Any em dash** (`—` or `&mdash;`) anywhere: articles, scorecard, metadata, titles, methodology, changelogs. Use a period, a colon, or restructure the sentence. The middle dot `·` is the only permitted title separator.
 
 ---
 
@@ -427,13 +427,16 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 
 ## Changelog
 
-### Apr 27, 2026 — Scorecard engine, SEO fixes, category pages, Galaxy
+### Apr 28, 2026 — Remove Galaxy from scorecard, enforce article-first rule
+
+- 0027.HK Galaxy Entertainment removed from `RECOS`. No article was published, so no scorecard entry should exist.
+- Rule added to README: article and scorecard entry are inseparable. Never add a ticker to `RECOS` without a live article in `src/analyses/`. No article = no scorecard entry.
+
+### Apr 27, 2026 — Scorecard engine, SEO fixes, category pages
 
 **Scorecard engine**
 - Entry price: first close strictly AFTER `pubDate` (`ts * 1000 > recoPubDate`). Weekend pub (Sat/Sun) → Monday open instead of close. Haier (Apr 25 = Saturday) uses Apr 28 open.
 - Last price: `meta.regularMarketPrice` used as primary source; OHLC close array as fallback. Fixes thinly traded stocks (e.g. 0113.HK) where the OHLC array lags and returns the entry-day close as "last".
-- 0027.HK Galaxy Entertainment added to RECOS tracking (`pubDate: Apr 9`, `noLink: true` — no analysis page yet).
-
 **SEO — high priority**
 - Homepage H1 added (visually hidden) for correct heading hierarchy.
 - Mobile hamburger menu added: button, CSS `.is-open` panel, JS toggle with `aria-expanded` and click-outside close.
