@@ -263,7 +263,7 @@ ul.menu-list--footer {
   }
   .menu-list--main.is-open { display: flex; }
 
-  .menu-list--main li { border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .menu-list--main li { border-bottom: 1px solid rgba(255,255,255,0.14); }
   .menu-list--main li:last-child { border-bottom: none; }
   .menu-list--main a {
     display: block;
