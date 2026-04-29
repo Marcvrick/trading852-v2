@@ -184,6 +184,9 @@
         '</tr></thead><tbody>';
     rows.forEach(function (r) {
       var pctCls = r.pct == null ? "" : r.pct >= 0 ? "pos" : "neg";
+      var pctCell = r.stopped
+        ? fmtPct(r.pct) + '<div class="sc-stopped-label">Stopped</div>'
+        : fmtPct(r.pct);
       var rowCls = r.stopped ? "sc-row-stopped" : r.isBenchmark ? "sc-row-benchmark" : "";
       var badge = r.stopped
         ? ' <span class="sc-badge sc-badge-stopped">Stopped</span>'
@@ -198,7 +201,7 @@
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) + (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') + '</td>' +
           '<td class="num">' + lastCell + '</td>' +
-          '<td class="num ' + pctCls + '">' + fmtPct(r.pct) + '</td>' +
+          '<td class="num ' + pctCls + '">' + pctCell + '</td>' +
         '</tr>';
     });
     html += '</tbody></table>';

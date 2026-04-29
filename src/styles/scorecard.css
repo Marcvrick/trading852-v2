@@ -122,8 +122,17 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   margin-bottom: 0.15rem;
 }
 
-.sc-table tr.sc-row-stopped td { opacity: 0.52; }
-.sc-table tr.sc-row-stopped:hover td { opacity: 0.72; }
+.sc-table tr.sc-row-stopped td { background: #fdf3f3; }
+.sc-table tr.sc-row-stopped:hover td { background: #fbe9e9; }
+.sc-stopped-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #b91e23;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+}
 
 .sc-table tr.sc-row-benchmark td { background: #f5f5f5; }
 .sc-table tr.sc-row-benchmark:hover td { background: #eeeeee; }
