@@ -130,11 +130,12 @@
       el.innerHTML = '<a href="/scorecard" class="strip-link">Scorecard — prices unavailable</a>';
       return;
     }
-    var avg = valid.reduce(function (a, r) { return a + r.pct; }, 0) / valid.length;
-    var wins = valid.filter(function (r) { return !r.stopped && r.pct > 0; }).length;
-    var losses = valid.filter(function (r) { return !r.stopped && r.pct < 0; }).length;
-    var stoppedCount = valid.filter(function (r) { return r.stopped; }).length;
-    var flats = valid.length - wins - losses - stoppedCount;
+    var picks = valid.filter(function (r) { return !r.isBenchmark; });
+    var avg = picks.length ? picks.reduce(function (a, r) { return a + r.pct; }, 0) / picks.length : null;
+    var wins = picks.filter(function (r) { return !r.stopped && r.pct > 0; }).length;
+    var losses = picks.filter(function (r) { return !r.stopped && r.pct < 0; }).length;
+    var stoppedCount = picks.filter(function (r) { return r.stopped; }).length;
+    var flats = picks.length - wins - losses - stoppedCount;
     var avgCls = avg >= 0 ? "pos" : "neg";
     var wlText = wins + 'W / ' + losses + 'L';
     if (stoppedCount) wlText += ' / ' + stoppedCount + ' stopped';
@@ -154,10 +155,11 @@
     var el = document.getElementById("scorecard-table");
     if (!el) return;
     var valid = rows.filter(function (r) { return r.pct != null; });
-    var avg = valid.length ? valid.reduce(function (a, r) { return a + r.pct; }, 0) / valid.length : null;
-    var wins = valid.filter(function (r) { return !r.stopped && r.pct > 0; }).length;
-    var losses = valid.filter(function (r) { return !r.stopped && r.pct < 0; }).length;
-    var stoppedCount = valid.filter(function (r) { return r.stopped; }).length;
+    var picks = valid.filter(function (r) { return !r.isBenchmark; });
+    var avg = picks.length ? picks.reduce(function (a, r) { return a + r.pct; }, 0) / picks.length : null;
+    var wins = picks.filter(function (r) { return !r.stopped && r.pct > 0; }).length;
+    var losses = picks.filter(function (r) { return !r.stopped && r.pct < 0; }).length;
+    var stoppedCount = picks.filter(function (r) { return r.stopped; }).length;
     var mostRecent = null;
     rows.forEach(function (r) {
       if (r.lastDate && (!mostRecent || r.lastDate > mostRecent)) mostRecent = r.lastDate;
