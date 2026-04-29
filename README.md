@@ -19,6 +19,14 @@ Static site for conviction-led HK stock analyses and market thesis articles. Sou
 Live site: [trading852.com](https://trading852.com)
 GitHub: [Marcvrick/trading852.com](https://github.com/Marcvrick/trading852.com)
 
+Editorial + SEO references live in [instructions/](instructions/):
+- [blog-style-guide.md](instructions/blog-style-guide.md) — voice, structure, the 7 canonical sections, what to never write
+- [seo/SEO-STRATEGY.md](instructions/seo/SEO-STRATEGY.md) — overall positioning + keyword targets
+- [seo/SITE-STRUCTURE.md](instructions/seo/SITE-STRUCTURE.md) — URL architecture, internal linking
+- [seo/CONTENT-CALENDAR.md](instructions/seo/CONTENT-CALENDAR.md) — pipeline of upcoming articles
+- [seo/COMPETITOR-ANALYSIS.md](instructions/seo/COMPETITOR-ANALYSIS.md) — market gap mapping
+- [seo/IMPLEMENTATION-ROADMAP.md](instructions/seo/IMPLEMENTATION-ROADMAP.md) — staged delivery plan
+
 ---
 
 ## What changed vs v1
@@ -42,6 +50,15 @@ Trading852-v2/
 ├── build.js                    ← Build script (Node, zero deps)
 ├── vercel.json                 ← buildCommand + cleanUrls + rewrites + headers
 ├── README.md
+│
+├── instructions/               ← Editorial + SEO reference docs (NOT served)
+│   ├── blog-style-guide.md        Voice, structure, 7-section template, what to never write
+│   └── seo/
+│       ├── SEO-STRATEGY.md         Positioning + keyword targets
+│       ├── SITE-STRUCTURE.md       URL architecture + internal linking
+│       ├── CONTENT-CALENDAR.md     Pipeline of upcoming articles
+│       ├── COMPETITOR-ANALYSIS.md  Market gap mapping
+│       └── IMPLEMENTATION-ROADMAP.md Staged delivery plan
 │
 ├── assets/                     ← Static assets copied as-is to dist/assets/
 │   ├── favicon-32.png
@@ -219,7 +236,7 @@ Market thesis articles: source `.md` lives outside the repo (e.g. `TRADING/Tradi
 
 ### Step 2 — Read the style guide
 
-Open the v1 style guide at [../Trading852/instructions/blog-style-guide.md](../Trading852/instructions/blog-style-guide.md) and the voice guide at [../../Voix Marc/VOIX-Marc.md](../../Voix%20Marc/VOIX-Marc.md). Key rules:
+Open the local style guide at [instructions/blog-style-guide.md](instructions/blog-style-guide.md) and the voice guide at [../../Voix Marc/VOIX-Marc.md](../../Voix%20Marc/VOIX-Marc.md). Key rules:
 
 - **7 canonical sections** — Hook → Company/Context → Discount → Catalyst → Valuation → Risks → Decision
 - **No bullet points** in the body (except numbered catalyst points and scenario tables)
@@ -428,6 +445,12 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### Apr 29, 2026 — Link `instructions/` from README
+
+- Top of README now lists the editorial + SEO references in [instructions/](instructions/) (style guide + 5 SEO docs).
+- Folder structure block updated to show `instructions/` and its `seo/` subfolder.
+- Step 2 of the editorial workflow now points to the local `instructions/blog-style-guide.md` instead of the v1 path.
 
 ### Apr 29, 2026 — Scorecard: average methodology, benchmark exclusion, stopped-row restyle
 

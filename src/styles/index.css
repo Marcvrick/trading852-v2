@@ -124,6 +124,11 @@ a.recent-update__link:focus {
   margin-bottom: 0.625rem;
 }
 
+.node-mode-recent_update .eyebrow .eyebrow-date {
+  font-weight: 400;
+  color: rgba(255,255,255,0.45);
+}
+
 .card-key-number {
   font-family: var(--ff-sans);
   font-weight: 700;
