@@ -9,7 +9,7 @@ tags:
 category: Trading/Blog
 type: readme
 created: 2026-04-26
-updated: 2026-04-26
+updated: 2026-04-29
 ---
 
 # Trading852 v2 — Build Pipeline + Editorial Workflow
@@ -321,9 +321,11 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 
 **Last price**: `meta.regularMarketPrice` from the Yahoo Finance response is used as the primary source (always current, no OHLC lag). Falls back to the close array scan only if the meta field is absent or pre-entry. This prevents thinly traded HK stocks (e.g. 0113.HK) from showing a stale entry-day close in the Last column.
 
-**Stop-loss rule**: intraday low ≤ entry × 0.90 closes the position at −10%. Return frozen at −10%, row grayed, "Stopped" badge + exit date.
+**Stop-loss rule**: intraday low ≤ entry × 0.90 closes the line at −10%. Return frozen at −10%, row highlighted in light red (`sc-row-stopped`, `#fdf3f3`), "Stopped" badge next to the ticker + exit date under the Last column. The % cell shows the locked −10% with a small uppercase "Stopped" label underneath. The frozen −10% still feeds the average.
 
-**Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick — it is the market reference since the April 10 inaugural issue. Do not reorder it.
+**Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick — it is the market reference since the April 10 inaugural issue. Do not reorder it. **The benchmark is excluded from the average return and from the winners/losers tally** — it is a reference line only, not a contributor to the headline number.
+
+**Average return**: simple arithmetic mean of every line's `pct`, benchmark excluded. Each pick counts equally. Computed in both `renderStrip` (homepage teaser) and `renderTable` (`/scorecard`) by filtering on `!r.isBenchmark` before summing.
 
 **Rule — article and scorecard entry are inseparable**: never add a ticker to `RECOS` without a published article in `src/analyses/`. No article = no scorecard entry, regardless of `noLink`. The two ship together or not at all.
 
@@ -426,6 +428,14 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### Apr 29, 2026 — Scorecard: average methodology, benchmark exclusion, stopped-row restyle
+
+- **Methodology block** rewritten to explain the average calculation: simple arithmetic mean of every line's % change, each ticker counts equally, benchmark excluded.
+- **Tracker Fund (2800.HK) excluded from the average** and from the winners/losers tally on both `/scorecard` and the homepage strip. The benchmark stays visible at the bottom of the table as a reference line only. Implemented by filtering `!r.isBenchmark` in `renderStrip` and `renderTable` before reducing.
+- **Stopped rows restyled**: opacity-based grey-out replaced by a very light red background (`#fdf3f3`, hover `#fbe9e9`). The previous opacity treatment looked too similar to the benchmark row's grey, blurring the difference between "we hit the stop" and "this is the market reference".
+- **Stopped % cell** now shows the locked `−10.0%` value with a small uppercase "Stopped" caption underneath (instead of replacing the number with text). Locked −10% still feeds the average.
+- Removed the "past performance on a three-figure sample is not a track record" line from the methodology — readers can draw their own conclusions.
 
 ### Apr 28, 2026 — Remove Galaxy from scorecard, enforce article-first rule
 
