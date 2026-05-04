@@ -389,6 +389,7 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 
 | File | Ticker | Title | Date |
 |---|---|---|---|
+| [src/analyses/1698-tencent-music.html](src/analyses/1698-tencent-music.html) | 1698.HK | Profit +66%, Stock -66% from ATH. Spotify Trades at Four Times the Multiple. | 2026-05-04 |
 | [src/analyses/6690-haier.html](src/analyses/6690-haier.html) | 6690.HK | The World's Largest Appliance Maker Trades at 6.85×. Midea at 12×. Electrolux at 14×. | 2026-04-25 |
 | [src/analyses/9988-alibaba.html](src/analyses/9988-alibaba.html) | 9988.HK | EBITA Down 57%. Cloud Up 36%. This Is What Amazon Looked Like in 2014. | 2026-04-14 |
 | [src/analyses/1585-yadea.html](src/analyses/1585-yadea.html) | 1585.HK | Profit +129%. EV/EBIT 6.1x. The Market Sees a Bicycle Company. | 2026-04-14 |
@@ -445,6 +446,11 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### Apr 29, 2026 — Homepage pub date + mobile menu dividers
+
+- Recent Analyses cards (homepage) now show the pub date in 45%-opacity grey after the ticker: `Sector · Ticker · Mon DD, YYYY`. Ticker stays bold; date is regular weight. New `.eyebrow-date` class in `src/styles/index.css`.
+- Mobile hamburger menu: divider lines between Analyses / Scorecard / HSI / About bumped from `rgba(255,255,255,0.08)` to `0.14` (+75%) — they were nearly invisible on dark backgrounds.
 
 ### Apr 29, 2026 — Link `instructions/` from README
 
