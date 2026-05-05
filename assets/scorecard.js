@@ -179,8 +179,7 @@
     var stoppedCount = picks.filter(function (r) { return r.stopped; }).length;
     var flats = picks.length - wins - losses - stoppedCount;
     var avgCls = avg >= 0 ? "pos" : "neg";
-    var wlText = wins + 'W / ' + losses + 'L';
-    if (stoppedCount) wlText += ' / ' + stoppedCount + ' stopped';
+    var wlText = wins + 'W / ' + losses + 'L / ' + stoppedCount + ' stopped';
     if (flats) wlText += ' / ' + flats + ' flat';
     el.innerHTML =
       '<a href="/scorecard" class="strip-link" aria-label="Scorecard since April 10">' +
@@ -209,11 +208,9 @@
 
     var summary = document.getElementById("scorecard-summary");
     if (summary) {
-      var stoppedHtml = stoppedCount ? ('<span>' + stoppedCount + ' stopped</span>') : '';
       summary.innerHTML =
         '<span>Average <strong class="' + (avg >= 0 ? "pos" : "neg") + '">' + fmtPct(avg) + '</strong></span>' +
-        '<span>' + wins + ' winners · ' + losses + ' losers</span>' +
-        stoppedHtml +
+        '<span>' + wins + ' winners · ' + losses + ' losers · ' + stoppedCount + ' stopped</span>' +
         '<span>As of ' + (mostRecent ? fmtDate(mostRecent) + ", 2026" : "—") + '</span>';
     }
 
