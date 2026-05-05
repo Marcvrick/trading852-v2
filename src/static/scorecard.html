@@ -41,11 +41,14 @@
           from Yahoo Finance, fetched live when you open this page.
         </p>
         <p>
-          <strong>Stop loss at &minus;10%.</strong> If the price drops 10% below entry
-          at any point after publication, the line is closed. The return is
-          locked at &minus;10%, the row is highlighted in light red with the exit
-          date, and a small <em>Stopped</em> label appears under the % value, even
-          if the stock keeps falling.
+          <strong>Stop loss, trailing.</strong> The stop starts at &minus;10%
+          below the buy price. If the price goes up 5% or more, the stop moves
+          up to &minus;5% below the buy price. If the price goes up 10% or more,
+          the stop moves up to the buy price (breakeven). The stop only ever
+          moves up, never down. When the price hits the stop, the line closes
+          at &minus;10%, &minus;5%, or 0%, the row is highlighted in light red
+          with the exit date, and a small <em>Stopped</em> label appears under
+          the % value.
         </p>
         <p>
           <strong>Average return</strong> is the simple arithmetic mean of the

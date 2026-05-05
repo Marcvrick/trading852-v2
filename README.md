@@ -338,7 +338,15 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 
 **Last price**: `meta.regularMarketPrice` from the Yahoo Finance response is used as the primary source (always current, no OHLC lag). Falls back to the close array scan only if the meta field is absent or pre-entry. This prevents thinly traded HK stocks (e.g. 0113.HK) from showing a stale entry-day close in the Last column.
 
-**Stop-loss rule**: intraday low ≤ entry × 0.90 closes the line at −10%. Return frozen at −10%, row highlighted in light red (`sc-row-stopped`, `#fdf3f3`), "Stopped" badge next to the ticker + exit date under the Last column. The % cell shows the locked −10% with a small uppercase "Stopped" label underneath. The frozen −10% still feeds the average.
+**Stop-loss rule (trailing, one-way ratchet)**: the stop tightens as the position appreciates and never loosens.
+
+| Peak gain since entry | Stop level | Locked return if hit |
+|---|---|---|
+| < +5 % | entry × 0.90 | −10 % |
+| ≥ +5 % | entry × 0.95 | −5 % |
+| ≥ +10 % | entry × 1.00 (breakeven) | 0 % |
+
+A stop fires when the intraday low ≤ the active stop level for that bar. Once a tighter tier activates, the stop never reverts even if the peak recedes. Stopped rows are highlighted in light red (`sc-row-stopped`, `#fdf3f3`) with a "Stopped" badge next to the ticker, exit date under the Last column, and the locked return in the % cell with a small uppercase "Stopped" label underneath. The locked return still feeds the average.
 
 **Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick — it is the market reference since the April 10 inaugural issue. Do not reorder it. **The benchmark is excluded from the average return and from the winners/losers tally** — it is a reference line only, not a contributor to the headline number.
 

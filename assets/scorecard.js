@@ -4,8 +4,12 @@
  * Fetches the daily HK OHLC series for each blog recommendation via the
  * yahoo-proxy Cloudflare worker. Computes:
  *   - entry price = first close after the pub date
- *   - stop loss   = −10% from entry, triggered on the intraday low
- *   - return      = pct change from entry to last close, OR −10% if stopped
+ *   - stop loss   = trailing 3-tier ratchet armed by intraday HIGH since entry:
+ *       peak ≥ +10 %  → stop = entry        (locks 0 %)
+ *       peak ≥ +5 %   → stop = entry × 0.95 (locks −5 %)
+ *       else          → stop = entry × 0.90 (locks −10 %)
+ *     One-way ratchet: tightens only, never loosens. Triggered on intraday low.
+ *   - return      = pct change from entry to last close, OR locked tier % if stopped
  *
  * Two render targets supported on the same page:
  *   #scorecard-strip  — compact 1-line summary for the homepage
@@ -17,7 +21,14 @@
   // Pub date for the inaugural issue. Entry price = first trading session close
   // strictly AFTER this date (Monday Apr 13 for a Friday Apr 10 publish).
   var PUB_DATE_UTC = Date.UTC(2026, 3, 10); // months are 0-indexed
-  var STOP_LOSS_PCT = -10;                  // −10% below entry, intraday trigger
+
+  // Trailing-stop tiers, ordered tightest-first. Tier activates once the
+  // intraday HIGH since entry has reached `triggerPct`. One-way ratchet.
+  var STOP_TIERS = [
+    { triggerPct: 10, stopMul: 1.00, lockedPct:   0 },
+    { triggerPct:  5, stopMul: 0.95, lockedPct:  -5 },
+    { triggerPct:  0, stopMul: 0.90, lockedPct: -10 },
+  ];
 
   var RECOS = [
     { t: "0113.HK", company: "Dickson Concepts",   eyebrow: "Luxury",                  slug: "0113-dickson-concepts",   pubDate: Date.UTC(2026, 3, 10) },
@@ -44,6 +55,7 @@
         var quote = (result.indicators && result.indicators.quote && result.indicators.quote[0]) || {};
         var opens = quote.open || [];
         var closes = quote.close || [];
+        var highs = quote.high || [];
         var lows = quote.low || [];
 
         // Weekday pub → entry = first close strictly after pub date
@@ -65,10 +77,26 @@
         }
         if (entry == null) throw new Error("no_entry_bar");
 
-        // Scan subsequent bars for a stop trigger (intraday low ≤ entry × 0.90)
-        var stopLevel = entry * (1 + STOP_LOSS_PCT / 100);
+        // Scan subsequent bars: arm the tightest tier whose +pct trigger has been
+        // reached by the running intraday HIGH, then check if the bar's intraday
+        // LOW breaches the active stop level. Tiers ratchet tighter only.
+        var activeTier = STOP_TIERS[STOP_TIERS.length - 1];
+        var stopLevel = entry * activeTier.stopMul;
+        var lockedPct = activeTier.lockedPct;
+        var peakHigh = entry;
         var stopped = false, stopDate = null;
         for (var k = entryIdx + 1; k < ts.length; k++) {
+          var hi = highs[k];
+          if (hi != null && hi > peakHigh) peakHigh = hi;
+          var peakGainPct = (peakHigh - entry) / entry * 100;
+          for (var ti = 0; ti < STOP_TIERS.length; ti++) {
+            if (peakGainPct >= STOP_TIERS[ti].triggerPct) {
+              activeTier = STOP_TIERS[ti];
+              stopLevel = entry * activeTier.stopMul;
+              lockedPct = activeTier.lockedPct;
+              break;
+            }
+          }
           var lo = lows[k];
           if (lo == null) continue;
           if (lo <= stopLevel) {
@@ -93,7 +121,7 @@
         }
         if (last == null) throw new Error("no_close");
 
-        var pct = stopped ? STOP_LOSS_PCT : (last - entry) / entry * 100;
+        var pct = stopped ? lockedPct : (last - entry) / entry * 100;
 
         return Object.assign({}, rec, {
           entry: entry,
@@ -105,6 +133,8 @@
           stopped: stopped,
           stopDate: stopDate,
           stopLevel: stopLevel,
+          lockedPct: lockedPct,
+          peakGainPct: (peakHigh - entry) / entry * 100,
         });
       })
       .catch(function (e) {
@@ -168,7 +198,7 @@
 
     var summary = document.getElementById("scorecard-summary");
     if (summary) {
-      var stoppedHtml = stoppedCount ? ('<span>' + stoppedCount + ' stopped @ −10%</span>') : '';
+      var stoppedHtml = stoppedCount ? ('<span>' + stoppedCount + ' stopped</span>') : '';
       summary.innerHTML =
         '<span>Average <strong class="' + (avg >= 0 ? "pos" : "neg") + '">' + fmtPct(avg) + '</strong></span>' +
         '<span>' + wins + ' winners · ' + losses + ' losers</span>' +
