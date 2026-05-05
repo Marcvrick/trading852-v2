@@ -338,7 +338,7 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 
 **Last price**: `meta.regularMarketPrice` from the Yahoo Finance response is used as the primary source (always current, no OHLC lag). Falls back to the close array scan only if the meta field is absent or pre-entry. This prevents thinly traded HK stocks (e.g. 0113.HK) from showing a stale entry-day close in the Last column.
 
-**Stop-loss rule (trailing, one-way ratchet)**: the stop tightens as the position appreciates and never loosens.
+**Stop-loss rule (trailing, one-way ratchet — picks published 2026-05-05 onward)**: the stop tightens as the position appreciates and never loosens.
 
 | Peak gain since entry | Stop level | Locked return if hit |
 |---|---|---|
@@ -347,6 +347,8 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 | ≥ +10 % | entry × 1.00 (breakeven) | 0 % |
 
 A stop fires when the intraday low ≤ the active stop level for that bar. Once a tighter tier activates, the stop never reverts even if the peak recedes. Stopped rows are highlighted in light red (`sc-row-stopped`, `#fdf3f3`) with a "Stopped" badge next to the ticker, exit date under the Last column, and the locked return in the % cell with a small uppercase "Stopped" label underneath. The locked return still feeds the average.
+
+**Legacy stop (picks published before 2026-05-05)**: flat −10 % from entry, no trailing. Triggered on intraday low ≤ entry × 0.90, locks at −10 %. The cutoff is enforced by `TRAILING_STOP_FROM = Date.UTC(2026, 4, 5)` in `assets/scorecard.js`. The 7 picks from the inaugural issue (Apr 10 / Apr 25 / May 4 pubs) keep the legacy rule for life.
 
 **Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick — it is the market reference since the April 10 inaugural issue. Do not reorder it. **The benchmark is excluded from the average return and from the winners/losers tally** — it is a reference line only, not a contributor to the headline number.
 

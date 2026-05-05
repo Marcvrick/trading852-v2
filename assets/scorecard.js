@@ -4,11 +4,14 @@
  * Fetches the daily HK OHLC series for each blog recommendation via the
  * yahoo-proxy Cloudflare worker. Computes:
  *   - entry price = first close after the pub date
- *   - stop loss   = trailing 3-tier ratchet armed by intraday HIGH since entry:
- *       peak ≥ +10 %  → stop = entry        (locks 0 %)
- *       peak ≥ +5 %   → stop = entry × 0.95 (locks −5 %)
- *       else          → stop = entry × 0.90 (locks −10 %)
- *     One-way ratchet: tightens only, never loosens. Triggered on intraday low.
+ *   - stop loss   = depends on pub date:
+ *       pubDate <  TRAILING_STOP_FROM → flat −10 % from entry (legacy rule)
+ *       pubDate >= TRAILING_STOP_FROM → trailing 3-tier ratchet armed by
+ *         intraday HIGH since entry:
+ *           peak ≥ +10 %  → stop = entry        (locks 0 %)
+ *           peak ≥ +5 %   → stop = entry × 0.95 (locks −5 %)
+ *           else          → stop = entry × 0.90 (locks −10 %)
+ *         One-way ratchet: tightens only, never loosens. Triggered on intraday low.
  *   - return      = pct change from entry to last close, OR locked tier % if stopped
  *
  * Two render targets supported on the same page:
@@ -29,6 +32,10 @@
     { triggerPct:  5, stopMul: 0.95, lockedPct:  -5 },
     { triggerPct:  0, stopMul: 0.90, lockedPct: -10 },
   ];
+
+  // Picks published before this date keep the original flat −10 % stop.
+  // Picks published on/after this date use the trailing 3-tier ratchet above.
+  var TRAILING_STOP_FROM = Date.UTC(2026, 4, 5); // 2026-05-05
 
   var RECOS = [
     { t: "0113.HK", company: "Dickson Concepts",   eyebrow: "Luxury",                  slug: "0113-dickson-concepts",   pubDate: Date.UTC(2026, 3, 10) },
@@ -77,24 +84,28 @@
         }
         if (entry == null) throw new Error("no_entry_bar");
 
-        // Scan subsequent bars: arm the tightest tier whose +pct trigger has been
-        // reached by the running intraday HIGH, then check if the bar's intraday
-        // LOW breaches the active stop level. Tiers ratchet tighter only.
+        // Scan subsequent bars: if trailing eligible, arm the tightest tier whose
+        // +pct trigger has been reached by the running intraday HIGH; otherwise
+        // keep the base −10 % tier. Then check if the bar's intraday LOW breaches
+        // the active stop level. Tiers ratchet tighter only.
+        var useTrailing = recoPubDate >= TRAILING_STOP_FROM;
         var activeTier = STOP_TIERS[STOP_TIERS.length - 1];
         var stopLevel = entry * activeTier.stopMul;
         var lockedPct = activeTier.lockedPct;
         var peakHigh = entry;
         var stopped = false, stopDate = null;
         for (var k = entryIdx + 1; k < ts.length; k++) {
-          var hi = highs[k];
-          if (hi != null && hi > peakHigh) peakHigh = hi;
-          var peakGainPct = (peakHigh - entry) / entry * 100;
-          for (var ti = 0; ti < STOP_TIERS.length; ti++) {
-            if (peakGainPct >= STOP_TIERS[ti].triggerPct) {
-              activeTier = STOP_TIERS[ti];
-              stopLevel = entry * activeTier.stopMul;
-              lockedPct = activeTier.lockedPct;
-              break;
+          if (useTrailing) {
+            var hi = highs[k];
+            if (hi != null && hi > peakHigh) peakHigh = hi;
+            var peakGainPct = (peakHigh - entry) / entry * 100;
+            for (var ti = 0; ti < STOP_TIERS.length; ti++) {
+              if (peakGainPct >= STOP_TIERS[ti].triggerPct) {
+                activeTier = STOP_TIERS[ti];
+                stopLevel = entry * activeTier.stopMul;
+                lockedPct = activeTier.lockedPct;
+                break;
+              }
             }
           }
           var lo = lows[k];
