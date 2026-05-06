@@ -183,6 +183,58 @@ Optional. If present, the inner JSON is wrapped in `<script type="application/ld
 
 ---
 
+## SEO pattern (mandatory for all ticker analyses)
+
+Locked May 2026 after applying it to the 8 published articles. Reference template: any DRAFT with the `-SEO-OPTIMIZED.html` suffix in [DRAFT/](DRAFT/) — canonical example is `DRAFT/1913-prada-SEO-OPTIMIZED.html`.
+
+### CONFIG block
+
+| Field | Rule |
+|---|---|
+| `title` | **≤ 60 chars total** (Google clips around 580px ≈ 55–60 chars on desktop). Format: `{Name} ({Ticker}.HK) Stock Analysis: {compact hook}`. **No ` · Trading852` suffix** — brand sits in `og:site_name` and the schema `publisher`, dropping it from the title is free SEO. Primary keyword "Stock Analysis" appears early. |
+| `ogTitle` | Keeps the editorial hook intact — no `Stock Analysis` keyword. This is what shows on social cards; voice wins over search. |
+| `description` | 150–165 chars. Opens with `{Name} ({Ticker}.HK) stock analysis:` then the arithmetic + main long-tail. |
+| `canonical`, `ogType`, `ogImage`, `pubDate` | Unchanged from the standard CONFIG rules above. |
+
+### JSONLD block
+
+Standard fields stay (`headline`, `author`, `publisher`, `mainEntityOfPage`, `about`, `datePublished`, `dateModified`). **Add these six**:
+
+| Field | Value |
+|---|---|
+| `image` | `"https://trading852.com/assets/og-image.png"` (Google explicitly recommends this on `Article`) |
+| `inLanguage` | `"en"` |
+| `wordCount` | Rounded to nearest 100 |
+| `articleSection` | Matches the sector hub: `"Luxury"`, `"Technology"`, `"Biotech"`, `"Consumer Discretionary"`, `"Electric Vehicles"`, `"Special Situations"`, `"Market Thesis"` |
+| `isPartOf` | `CollectionPage` object pointing to `https://trading852.com/analyses/{sector}` |
+| `keywords` | Comma-separated. Must include: `{Name} stock analysis`, `{Ticker}.HK`, `{name} thesis 2026`. Plus 3–5 article-specific long-tails (e.g. `{name} vs {peer}`, `{catalyst} explained`, etc.) |
+
+### Body
+
+| Element | Rule |
+|---|---|
+| H1 + subtitle | Never modified for SEO. Editorial integrity wins. |
+| H2s | At least one H2 must include the entity name. Format: `Why {Company} Trades at a Discount` and/or `What {Company} Is Actually Worth`. Avoid generic H2s like `What the Company Is Worth` or `Why the Discount Exists` — they leave SEO weight on the table. |
+| Risk callout labels | Use `<h3 class="risk-callout__label">` (not `<div>`). Same visual styling, but the H3 is parseable by Google's passage-extraction and helps AI summarisers attribute risks to the correct section. |
+| `What {Company} Does` first paragraph | Must explicitly state `{Name} ({Ticker}.HK)` and the HKEX listing context. This is the canonical entity-establishment paragraph for Google + AI extractors. |
+| Inline link | At least one inline link from the body to the article's sector hub (`/analyses/{sector}`). Anchor text = a natural noun phrase (e.g. `luxury sector`, `electric two-wheeler`, `biotechs`, `negative enterprise value`). |
+
+### What never changes for SEO
+
+- Numbers, tables, scenarios, risk callouts, sources
+- Editorial voice and 7-section structure
+- Disclaimer paragraph and price targets
+- Update notice block (if any)
+
+### Workflow when writing a new article
+
+1. Write the article with the editorial voice and 7-section structure as usual.
+2. Apply the SEO pattern above as the **last step before publishing**.
+3. Diff against `DRAFT/1913-prada-SEO-OPTIMIZED.html` to verify pattern compliance.
+4. Pre-publish checklist below covers the SEO line items.
+
+---
+
 ## Images convention (important)
 
 Article images go in `src/analyses/images/<slug>.jpg`. The build copies them as-is to `dist/analyses/images/<slug>.jpg`.
@@ -431,6 +483,17 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] JSON-LD block present (`Article` for analyses, `WebSite` for index)
 - [ ] Images: `width` + `height` + `alt`, lazy below the fold
 
+### Ticker analyses (additional — see SEO pattern above)
+
+- [ ] `title` ≤ 60 chars, opens with `{Name} ({Ticker}.HK) Stock Analysis:`, **no ` · Trading852` suffix**
+- [ ] `description` 150–165 chars, opens with `{Name} ({Ticker}.HK) stock analysis:`
+- [ ] JSONLD has `image`, `inLanguage`, `wordCount`, `articleSection`, `isPartOf` (sector hub `CollectionPage`), expanded `keywords`
+- [ ] Sector hub URL referenced by `isPartOf` and inline link must be live before publish
+- [ ] At least one H2 contains the entity name (e.g. `What {Company} Is Actually Worth`, `Why {Company} Trades at a Discount`)
+- [ ] First paragraph of `What {Company} Does` establishes ticker + HKEX listing context
+- [ ] Risk callout labels use `<h3 class="risk-callout__label">`, not `<div>`
+- [ ] At least one inline link from body to a sector hub (`/analyses/{sector}`)
+
 ---
 
 ## Pre-publish checklist
@@ -438,6 +501,7 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] Source material identified, read
 - [ ] Style guide + VOIX-Marc read
 - [ ] CONFIG + JSONLD blocks complete and JSON-valid
+- [ ] **SEO pattern applied** — see "SEO pattern (mandatory for all ticker analyses)" section above. Diff against `DRAFT/1913-prada-SEO-OPTIMIZED.html` to verify
 - [ ] No bullet points in body text
 - [ ] Every number has a date or source
 - [ ] Valuation / NAV table present
@@ -445,6 +509,9 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] Risks: exactly 2, named in bold
 - [ ] Word count between 1 000 and 1 400
 - [ ] Title contains a concrete number
+- [ ] At least one H2 contains the entity name
+- [ ] First paragraph of `What X Does` establishes ticker + HKEX listing
+- [ ] At least one inline link to a sector hub (`/analyses/{sector}`)
 - [ ] Image (if any) dropped in `src/analyses/images/` with relative `<img src="images/...">`
 - [ ] Homepage updated (Recent Analyses + Identified Situations)
 - [ ] feed.xml: new `<item>` + `<lastBuildDate>` updated
@@ -456,6 +523,18 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### May 6, 2026 — SEO pattern locked, applied to all 8 published articles
+
+- Added "SEO pattern (mandatory for all ticker analyses)" section to README — title/description format, JSONLD additions (image, articleSection, inLanguage, wordCount, isPartOf, expanded keywords), H2 entity-name rule, body ticker+HKEX establishment paragraph, inline sector-hub link, h3 risk callout labels.
+- Pre-publish checklist updated with 8 new SEO line items.
+- 8 SEO-optimized DRAFTs created in `DRAFT/`, one per published article (Tencent Music, Haier, Alibaba, Yadea, Jacobio, Prada, Dickson, HSI 35-year). Pattern was first developed and validated on `1913-prada-SEO-OPTIMIZED.html`, which is the canonical reference.
+- All titles trimmed to ≤ 60 chars, ` · Trading852` suffix dropped (brand sits in `og:site_name` + schema `publisher`, so dropping it from title is free SEO).
+- All Article schemas now include `image` field (Google explicit recommendation).
+- All `risk-callout__label` divs converted to `<h3>` for passage-extraction by Google + AI summarisers.
+- New `SEO/` folder with `keywords-funnel.md` (TOFU/MOFU/BOFU keyword strategy without Ahrefs).
+- New `POST SUGGESTION/` folder cross-referencing FinRatios CONVICTION ≥ 7.5 with active investor research themes.
+- `instructions/seo/SEO-STRATEGY.md` cleaned: methodology pages (`/method/*`) abandoned. MOFU served by sectoral hubs + comparatifs + screens + thesis articles instead. The methodology stays a moat.
 
 ### Apr 29, 2026 — Homepage pub date + mobile menu dividers
 

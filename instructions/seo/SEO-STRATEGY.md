@@ -1,6 +1,8 @@
 # SEO Strategy — Trading852
 
-*April 2026*
+*April 2026 · revised May 2026*
+
+> **Strategic constraint (May 2026 revision)** : la méthodologie Trading852 (SOTP, NAV, lecture de filings) **n'est jamais publiée comme contenu autonome**. Elle reste un moat éditorial. Le MOFU est servi par des sectoral hubs, comparatifs ticker vs peer, screens éditorialisés et thesis articles macro — jamais par des pages méthode. Voir [`SEO/keywords-funnel.md`](../../SEO/keywords-funnel.md) pour le détail des formats.
 
 ---
 
@@ -10,7 +12,7 @@ Trading852 is a personal research site publishing conviction analysis on HKEX-li
 
 The strategy has three phases:
 1. **Fix the floor** — clean URLs, schema, sitemap, author page (3 hours of work)
-2. **Build the pillar** — method pages + consistent stock analysis publishing (months 1–3)
+2. **Build the pillar** — sectoral hubs, comparatifs, thesis articles, screens. The methodology itself is never published. (months 1–3)
 3. **Compound** — let the content library grow, attract links, rank for long-tail tickers (months 4–12)
 
 The biggest risk is not competition — it is inconsistency. Two analyses per month is enough to build authority in this niche within 12 months.
@@ -21,7 +23,7 @@ The biggest risk is not competition — it is inconsistency. Two analyses per mo
 
 **Primary:** English-speaking retail investors researching HKEX-listed stocks
 - Based in: US, UK, Hong Kong, Singapore, Australia
-- Intent: Research before investing, understanding the HK market, learning SOTP methodology
+- Intent: Research before investing, understanding the HK market, finding undervalued names
 - Search behaviour: Company name + "analysis" / "undervalued" / "NAV", plus thematic queries like "why invest Hong Kong 2026"
 
 **Secondary:** Finance students, analysts, journalists covering HK markets
@@ -36,7 +38,7 @@ The biggest risk is not competition — it is inconsistency. Two analyses per mo
 - HKEX-specific focus (not Asia-broad)
 - Free access (not paywalled like Asian Century Stocks)
 - Narrative depth (not just screens like Emerging Value)
-- Investment thesis + SOTP methodology (not just governance like Webb-site)
+- Investment thesis + filing-grounded valuation (not just governance like Webb-site)
 - Independent voice (not a broker or fund)
 
 One-line SEO positioning: **"The independent English-language research site for HKEX value investors."**
@@ -47,16 +49,18 @@ One-line SEO positioning: **"The independent English-language research site for 
 
 ### Tier 1 — Own These (low competition, high intent)
 
+> Volumes mensuels = estimations directionnelles, à valider via Google Search Console + Google Keyword Planner. Voir le pipeline dans [`SEO/keywords-funnel.md`](../../SEO/keywords-funnel.md).
+
 | Keyword | Monthly searches (est.) | Competition | Target page |
 |---|---|---|---|
-| `NAV discount hong kong` | 200–500 | Very Low | `/method/nav-discount` |
-| `HKEX conglomerate discount` | 100–300 | Very Low | `/analyses/why-hong-kong-why-now` |
-| `great eagle holdings NAV` | 100–200 | Very Low | `/analyses/0041-great-eagle` |
-| `Hongkong Land NAV discount` | 200–500 | Low | `/analyses/0101-hongkong-land` |
 | `dickson concepts privatization` | 50–150 | Very Low | `/analyses/0113-dickson-concepts` |
 | `jacobio pharmaceuticals analysis` | 100–300 | Very Low | `/analyses/1167-jacobio` |
-| `sum of parts valuation HKEX` | 200–500 | Low | `/method/sotp-valuation` |
-| `how to read HKEX annual report` | 300–800 | Low | `/method/how-to-read-hkex` |
+| `prada 1913 stock analysis` | 100–300 | Low | `/analyses/1913-prada` |
+| `tencent music stock analysis` | 200–500 | Low | `/analyses/1698-tencent-music` |
+| `haier smart home stock analysis` | 100–300 | Low | `/analyses/6690-haier` |
+| `yadea stock analysis` | 50–150 | Very Low | `/analyses/1585-yadea` |
+| `HKEX conglomerate discount` | 100–300 | Very Low | Thesis article (à créer) |
+| `southbound stock connect explained` | 100–300 | Low-Medium | Thesis article (à créer) |
 
 ### Tier 2 — Build Toward (medium competition, broader)
 
@@ -84,9 +88,9 @@ Finance content falls under Google's YMYL (Your Money Your Life) category — E-
 
 **Experience:** Demonstrated by original SOTP calculations, specific filings cited with dates, real numbers from real documents. Every article already does this — maintain it.
 
-**Expertise:** Shown by methodology depth (SOTP, NAV, catalyst framework explained in method pages) and consistent accuracy. The method pillar directly signals expertise.
+**Expertise:** Shown by the depth of each individual analysis — original SOTP models, filing-grounded NAV calculations, catalyst frameworks applied case by case. The methodology is signalled by results, not published as standalone tutorials.
 
-**Authoritativeness:** Built over time as other sites link to and cite Trading852 data. The "Privatisation Playbook" and "NAV Dashboard" pieces are designed to be cited.
+**Authoritativeness:** Built over time as other sites link to and cite Trading852 data. Sectoral hubs and screen pages (e.g. "HK privatization watch", "HK deep value 2026") are designed to be cited.
 
 **Trustworthiness:** Named author (Marc), visible date on every article, disclaimer page, source citations with dates. Currently partially achieved. Gap: no author photo, no social proof links.
 
@@ -109,10 +113,10 @@ Finance content falls under Google's YMYL (Your Money Your Life) category — E-
 |---|---|---|
 | Homepage | `WebSite`, `Person` (author) | Week 1 |
 | All analyses | `Article` + `Person` (author) | Week 1 |
-| Method pages | `Article` + `HowTo` (where applicable) | Week 3 |
+| Sectoral hubs | `CollectionPage` + `ItemList` | Week 3 |
+| Comparatifs ticker vs peer | `Article` + `ComparativeAnalysis` (custom) | Week 4 |
+| Screens éditorialisés | `CollectionPage` + `ItemList` | Phase 2 |
 | About page | `Person`, `ProfilePage` | Week 2 |
-| Glossary entries | `DefinedTerm` | Phase 2 |
-| Data tables | `Dataset` (NAV dashboard) | Phase 3 |
 
 ---
 
@@ -159,7 +163,7 @@ Trading852 content is well-positioned to be cited by AI systems because:
 **To maximise AI citation:**
 - Keep tables in every article — AI systems extract and cite tabular data readily
 - First paragraph of every article should contain 1–2 quotable facts
-- Method pages should have clear definition boxes (AI pulls these for "what is X" queries)
+- Sectoral hubs should have a one-paragraph thesis at the top (AI pulls these for "best HK X stocks" queries)
 - Ensure author entity is defined via Person schema with `sameAs` links when possible
 
 ---
@@ -171,5 +175,5 @@ Trading852 content is well-positioned to be cited by AI systems because:
 | Low publishing frequency | Set 2 analyses/month as minimum — even short analyses count |
 | E-E-A-T penalties for YMYL | Named author + source discipline already in place; add schema |
 | Competitor copies content | Original SOTP models and filing citations are hard to replicate |
-| Algorithm update | Diverse content types (analysis + method + thesis) reduce single-type dependency |
+| Algorithm update | Diverse content types (individual analyses + sectoral hubs + thesis + screens) reduce single-type dependency |
 | Stale content | Mark analysis articles with "updated" dates; revisit after earnings |
