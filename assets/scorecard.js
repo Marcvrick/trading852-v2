@@ -40,7 +40,7 @@
   var RECOS = [
     { t: "0113.HK", company: "Dickson Concepts",   eyebrow: "Luxury",                  slug: "0113-dickson-concepts",   pubDate: Date.UTC(2026, 3, 10) },
     { t: "1913.HK", company: "Prada",              eyebrow: "Luxury",                  slug: "1913-prada",              pubDate: Date.UTC(2026, 3, 10) },
-    { t: "1167.HK", company: "Jacobio",            eyebrow: "Biotech",                 slug: "1167-jacobio",            pubDate: Date.UTC(2026, 3, 10) },
+    { t: "1167.HK", company: "Jacobio",            eyebrow: "Biotech · Monitor",       slug: "1167-jacobio",            pubDate: Date.UTC(2026, 3, 10) },
     { t: "1585.HK", company: "Yadea",              eyebrow: "Electric Vehicles",       slug: "1585-yadea",              pubDate: Date.UTC(2026, 3, 10) },
     { t: "9988.HK", company: "Alibaba",            eyebrow: "Technology",              slug: "9988-alibaba",            pubDate: Date.UTC(2026, 3, 10) },
     { t: "2800.HK", company: "Tracker Fund (HSI)", eyebrow: "Benchmark",               slug: "hsi-35-year-trendline",   pubDate: Date.UTC(2026, 3, 10), isBenchmark: true },

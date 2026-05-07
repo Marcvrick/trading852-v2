@@ -294,7 +294,7 @@ Set globally in `vercel.json`: `X-Content-Type-Options: nosniff`, `X-Frame-Optio
 
 ### Step 1 — Find the source material
 
-Stock analyses: look up the ticker in `TRADING/Trading-research/HK Stocks/Experts analysis/`. Folder pattern: `{TICKER} - {Company} - {CONVICTION|MONITOR|AVOID}`. Only proceed if verdict is **CONVICTION**.
+Stock analyses: look up the ticker in `TRADING/Trading-research/HK Stocks/Experts analysis/`. Folder pattern: `{TICKER} - {Company} - {CONVICTION|MONITOR|AVOID}`. The verdict is whatever the expert analysis returns (`CONVICTION`, `MONITOR`, or `AVOID`). All three publish; the label drives how the article is framed and how it surfaces on the homepage, the sector hub eyebrow, the scorecard eyebrow, and the meta-verdict pill. Apply the verdict consistently across all four surfaces from day one.
 
 Market thesis articles: source `.md` lives outside the repo (e.g. `TRADING/Trading852/BD/Briefs-ChatGPT/`).
 
@@ -346,7 +346,7 @@ Two sections in [src/index.html](src/index.html):
 3. Old small card #1 → small card #2
 4. Old small card #2 → drops to **Identified Situations** as the next numbered row
 
-**Identified Situations**: all articles outside the top 3, reverse chronological, numbered from 04 upward. Tag `CONVICTION` for stock analyses, `THESIS` for market thesis articles.
+**Identified Situations**: all articles outside the top 3, reverse chronological, numbered from 04 upward. Tag with the expert verdict (`CONVICTION`, `MONITOR`, or `AVOID`) for stock analyses, `THESIS` for market thesis articles. Whichever the expert returns is what ships; the rule is to apply it consistently.
 
 ### Step 6 — Update feed.xml + sitemap.xml
 
@@ -541,10 +541,11 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 
 ## Changelog
 
-### May 7, 2026 — Scorecard: post-stop live price + 1167 → Monitor
+### May 7, 2026 — Scorecard: post-stop live price + 1167 verdict correction
 
-- **Live last close shown under the entry price for stopped rows**. New `now: XX.XX` line, small green text right-aligned in the Entry column. Locked `pct` stays frozen at the stop tier — the live price is informational, never feeds the average. Wired in `assets/scorecard.js` (`currentPrice` preserved separately from `last`) and styled in `src/styles/scorecard.css` (`.sc-now`). Methodology paragraph updated.
-- **1167.HK Jacobio verdict downgraded from Conviction to Monitor** on the analysis page (`src/analyses/1167-jacobio.html` meta-verdict pill) and the biotech category card (`src/analyses/biotech.html` eyebrow).
+- **Live last close shown under the entry price for stopped rows**. New `now: XX.XX` line, small green text right-aligned in the Entry column. Locked `pct` stays frozen at the stop tier; the live price is informational, never feeds the average. Wired in `assets/scorecard.js` (`currentPrice` preserved separately from `last`) and styled in `src/styles/scorecard.css` (`.sc-now`). Methodology paragraph updated.
+- **1167.HK Jacobio verdict corrected from CONVICTION to MONITOR.** The expert analysis returned MONITOR; the article was labelled CONVICTION at the Apr 14 publication in error. The correct call has always been MONITOR. Updated in five places: meta-verdict pill on the analysis page, new Correction notice block at the top of `src/analyses/1167-jacobio.html`, biotech category card eyebrow on `src/analyses/biotech.html`, the verdict-tag on the Identified Situations row in `src/index.html`, and the scorecard eyebrow on the Jacobio row in `assets/scorecard.js` (`Biotech` → `Biotech · Monitor`). Reasoning: binary Phase III futility risk, NRDL adoption pace unverified through one full reporting cycle (H1 2026 interim due Jul or Aug), CEO Wang Yinxiang silent in the secondary market since his HK$96M purchase between Jul and Sep 2025 at HK$8.56. The arithmetic and valuation framework in the article are unchanged.
+- **Editorial rule clarification (Step 1 + Step 5)**: the verdict is whatever the expert analysis returns (CONVICTION, MONITOR, or AVOID). All three publish. The label drives framing and surface treatment across the four canonical places: meta-verdict pill, sector card eyebrow, homepage verdict-tag, scorecard eyebrow.
 
 ### May 6, 2026 — Sitemap refresh + favicon at root (SEO follow-up)
 
