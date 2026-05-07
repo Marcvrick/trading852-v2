@@ -167,6 +167,18 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   letter-spacing: 0.02em;
 }
 
+.sc-now {
+  display: inline-block;
+  margin-top: 0.2rem;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #0f9d66;
+  background: #e6fbb3;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+}
+
 .sc-loading {
   padding: 3rem 1rem;
   text-align: center;

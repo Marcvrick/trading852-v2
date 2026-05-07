@@ -140,6 +140,8 @@
           entryIsOpen: entryIsOpen,
           last: stopped ? stopLevel : last,
           lastDate: stopped ? stopDate : lastDate,
+          currentPrice: last,
+          currentDate: lastDate,
           pct: pct,
           stopped: stopped,
           stopDate: stopDate,
@@ -240,7 +242,10 @@
         '<tr class="' + rowCls + '">' +
           '<td class="sc-ticker">' + (r.noLink ? r.t : '<a href="/analyses/' + r.slug + '">' + r.t + '</a>') + badge + '</td>' +
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
-          '<td class="num">' + fmtPrice(r.entry) + (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') + '</td>' +
+          '<td class="num">' + fmtPrice(r.entry) +
+            (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') +
+            (r.stopped && r.currentPrice != null ? '<div class="sc-now">now: ' + fmtPrice(r.currentPrice) + '</div>' : '') +
+          '</td>' +
           '<td class="num">' + lastCell + '</td>' +
           '<td class="num ' + pctCls + '">' + pctCell + '</td>' +
         '</tr>';
