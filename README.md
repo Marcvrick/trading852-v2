@@ -9,7 +9,7 @@ tags:
 category: Trading/Blog
 type: readme
 created: 2026-04-26
-updated: 2026-04-29
+updated: 2026-05-06
 ---
 
 # Trading852 v2 — Build Pipeline + Editorial Workflow
@@ -85,6 +85,7 @@ Trading852-v2/
 │   │
 │   ├── index.html              ← Homepage (layout: index)
 │   ├── feed.xml                ← RSS feed (copied as-is)
+│   ├── favicon.ico             ← Root favicon (copied to dist/favicon.ico — required by Google + GSC, not just /assets/)
 │   │
 │   ├── analyses/               ← Published articles (layout: article)
 │   │   ├── *.html
@@ -99,6 +100,9 @@ Trading852-v2/
 │       ├── legal-notice.html      → trading852.com/legal-notice
 │       ├── robots.txt             → trading852.com/robots.txt
 │       └── sitemap.xml            → trading852.com/sitemap.xml
+│
+├── TO DO/                      ← Pending engineering tasks (not served, not built)
+│   └── per-article-og-images.md   Spec for unique OG images per article (highest social CTR move)
 │
 └── dist/                       ← Build output. Do NOT edit. Do NOT commit changes here manually.
 ```
@@ -160,7 +164,7 @@ Every page in `src/` (except `_partials/`) follows the same structure:
 | Key | Required | Notes |
 |---|---|---|
 | `layout` | yes | `article` · `index` · `static` · `scorecard` — drives CSS + footer + nav variant |
-| `title` | yes | Full `<title>` (include the ` · Trading852` suffix) |
+| `title` | yes | Full `<title>`. Static pages keep the ` · Trading852` suffix; **ticker analyses drop it** — see SEO pattern below (brand sits in `og:site_name`). |
 | `ogTitle` | yes | Open Graph + Twitter title (no suffix) |
 | `description` | yes | `<meta name="description">` + OG/Twitter description |
 | `canonical` | yes | Absolute URL, no `.html` (cleanUrls is on) |
@@ -208,6 +212,14 @@ Standard fields stay (`headline`, `author`, `publisher`, `mainEntityOfPage`, `ab
 | `articleSection` | Matches the sector hub: `"Luxury"`, `"Technology"`, `"Biotech"`, `"Consumer Discretionary"`, `"Electric Vehicles"`, `"Special Situations"`, `"Market Thesis"` |
 | `isPartOf` | `CollectionPage` object pointing to `https://trading852.com/analyses/{sector}` |
 | `keywords` | Comma-separated. Must include: `{Name} stock analysis`, `{Ticker}.HK`, `{name} thesis 2026`. Plus 3–5 article-specific long-tails (e.g. `{name} vs {peer}`, `{catalyst} explained`, etc.) |
+
+> **`dateModified` semantics.** `datePublished` is locked to the original publication date and never changes. `dateModified` must be bumped to the **actual** date a meaningful update was made — not just SEO refreshes (re-titling, schema enrichment, H2 changes), but also factual corrections, post-earnings updates, and price-target revisions. Stale `dateModified` on a page that *did* change suppresses Google re-crawl frequency and weakens YMYL freshness signals. Bump it. Bump the matching sitemap `lastmod` at the same time (see Step 6).
+
+### BreadcrumbList JSON-LD (automatic — no per-article work)
+
+`build.js` extracts the in-body `<div class="article-breadcrumb">` of every article (any page with `layout: article` and a breadcrumb element) and emits a `BreadcrumbList` JSON-LD block in the `<head>`. The leaf item is the article's `ogTitle` (falling back to `title`). Category hub pages and the homepage correctly skip it.
+
+Implication for new articles: keep the standard breadcrumb pattern (`<a href="/">Trading852</a> &nbsp;/&nbsp; Research &nbsp;/&nbsp; <a href="/analyses/{sector}">{Sector}</a>`) and the schema is generated for free. The sector hub URL referenced in the breadcrumb must be live before publish (same rule as `isPartOf`).
 
 ### Body
 
@@ -361,6 +373,8 @@ Two sections in [src/index.html](src/index.html):
 </url>
 ```
 
+> **Refresh rule.** When updating an existing article (SEO restructure, factual correction, post-earnings update), bump that article's `<lastmod>` AND the homepage `<lastmod>` to the refresh date. The same date should appear in JSON-LD `dateModified` (see SEO pattern). Sitemap and JSON-LD freshness signals must agree, or Google trusts neither.
+
 ### Step 7 — Build, verify locally, commit
 
 ```bash
@@ -399,6 +413,8 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 | ≥ +10 % | entry × 1.00 (breakeven) | 0 % |
 
 A stop fires when the intraday low ≤ the active stop level for that bar. Once a tighter tier activates, the stop never reverts even if the peak recedes. Stopped rows are highlighted in light red (`sc-row-stopped`, `#fdf3f3`) with a "Stopped" badge next to the ticker, exit date under the Last column, and the locked return in the % cell with a small uppercase "Stopped" label underneath. The locked return still feeds the average.
+
+**Post-stop live price**: once a position is stopped, the % column stays frozen at the locked tier (no re-entry, no recovery if the stock bounces back above entry). The live last close keeps refreshing and is shown as a small green `now: XX.XX` line under the entry price, right-aligned in the Entry column. It is informational only — it never feeds `pct` or the average. Wired in `fetchOne` (preserves `currentPrice` separately from `last`) and rendered in `renderTable` via `.sc-now`.
 
 **Legacy stop (picks published before 2026-05-05)**: flat −10 % from entry, no trailing. Triggered on intraday low ≤ entry × 0.90, locks at −10 %. The cutoff is enforced by `TRAILING_STOP_FROM = Date.UTC(2026, 4, 5)` in `assets/scorecard.js`. The 7 picks from the inaugural issue (Apr 10 / Apr 25 / May 4 pubs) keep the legacy rule for life.
 
@@ -481,6 +497,7 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] RSS autodiscovery (`<link rel="alternate" type="application/rss+xml">`) — already in `head.html`
 - [ ] Twitter card + og:* tags — driven by `ogTitle` / `description` / `ogImage`
 - [ ] JSON-LD block present (`Article` for analyses, `WebSite` for index)
+- [ ] BreadcrumbList JSON-LD — emitted automatically by `build.js` from the in-body breadcrumb; verify the breadcrumb HTML pattern is intact
 - [ ] Images: `width` + `height` + `alt`, lazy below the fold
 
 ### Ticker analyses (additional — see SEO pattern above)
@@ -515,7 +532,7 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] Image (if any) dropped in `src/analyses/images/` with relative `<img src="images/...">`
 - [ ] Homepage updated (Recent Analyses + Identified Situations)
 - [ ] feed.xml: new `<item>` + `<lastBuildDate>` updated
-- [ ] sitemap.xml: new `<url>` + homepage `<lastmod>` updated
+- [ ] sitemap.xml: new `<url>` + homepage `<lastmod>` updated. **Refresh of an existing article** = bump that article's `<lastmod>` AND the homepage `<lastmod>` AND JSON-LD `dateModified` to the refresh date
 - [ ] `node build.js` runs clean
 - [ ] Spot-checked `dist/analyses/<slug>.html` in a browser
 - [ ] Committed and pushed
@@ -523,6 +540,23 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### May 7, 2026 — Scorecard: post-stop live price + 1167 → Monitor
+
+- **Live last close shown under the entry price for stopped rows**. New `now: XX.XX` line, small green text right-aligned in the Entry column. Locked `pct` stays frozen at the stop tier — the live price is informational, never feeds the average. Wired in `assets/scorecard.js` (`currentPrice` preserved separately from `last`) and styled in `src/styles/scorecard.css` (`.sc-now`). Methodology paragraph updated.
+- **1167.HK Jacobio verdict downgraded from Conviction to Monitor** on the analysis page (`src/analyses/1167-jacobio.html` meta-verdict pill) and the biotech category card (`src/analyses/biotech.html` eyebrow).
+
+### May 6, 2026 — Sitemap refresh + favicon at root (SEO follow-up)
+
+- **Sitemap `<lastmod>` bumped to 2026-05-06** for the 7 SEO-refreshed ticker articles + homepage. Without this, Google sees the May 6 schema/H2/title restructure as if it never happened — re-crawl frequency depends on the `<lastmod>` signal, not on actual change detection.
+- **JSON-LD `dateModified` bumped to 2026-05-06** in the same 7 articles. Sitemap and JSON-LD freshness must agree.
+- **`/favicon.ico` added at the site root** (was returning 404). Google Search Console and many crawlers fetch `/favicon.ico` directly rather than reading `<link rel="icon">` declarations — the missing root favicon was producing a placeholder avatar in GSC's property selector. Built from the existing 32×32 PNG; `head.html` now also declares the legacy `<link rel="shortcut icon">`.
+- **README**: SEO pattern doc expanded with `dateModified` semantics rule, sitemap refresh rule in Step 6, pre-publish checklist updated, folder structure shows `src/favicon.ico`. Title field rule clarified — static pages keep ` · Trading852` suffix, ticker analyses drop it.
+
+### May 6, 2026 — Auto-generated BreadcrumbList JSON-LD + TO DO folder
+
+- `build.js` now emits `BreadcrumbList` JSON-LD for every article page by parsing the existing in-body `<div class="article-breadcrumb">`. New token `{{BREADCRUMB_JSONLD}}` added to `head.html`. Zero per-article edits — all 7 stock analyses + the HSI thesis page get the schema; category hubs and homepage correctly skip it.
+- `TO DO/` folder created. First entry: `per-article-og-images.md` — spec for replacing the shared `og-image.png` with one unique 1200×630 PNG per article (manual Figma path or auto-generated Puppeteer path), highest social CTR move available.
 
 ### May 6, 2026 — SEO pattern locked, applied to all 8 published articles
 
