@@ -9,7 +9,7 @@ tags:
 category: Trading/Blog
 type: readme
 created: 2026-04-26
-updated: 2026-05-06
+updated: 2026-05-07
 ---
 
 # Trading852 v2 — Build Pipeline + Editorial Workflow
@@ -540,6 +540,13 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### May 7, 2026 · SEO architecture audit + CollectionPage schema for 7 sector hubs
+
+- **Audit deliverable** at [instructions/seo/SEO-ARCHITECTURE-AUDIT-2026-05-07.md](instructions/seo/SEO-ARCHITECTURE-AUDIT-2026-05-07.md). Full-site review of schema, sitemap, and hreflang. 0 critical, 12 high-severity items. Hreflang N/A (English-only).
+- **CollectionPage + ItemList JSON-LD added to all 7 sector hubs**: luxury, biotech, technology, electric-vehicles, consumer-discretionary, special-situations, market-thesis. Closes the dangling `isPartOf` `@id` references that every ticker article was already emitting (each article declares "I belong to /analyses/luxury", but those hub URLs previously had no schema entity at the destination). Each hub `@id` and `name` are kept consistent with the article-side reference. Build script unchanged: hubs use the existing `<!-- JSONLD ... -->` comment pattern picked up by `build.js`.
+- **Sitemap `<lastmod>` bumped to 2026-05-07** for the 7 hub URLs to reflect the schema addition.
+- **Audit items still open** (tracked in the audit doc): HSI article missed the May 6 SEO pattern upgrade (no `image`, `inLanguage`, `wordCount`, `articleSection`, `isPartOf`); no sitewide `Organization` entity in `head.html`; sitemap `<priority>` and `<changefreq>` are dead weight (Google ignores both).
 
 ### May 7, 2026 — Scorecard: post-stop live price + 1167 verdict correction
 
