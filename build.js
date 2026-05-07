@@ -32,8 +32,51 @@ function parseSource(src) {
   return { config, jsonld, content: text.trim() };
 }
 
+// ── Build BreadcrumbList JSON-LD from in-body breadcrumb ─────────────────────
+const SITE_ORIGIN = 'https://trading852.com';
+
+function buildBreadcrumbJSONLD(content, config) {
+  if (config.layout && config.layout !== 'article') return '';
+
+  const blockMatch = content.match(/<div class="article-breadcrumb">([\s\S]*?)<\/div>/);
+  if (!blockMatch) return '';
+
+  const linkRe = /<a\s+href="([^"]+)"[^>]*>([^<]+)<\/a>/g;
+  const items = [];
+  let m;
+  while ((m = linkRe.exec(blockMatch[1])) !== null) {
+    const url = m[1].startsWith('http') ? m[1] : `${SITE_ORIGIN}${m[1]}`;
+    items.push({ name: m[2].trim().replace(/\s+/g, ' '), url });
+  }
+  if (items.length === 0) return '';
+
+  const listItems = items.map((it, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: it.name,
+    item: it.url,
+  }));
+
+  const leafName = config.ogTitle || config.title;
+  if (leafName) {
+    listItems.push({
+      '@type': 'ListItem',
+      position: listItems.length + 1,
+      name: leafName,
+    });
+  }
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: listItems,
+  };
+
+  return `  <script type="application/ld+json">\n${JSON.stringify(schema, null, 2)}\n  </script>`;
+}
+
 // ── Build <head> content ───────────────────────────────────────────────────────
-function buildHead(config, jsonld, cssFiles) {
+function buildHead(config, jsonld, cssFiles, content) {
   const ogImg    = config.ogImage   || 'https://trading852.com/assets/og-image.png';
   const ogTitle  = config.ogTitle   || config.title || 'Trading852';
   const ogType   = config.ogType    || 'website';
@@ -47,18 +90,21 @@ function buildHead(config, jsonld, cssFiles) {
     ? `  <script type="application/ld+json">\n${jsonld}\n  </script>`
     : '';
 
+  const breadcrumbBlock = buildBreadcrumbJSONLD(content || '', config);
+
   const cssLinks = cssFiles.map(f => `  <link rel="stylesheet" href="/styles/${f}.css">`).join('\n');
 
   const subs = {
-    '{{TITLE}}':           config.title          || 'Trading852',
-    '{{OG_TITLE}}':        ogTitle,
-    '{{DESCRIPTION}}':     config.description    || '',
-    '{{OG_DESCRIPTION}}':  config.ogDescription  || config.description || '',
-    '{{CANONICAL}}':       canonical,
-    '{{OG_TYPE}}':         ogType,
-    '{{OG_IMAGE}}':        ogImg,
-    '{{ARTICLE_META}}':    articleMeta,
-    '{{JSONLD}}':          jsonldBlock,
+    '{{TITLE}}':              config.title          || 'Trading852',
+    '{{OG_TITLE}}':           ogTitle,
+    '{{DESCRIPTION}}':        config.description    || '',
+    '{{OG_DESCRIPTION}}':     config.ogDescription  || config.description || '',
+    '{{CANONICAL}}':          canonical,
+    '{{OG_TYPE}}':            ogType,
+    '{{OG_IMAGE}}':           ogImg,
+    '{{ARTICLE_META}}':       articleMeta,
+    '{{JSONLD}}':             jsonldBlock,
+    '{{BREADCRUMB_JSONLD}}':  breadcrumbBlock,
   };
 
   let head = partials.head;
@@ -80,7 +126,7 @@ function assemblePage(config, jsonld, content) {
   };
   const cssFiles = cssMap[layout] || ['base', 'article'];
 
-  const head = buildHead(config, jsonld, cssFiles);
+  const head = buildHead(config, jsonld, cssFiles, content);
 
   const isLight = layout === 'index' || layout === 'scorecard';
   const headerModsClass = isLight ? ' page-header--scrolls-light' : '';
