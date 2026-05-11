@@ -537,6 +537,15 @@
 }
 
 /* ── Responsive ───────────────────────────────────────────────────────────────── */
+.article-chart { margin: 1.5rem 0 2.5rem; }
+.article-chart figcaption {
+  margin-top: 0.75rem;
+  font-family: var(--ff-sans);
+  font-size: var(--fs-12);
+  color: var(--dp-c-gray-2);
+  line-height: 1.5;
+}
+
 @media (max-width: 48rem) {
   .article-body .container {
     grid-template-columns: 1fr;
