@@ -12,6 +12,10 @@
     { "source": "/robots.txt",   "destination": "/static/robots.txt" },
     { "source": "/sitemap.xml",  "destination": "/static/sitemap.xml" }
   ],
+  "redirects": [
+    { "source": "/analyses/spy-ipo-fork-747", "destination": "/analyses/spy-747-level", "permanent": true },
+    { "source": "/analyses/images/spy-ipo-fork-chart-202605.jpg", "destination": "/analyses/images/spy-747-chart-202605.jpg", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
