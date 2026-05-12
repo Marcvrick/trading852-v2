@@ -2,7 +2,7 @@
 :root {
   --dp-c-black:        #000;
   --dp-c-white:        #fff;
-  --dp-c-gray-2:       #697188;
+  --dp-c-gray-2:       #5b6478;
   --dp-c-gray-border:  #d6d5db;
   --dp-c-gray-pale:    #eff0f5;
   --dp-c-periwinkle:   #d6d5dbcc;
@@ -147,7 +147,7 @@ html, body {
 .footer-tagline {
   font-family: var(--ff-serif);
   font-size: var(--fs-16);
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.55);
   line-height: 1.7;
   max-width: 32rem;
 }
@@ -189,7 +189,7 @@ ul.menu-list--footer {
 
 .menu-list--footer > .menu-item--expanded > span {
   display: block;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.55);
   font-size: var(--fs-12);
   font-weight: 700;
   letter-spacing: 0.0625rem;
@@ -213,12 +213,12 @@ ul.menu-list--footer {
   border-top: 0.0625rem solid rgba(255,255,255,0.12);
   padding: 1rem 0 2rem;
   font-size: var(--fs-12);
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.55);
   line-height: 1.6;
 }
 
 .footer-copyright a {
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.6);
   text-decoration: none;
 }
 

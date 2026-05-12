@@ -126,7 +126,7 @@ a.recent-update__link:focus {
 
 .node-mode-recent_update .eyebrow .eyebrow-date {
   font-weight: 400;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.5);
 }
 
 .card-key-number {
@@ -134,7 +134,7 @@ a.recent-update__link:focus {
   font-weight: 700;
   font-size: var(--fs-20);
   letter-spacing: -0.02em;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.45);
   margin-bottom: 0.875rem;
   transition: color 0.5s;
   min-width: 0;
@@ -260,7 +260,7 @@ a.our-work__link {
   font-family: var(--ff-sans);
   font-size: var(--fs-12);
   font-weight: 700;
-  color: rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.5);
   padding: 0.5rem 0.75rem 0.5rem 0;
 }
 
@@ -281,8 +281,8 @@ a.our-work__link {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.38);
-  border: 0.0625rem solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.55);
+  border: 0.0625rem solid rgba(255,255,255,0.25);
   padding: 0.25rem 0.625rem;
   margin-right: 1.5rem;
   transition: color 0.3s, border-color 0.3s;
@@ -352,7 +352,7 @@ a.our-work__link:focus .verdict-tag {
   font-family: var(--ff-sans);
   font-size: var(--fs-12);
   font-weight: 700;
-  color: rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.5);
   flex: 0 0 2rem;
   padding-top: 0.2rem;
 }

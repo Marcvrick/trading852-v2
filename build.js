@@ -83,7 +83,11 @@ function buildHead(config, jsonld, cssFiles, content) {
   const canonical = config.canonical || 'https://trading852.com';
 
   const articleMeta = config.pubDate
-    ? `  <meta property="article:published_time" content="${config.pubDate}T00:00:00+08:00">\n  <meta property="article:author" content="Marc">`
+    ? [
+        `  <meta property="article:published_time" content="${config.pubDate}T00:00:00+08:00">`,
+        config.modDate ? `  <meta property="article:modified_time" content="${config.modDate}T00:00:00+08:00">` : '',
+        `  <meta property="article:author" content="Marc">`,
+      ].filter(Boolean).join('\n')
     : '';
 
   const jsonldBlock = jsonld
@@ -92,7 +96,10 @@ function buildHead(config, jsonld, cssFiles, content) {
 
   const breadcrumbBlock = buildBreadcrumbJSONLD(content || '', config);
 
-  const cssLinks = cssFiles.map(f => `  <link rel="stylesheet" href="/styles/${f}.css">`).join('\n');
+  const cssInlined = cssFiles
+    .map(f => fs.readFileSync(path.join(SRC, 'styles', `${f}.css`), 'utf8'))
+    .join('\n');
+  const cssLinks = `  <style>\n${cssInlined}\n  </style>`;
 
   const subs = {
     '{{TITLE}}':              config.title          || 'Trading852',
@@ -105,6 +112,8 @@ function buildHead(config, jsonld, cssFiles, content) {
     '{{OG_IMAGE_WIDTH}}':     config.ogImageWidth  || '1200',
     '{{OG_IMAGE_HEIGHT}}':    config.ogImageHeight || '630',
     '{{OG_IMAGE_TYPE}}':      config.ogImageType   || 'image/png',
+    '{{OG_IMAGE_ALT}}':       config.ogImageAlt    || 'Trading852 — independent equity research on HKEX-listed companies',
+    '{{CSS_LINKS}}':          cssLinks,
     '{{ARTICLE_META}}':       articleMeta,
     '{{JSONLD}}':             jsonldBlock,
     '{{BREADCRUMB_JSONLD}}':  breadcrumbBlock,
@@ -114,7 +123,7 @@ function buildHead(config, jsonld, cssFiles, content) {
   for (const [k, v] of Object.entries(subs)) {
     head = head.split(k).join(v);
   }
-  return head + '\n' + cssLinks;
+  return head;
 }
 
 // ── Assemble full page ─────────────────────────────────────────────────────────
