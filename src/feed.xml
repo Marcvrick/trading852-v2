@@ -5,8 +5,16 @@
     <link>https://trading852.com</link>
     <description>Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.</description>
     <language>en</language>
-    <lastBuildDate>Wed, 13 May 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 14 May 2026 00:00:00 +0800</lastBuildDate>
     <atom:link href="https://trading852.com/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>UPDATE: Alibaba (9988.HK) FY2026 Annual — Cloud +40%, AI Revenue RMB 10B</title>
+      <link>https://trading852.com/analyses/9988-alibaba</link>
+      <guid>https://trading852.com/analyses/9988-alibaba#update-20260514</guid>
+      <pubDate>Thu, 14 May 2026 00:00:00 +0800</pubDate>
+      <description>FY2026 annual results (filed May 13, 2026): Full-year revenue +3% YoY. Cloud Intelligence Group external revenue +40% YoY; AI-related products represent 30% of cloud revenue. GAAP net income RMB 102.1B. Non-GAAP earnings fell as Alibaba front-loaded AI data-center and GPU expenditure. T-Head AI chip annual revenue reached RMB 10B. Quick commerce revenue +56% YoY to RMB 20.8B. Dividend: US$1.05/ADS declared. Price at HKD 138.70. Next catalyst: Q1 FY2027 results (expected August 2026).</description>
+    </item>
 
     <item>
       <title>UPDATE: Tencent Music (1698.HK) Q1 2026 — Revenue +7.3%, Music Services +12.2%</title>
