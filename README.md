@@ -502,6 +502,7 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 
 | File | Ticker | Title | Date |
 |---|---|---|---|
+| [src/analyses/spy-747-level.html](src/analyses/spy-747-level.html) | SPY | The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One. | 2026-05-11 |
 | [src/analyses/1698-tencent-music.html](src/analyses/1698-tencent-music.html) | 1698.HK | Profit +66%, Stock -66% from ATH. Spotify Trades at Four Times the Multiple. | 2026-05-04 |
 | [src/analyses/6690-haier.html](src/analyses/6690-haier.html) | 6690.HK | The World's Largest Appliance Maker Trades at 6.85×. Midea at 12×. Electrolux at 14×. | 2026-04-25 |
 | [src/analyses/9988-alibaba.html](src/analyses/9988-alibaba.html) | 9988.HK | EBITA Down 57%. Cloud Up 36%. This Is What Amazon Looked Like in 2014. | 2026-04-14 |
