@@ -384,6 +384,32 @@ Two sections in [src/index.html](src/index.html):
 
 > **Refresh rule.** When updating an existing article (SEO restructure, factual correction, post-earnings update), bump that article's `<lastmod>` AND the homepage `<lastmod>` to the refresh date. The same date should appear in JSON-LD `dateModified` (see SEO pattern). Sitemap and JSON-LD freshness signals must agree, or Google trusts neither.
 
+**Article update items in feed.xml** (post-earnings, factual corrections, thesis changes):
+
+Add a new `UPDATE:` item at the top with a unique `guid` (`#update-YYYYMMDD`). When a second update follows for the same article, **collapse the previous update item** — shorten its `<description>` to one line summary — before inserting the new one above it. This keeps the feed readable as updates accumulate.
+
+```xml
+<!-- New update: full description -->
+<item>
+  <title>UPDATE: Company (TICKER.HK) Q2 2026 — one-line hook</title>
+  <link>https://trading852.com/analyses/SLUG</link>
+  <guid>https://trading852.com/analyses/SLUG#update-YYYYMMDD</guid>
+  <pubDate>Day, DD Mon YYYY 00:00:00 +0800</pubDate>
+  <description>Full detail — key numbers, scenario check, next catalyst.</description>
+</item>
+
+<!-- Previous update: collapsed to one line -->
+<item>
+  <title>UPDATE: Company (TICKER.HK) Q1 2026 — one-line hook</title>
+  <link>https://trading852.com/analyses/SLUG</link>
+  <guid>https://trading852.com/analyses/SLUG#update-YYYYMMDD</guid>
+  <pubDate>Day, DD Mon YYYY 00:00:00 +0800</pubDate>
+  <description>Q1 2026: Revenue +X%, net profit +Y%. Base case met. [Collapsed — see Q2 update above.]</description>
+</item>
+```
+
+Same rule applies to the **update notice block inside the article**: the most recent update sits at the top; prior updates are collapsed to a single `<p>` with date + one-line summary, then a "see update above" note.
+
 ### Step 7 — Build, verify locally, commit
 
 ```bash
