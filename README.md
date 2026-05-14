@@ -344,9 +344,18 @@ Two sections in [src/index.html](src/index.html):
 1. New article → featured card
 2. Old featured → small card #1
 3. Old small card #1 → small card #2
-4. Old small card #2 → drops to **Identified Situations** as the next numbered row
+4. Old small card #2 → **prepend to Identified Situations as the new 04**, renumber all existing rows down by one
+
+**Step 4 is mandatory.** The evicted card must be added to Identified Situations in the same commit. Skipping it silently removes the article from the homepage with no trace. The numbered list must grow by one entry every time a new article publishes.
 
 **Identified Situations**: all articles outside the top 3, reverse chronological, numbered from 04 upward. Tag with the expert verdict (`CONVICTION`, `MONITOR`, or `AVOID`) for stock analyses, `THESIS` for market thesis articles. Whichever the expert returns is what ships; the rule is to apply it consistently.
+
+**Checklist before committing a homepage update:**
+- [ ] New article is in the featured card
+- [ ] Old cards shifted correctly (featured → small #1, small #1 → small #2)
+- [ ] Evicted article added as item 04 in Identified Situations
+- [ ] All existing items renumbered down by one
+- [ ] Item count in Identified Situations = (total published articles) − 3
 
 ### Step 6 — Update feed.xml + sitemap.xml
 
@@ -530,7 +539,7 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] First paragraph of `What X Does` establishes ticker + HKEX listing
 - [ ] At least one inline link to a sector hub (`/analyses/{sector}`)
 - [ ] Image (if any) dropped in `src/analyses/images/` with relative `<img src="images/...">`
-- [ ] Homepage updated (Recent Analyses + Identified Situations)
+- [ ] Homepage updated — new article in featured card, old cards shifted, evicted card prepended as item 04 in Identified Situations, all items renumbered, item count = (total published) − 3
 - [ ] feed.xml: new `<item>` + `<lastBuildDate>` updated
 - [ ] sitemap.xml: new `<url>` + homepage `<lastmod>` updated. **Refresh of an existing article** = bump that article's `<lastmod>` AND the homepage `<lastmod>` AND JSON-LD `dateModified` to the refresh date
 - [ ] `node build.js` runs clean
