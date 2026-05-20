@@ -132,6 +132,47 @@
   margin-bottom: 0;
 }
 
+/* ── Related sectors (hub cross-linking) ─────────────────────────────────────── */
+.related-sectors {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 0.0625rem solid var(--dp-c-gray-border);
+}
+
+.related-sectors-label {
+  font-family: var(--ff-sans);
+  font-size: var(--fs-12);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.0625rem;
+  color: var(--dp-c-gray-2);
+  margin-bottom: 1rem;
+}
+
+.related-sectors-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.related-sector-link {
+  font-family: var(--ff-sans);
+  font-size: var(--fs-12);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dp-c-gray-2);
+  border: 0.0625rem solid var(--dp-c-gray-border);
+  padding: 0.375rem 0.75rem;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.related-sector-link:hover {
+  color: var(--dp-c-black);
+  border-color: var(--dp-c-black);
+}
+
 /* ── Responsive ───────────────────────────────────────────────────────────────── */
 @media (max-width: 48rem) {
   .page-body .container { grid-template-columns: 1fr; padding-inline: var(--gutter); }
