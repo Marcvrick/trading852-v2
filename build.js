@@ -112,7 +112,7 @@ function buildHead(config, jsonld, cssFiles, content) {
     '{{OG_IMAGE_WIDTH}}':     config.ogImageWidth  || '1200',
     '{{OG_IMAGE_HEIGHT}}':    config.ogImageHeight || '630',
     '{{OG_IMAGE_TYPE}}':      config.ogImageType   || 'image/png',
-    '{{OG_IMAGE_ALT}}':       config.ogImageAlt    || 'Trading852 — independent equity research on HKEX-listed companies',
+    '{{OG_IMAGE_ALT}}':       config.ogImageAlt    || 'Trading852: independent equity research on HKEX-listed companies',
     '{{CSS_LINKS}}':          cssLinks,
     '{{ARTICLE_META}}':       articleMeta,
     '{{JSONLD}}':             jsonldBlock,
