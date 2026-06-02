@@ -273,3 +273,37 @@
     boot();
   }
 })();
+
+/*
+ * SPY topping-zone alert — turns the homepage SPY card red when SPY is in the zone.
+ * Mirrors the model on /analyses/spy-747-level. Retune via ZONE_FLOOR / ZONE_CEILING.
+ * No-ops on pages that don't contain #spy-zone-card.
+ */
+(function () {
+  "use strict";
+  var CARD_ID = "spy-zone-card";
+  var ZONE_FLOOR = 747;    // SPY at/above this = inside the historical topping zone → red
+  var ZONE_CEILING = 820;  // above this (~+9%) the topping read no longer applies → not red
+  var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
+  var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
+
+  function applyZone(price) {
+    var card = document.getElementById(CARD_ID);
+    if (!card) return;
+    if (price >= ZONE_FLOOR && price < ZONE_CEILING) card.classList.add("spy-in-zone");
+    else card.classList.remove("spy-in-zone");
+  }
+  function boot() {
+    var u = PROXY + encodeURIComponent(CHART + "SPY?range=5d&interval=1d");
+    fetch(u, { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (j) {
+        var res = j && j.chart && j.chart.result && j.chart.result[0]; if (!res) return;
+        var p = res.meta && res.meta.regularMarketPrice;
+        if (p == null) { var q = res.indicators.quote[0].close; for (var i = q.length - 1; i >= 0; i--) { if (q[i] != null) { p = q[i]; break; } } }
+        if (p != null) applyZone(p);
+      })
+      .catch(function () {});
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+})();

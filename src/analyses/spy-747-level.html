@@ -87,6 +87,97 @@
   <div class="article-body">
     <div class="container">
 
+      <!-- Live update banner — auto-refreshes on each page load via the yahoo-proxy worker.
+           Static values below are the last manual snapshot (May 29) and serve as the fallback
+           if the live fetch fails. Model constants live in the inline script that follows. -->
+      <div style="border-left:3px solid rgba(71,96,255,0.75);background:rgba(71,96,255,0.07);border-radius:0 6px 6px 0;padding:1.25rem 1.5rem;margin-bottom:2rem;">
+        <div id="spy-update-date" style="font-size:11px;font-weight:600;letter-spacing:0.08em;color:rgba(255,255,255,0.55);margin-bottom:0.85rem;">UPDATE &middot; MAY 31, 2026</div>
+        <div style="display:flex;gap:2.5rem;flex-wrap:wrap;margin-bottom:0.9rem;">
+          <div>
+            <div id="spy-price" style="font-size:21px;font-weight:700;color:rgba(255,255,255,0.92);line-height:1.1;">$756.48</div>
+            <div id="spy-price-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">SPY &middot; May 29</div>
+          </div>
+          <div>
+            <div id="spy-vs-level" style="font-size:21px;font-weight:700;color:#56d49f;line-height:1.1;">+1.3%</div>
+            <div id="spy-vs-level-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">above $747 level (+$9.48)</div>
+          </div>
+          <div>
+            <div id="spy-to-ceiling" style="font-size:21px;font-weight:700;color:rgba(255,200,80,0.9);line-height:1.1;">~3.1%</div>
+            <div id="spy-to-ceiling-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">to calculated ceiling (~$781)</div>
+          </div>
+          <div>
+            <div id="spy-friction" style="font-size:21px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.1;">164 days</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">in friction zone (fast &lt; 252)</div>
+          </div>
+        </div>
+        <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.65;"><span id="spy-lead">The $747 level was crossed.</span> The calculated ceiling advances ~$0.83 per trading day and sits near <strong id="spy-ceiling-prose" style="color:rgba(255,255,255,0.92);">$781</strong> as of <span id="spy-asof-prose">May 29</span> &mdash; the maximum overshoot the historical envelope allows. No confirmed peak yet: the post-peak volume signal (20 sessions after the high vs. trailing 12-month average) has not triggered. At <span id="spy-friction-prose">164</span> trading days in the friction zone, the approach remains in the fast category (threshold: 252 days). All prices unadjusted &mdash; verify on a chart with dividends off.</p>
+        <div id="spy-live-note" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:0.75rem;">Live &middot; refreshes from Yahoo Finance each time this page loads.</div>
+      </div>
+      <script>
+      (function () {
+        "use strict";
+        // --- Model parameters (IPO Fork SPY framework) ---
+        var LEVEL = 747;                      // structural level (1/1 line), fixed target
+        var CEIL_ANCHOR = Date.UTC(2026, 4, 29); // 2026-05-29 anchor
+        var CEIL_VAL = 781;                   // calculated ceiling at the anchor date
+        var CEIL_PER_TD = 0.83;               // ceiling advance per trading day
+        var FRICTION_ANCHOR_DAYS = 164;       // friction-zone trading days at the anchor
+        var FAST_MAX = 252;                   // "fast approach" threshold (days)
+        var WITHIN_PCT = 1.0;                 // highlight when within this % of the ceiling
+        var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
+        var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
+        var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        function set(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; }
+        function fD(d) { return MON[d.getUTCMonth()] + " " + d.getUTCDate(); }
+        function tdays(a, b) { // weekday count a→b (approx; ignores market holidays)
+          if (b <= a) return 0;
+          var n = 0, c = a + 86400000;
+          while (c <= b) { var w = new Date(c).getUTCDay(); if (w !== 0 && w !== 6) n++; c += 86400000; }
+          return n;
+        }
+        function render(price, d) {
+          var dUTC = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+          var td = tdays(CEIL_ANCHOR, dUTC);
+          var ceiling = CEIL_VAL + CEIL_PER_TD * td;
+          var pctLvl = (price - LEVEL) / LEVEL * 100, diff = price - LEVEL;
+          var pctCeil = (ceiling - price) / price * 100, friction = FRICTION_ANCHOR_DAYS + td;
+          var within = pctCeil <= WITHIN_PCT && pctCeil >= -WITHIN_PCT;
+          set("spy-update-date", "UPDATE · " + (MON[d.getUTCMonth()] + " " + d.getUTCDate() + ", " + d.getUTCFullYear()).toUpperCase());
+          set("spy-price", "$" + price.toFixed(2));
+          set("spy-price-sub", "SPY · " + fD(d));
+          set("spy-vs-level", (pctLvl >= 0 ? "+" : "") + pctLvl.toFixed(1) + "%");
+          var lv = document.getElementById("spy-vs-level"); if (lv) lv.style.color = pctLvl >= 0 ? "#56d49f" : "rgba(255,140,120,0.95)";
+          set("spy-vs-level-sub", (pctLvl >= 0 ? "above" : "below") + " $" + LEVEL + " level (" + (diff >= 0 ? "+$" : "−$") + Math.abs(diff).toFixed(2) + ")");
+          set("spy-to-ceiling", "~" + pctCeil.toFixed(1) + "%");
+          var ce = document.getElementById("spy-to-ceiling"); if (ce) ce.style.color = within ? "#ff5c5c" : "rgba(255,200,80,0.9)";
+          set("spy-to-ceiling-sub", (within ? "⚠ within 1% of " : "to ") + "calculated ceiling (~$" + Math.round(ceiling) + ")");
+          set("spy-friction", friction + " days");
+          set("spy-lead", price >= LEVEL ? "The $" + LEVEL + " level was crossed." : "SPY is below the $" + LEVEL + " level.");
+          set("spy-ceiling-prose", "$" + Math.round(ceiling));
+          set("spy-asof-prose", fD(d));
+          set("spy-friction-prose", String(friction));
+          set("spy-live-note", "Live · refreshed from Yahoo Finance on page load (" + fD(d) + ").");
+        }
+        function boot() {
+          var u = PROXY + encodeURIComponent(CHART + "SPY?range=5d&interval=1d");
+          fetch(u, { cache: "no-store" })
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function (j) {
+              var res = j && j.chart && j.chart.result && j.chart.result[0]; if (!res) throw 0;
+              var p = res.meta && res.meta.regularMarketPrice, t = res.meta && res.meta.regularMarketTime;
+              if (p == null) {
+                var q = res.indicators.quote[0].close, ts = res.timestamp;
+                for (var i = q.length - 1; i >= 0; i--) { if (q[i] != null) { p = q[i]; t = ts[i]; break; } }
+              }
+              if (p == null) throw 0;
+              render(p, t ? new Date(t * 1000) : new Date());
+            })
+            .catch(function () { /* keep the static May-29 snapshot already in the DOM */ });
+        }
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+      })();
+      </script>
+
       <!-- Key takeaway -->
       <div class="key-takeaway">
         <div class="key-takeaway__label">Key Takeaway</div>
