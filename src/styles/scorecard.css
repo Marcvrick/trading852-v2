@@ -175,6 +175,9 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   color: #0f9d66;
   letter-spacing: 0.02em;
 }
+/* now-price vs the stop level: green if it has recovered above the stop, red if still below */
+.sc-now.sc-now-pos { color: #0f9d66; }
+.sc-now.sc-now-neg { color: #c93338; }
 
 .sc-loading {
   padding: 3rem 1rem;

@@ -244,7 +244,7 @@
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) +
             (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') +
-            (r.stopped && r.currentPrice != null ? '<div class="sc-now">now: ' + fmtPrice(r.currentPrice) + '</div>' : '') +
+            (r.stopped && r.currentPrice != null ? '<div class="sc-now ' + (r.currentPrice >= r.stopLevel ? 'sc-now-pos' : 'sc-now-neg') + '">now: ' + fmtPrice(r.currentPrice) + '</div>' : '') +
           '</td>' +
           '<td class="num">' + lastCell + '</td>' +
           '<td class="num ' + pctCls + '">' + pctCell + '</td>' +
