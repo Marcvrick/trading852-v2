@@ -275,22 +275,33 @@
 })();
 
 /*
- * SPY topping-zone alert: turns the homepage SPY card red when SPY is in the zone.
- * Mirrors the model on /analyses/spy-747-level. Retune via ZONE_FLOOR / ZONE_CEILING.
+ * SPY ceiling alert: turns the homepage SPY card red when SPY is within 1% of the
+ * advancing calculated ceiling. Ceiling model mirrors /analyses/spy-747-level.
  * No-ops on pages that don't contain #spy-zone-card.
  */
 (function () {
   "use strict";
   var CARD_ID = "spy-zone-card";
-  var ZONE_FLOOR = 747;    // SPY at/above this = inside the historical topping zone → red
-  var ZONE_CEILING = 820;  // above this (~+9%) the topping read no longer applies → not red
+  var CEIL_ANCHOR = Date.UTC(2026, 4, 29); // 2026-05-29 anchor
+  var CEIL_VAL = 781;                      // calculated ceiling at the anchor date
+  var CEIL_PER_TD = 0.83;                  // ceiling advance per trading day
+  var WITHIN_PCT = 1.0;                    // red when within this % of the ceiling
   var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
   var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
 
-  function applyZone(price) {
+  function tdays(a, b) { // weekday count a→b (approx; ignores market holidays)
+    if (b <= a) return 0;
+    var n = 0, c = a + 86400000;
+    while (c <= b) { var w = new Date(c).getUTCDay(); if (w !== 0 && w !== 6) n++; c += 86400000; }
+    return n;
+  }
+  function applyZone(price, d) {
     var card = document.getElementById(CARD_ID);
     if (!card) return;
-    if (price >= ZONE_FLOOR && price < ZONE_CEILING) card.classList.add("spy-in-zone");
+    var dUTC = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+    var ceiling = CEIL_VAL + CEIL_PER_TD * tdays(CEIL_ANCHOR, dUTC);
+    var withinCeiling = Math.abs(ceiling - price) / ceiling * 100 <= WITHIN_PCT;
+    if (withinCeiling) card.classList.add("spy-in-zone");
     else card.classList.remove("spy-in-zone");
   }
   function boot() {
@@ -299,9 +310,9 @@
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (j) {
         var res = j && j.chart && j.chart.result && j.chart.result[0]; if (!res) return;
-        var p = res.meta && res.meta.regularMarketPrice;
-        if (p == null) { var q = res.indicators.quote[0].close; for (var i = q.length - 1; i >= 0; i--) { if (q[i] != null) { p = q[i]; break; } } }
-        if (p != null) applyZone(p);
+        var p = res.meta && res.meta.regularMarketPrice, t = res.meta && res.meta.regularMarketTime;
+        if (p == null) { var q = res.indicators.quote[0].close, ts = res.timestamp; for (var i = q.length - 1; i >= 0; i--) { if (q[i] != null) { p = q[i]; t = ts[i]; break; } } }
+        if (p != null) applyZone(p, t ? new Date(t * 1000) : new Date());
       })
       .catch(function () {});
   }
