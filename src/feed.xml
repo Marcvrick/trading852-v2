@@ -5,8 +5,16 @@
     <link>https://trading852.com</link>
     <description>Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.</description>
     <language>en</language>
-    <lastBuildDate>Thu, 14 May 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 02 Jun 2026 00:00:00 +0800</lastBuildDate>
     <atom:link href="https://trading852.com/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>Midea Group (0300.HK): It Owns One of the World's Four Big Robot Makers. The Market Prices It as a Washing-Machine Company.</title>
+      <link>https://trading852.com/analyses/0300-midea</link>
+      <guid>https://trading852.com/analyses/0300-midea</guid>
+      <pubDate>Tue, 02 Jun 2026 00:00:00 +0800</pubDate>
+      <description>Midea owns Kuka, one of the four companies that dominate global industrial robotics (with ABB, Fanuc, Yaskawa), now moving into embodied AI. Its robotics and automation arm earned RMB 31.0B in 2025 (+8%). Yet the whole group trades at about 11x operating profit, the appliance-peer average, while ABB, Fanuc and Yaskawa trade at 40-50x earnings. FY2025: revenue RMB 458.5B (+12.1%), net profit RMB 43.95B (+14.0%), free cash flow RMB 42.2B, cash RMB 68.5B vs borrowings RMB 64.2B. The catch: Q1 2026 decelerated sharply (revenue +2.55%, net profit +2.03%). Verdict: MONITOR. Price HK$89.90 on June 2, 2026.</description>
+    </item>
 
     <item>
       <title>UPDATE: Alibaba (9988.HK) FY2026 Annual — Cloud +40%, AI Revenue RMB 10B</title>
