@@ -1,5 +1,5 @@
 /*
- * Trading852 — Scorecard client
+ * Trading852 Scorecard client
  *
  * Fetches the daily HK OHLC series for each blog recommendation via the
  * yahoo-proxy Cloudflare worker. Computes:
@@ -15,8 +15,8 @@
  *   - return      = pct change from entry to last close, OR locked tier % if stopped
  *
  * Two render targets supported on the same page:
- *   #scorecard-strip  — compact 1-line summary for the homepage
- *   #scorecard-table  — full table on /scorecard
+ *   #scorecard-strip  : compact 1-line summary for the homepage
+ *   #scorecard-table  : full table on /scorecard
  */
 (function () {
   "use strict";
@@ -155,13 +155,13 @@
       });
   }
 
-  function fmtPrice(v) { return (v == null ? "—" : v.toFixed(2)); }
+  function fmtPrice(v) { return (v == null ? "n/a" : v.toFixed(2)); }
   function fmtPct(v) {
-    if (v == null || !isFinite(v)) return "—";
+    if (v == null || !isFinite(v)) return "n/a";
     return (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
   }
   function fmtDate(d) {
-    if (!d) return "—";
+    if (!d) return "n/a";
     var m = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return m[d.getUTCMonth()] + " " + d.getUTCDate();
   }
@@ -171,7 +171,7 @@
     if (!el) return;
     var valid = rows.filter(function (r) { return r.pct != null; });
     if (!valid.length) {
-      el.innerHTML = '<a href="/scorecard" class="strip-link">Scorecard — prices unavailable</a>';
+      el.innerHTML = '<a href="/scorecard" class="strip-link">Scorecard: prices unavailable</a>';
       return;
     }
     var picks = valid.filter(function (r) { return !r.isBenchmark; });
@@ -213,7 +213,7 @@
       summary.innerHTML =
         '<span>Average <strong class="' + (avg >= 0 ? "pos" : "neg") + '">' + fmtPct(avg) + '</strong></span>' +
         '<span>' + wins + ' winners · ' + losses + ' losers · ' + stoppedCount + ' stopped</span>' +
-        '<span>As of ' + (mostRecent ? fmtDate(mostRecent) + ", 2026" : "—") + '</span>';
+        '<span>As of ' + (mostRecent ? fmtDate(mostRecent) + ", 2026" : "n/a") + '</span>';
     }
 
     var html =
@@ -275,7 +275,7 @@
 })();
 
 /*
- * SPY topping-zone alert — turns the homepage SPY card red when SPY is in the zone.
+ * SPY topping-zone alert: turns the homepage SPY card red when SPY is in the zone.
  * Mirrors the model on /analyses/spy-747-level. Retune via ZONE_FLOOR / ZONE_CEILING.
  * No-ops on pages that don't contain #spy-zone-card.
  */
