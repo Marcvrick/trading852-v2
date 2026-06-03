@@ -1,5 +1,5 @@
 ---
-title: "Trading852 v2 — Build Pipeline + Editorial Workflow"
+title: "Trading852 v2, Build Pipeline + Editorial Workflow"
 tags:
   - readme
   - blog
@@ -12,7 +12,7 @@ created: 2026-04-26
 updated: 2026-06-03
 ---
 
-# Trading852 v2 — Build Pipeline + Editorial Workflow
+# Trading852 v2: Build Pipeline + Editorial Workflow
 
 Static site for conviction-led HK stock analyses and market thesis articles. Source pages live in [src/](src/), get assembled into [dist/](dist/) by [build.js](build.js), and Vercel serves `dist/`.
 
@@ -20,24 +20,24 @@ Live site: [trading852.com](https://trading852.com)
 GitHub: [Marcvrick/trading852.com](https://github.com/Marcvrick/trading852.com)
 
 Editorial + SEO references live in [instructions/](instructions/):
-- [blog-style-guide.md](instructions/blog-style-guide.md) — voice, structure, the 7 canonical sections, what to never write
-- [seo/SEO-STRATEGY.md](instructions/seo/SEO-STRATEGY.md) — overall positioning + keyword targets
-- [seo/SITE-STRUCTURE.md](instructions/seo/SITE-STRUCTURE.md) — URL architecture, internal linking
-- [seo/CONTENT-CALENDAR.md](instructions/seo/CONTENT-CALENDAR.md) — pipeline of upcoming articles
-- [seo/COMPETITOR-ANALYSIS.md](instructions/seo/COMPETITOR-ANALYSIS.md) — market gap mapping
-- [seo/IMPLEMENTATION-ROADMAP.md](instructions/seo/IMPLEMENTATION-ROADMAP.md) — staged delivery plan
+- [blog-style-guide.md](instructions/blog-style-guide.md): voice, structure, the 7 canonical sections, what to never write
+- [seo/SEO-STRATEGY.md](instructions/seo/SEO-STRATEGY.md): overall positioning + keyword targets
+- [seo/SITE-STRUCTURE.md](instructions/seo/SITE-STRUCTURE.md): URL architecture, internal linking
+- [seo/CONTENT-CALENDAR.md](instructions/seo/CONTENT-CALENDAR.md): pipeline of upcoming articles
+- [seo/COMPETITOR-ANALYSIS.md](instructions/seo/COMPETITOR-ANALYSIS.md): market gap mapping
+- [seo/IMPLEMENTATION-ROADMAP.md](instructions/seo/IMPLEMENTATION-ROADMAP.md): staged delivery plan
 
 ---
 
 ## What changed vs v1
 
-v1 was flat HTML — every page duplicated the `<head>`, navbar, and footer. A single nav link change required edits in 13 files.
+v1 was flat HTML, every page duplicated the `<head>`, navbar, and footer. A single nav link change required edits in 13 files.
 
 v2 splits the site into:
-- **Source pages** ([src/](src/)) — body content + a `<!-- CONFIG -->` frontmatter comment. **No `<head>`. No navbar. No footer.**
-- **Partials** ([src/_partials/](src/_partials/)) — single source of truth for `<head>`, navbar, footer variants, scroll script.
-- **Build script** ([build.js](build.js)) — zero-dependency Node.js. Reads each source file, parses its `CONFIG` + `JSONLD` blocks, injects partials, writes the assembled HTML to `dist/`.
-- **Vercel** — runs `node build.js` on push, serves `dist/`.
+- **Source pages** ([src/](src/)): body content + a `<!-- CONFIG -->` frontmatter comment. **No `<head>`. No navbar. No footer.**
+- **Partials** ([src/_partials/](src/_partials/)): single source of truth for `<head>`, navbar, footer variants, scroll script.
+- **Build script** ([build.js](build.js)): zero-dependency Node.js. Reads each source file, parses its `CONFIG` + `JSONLD` blocks, injects partials, writes the assembled HTML to `dist/`.
+- **Vercel**: runs `node build.js` on push, serves `dist/`.
 
 One nav link change = one edit in [src/_partials/navbar.html](src/_partials/navbar.html) → propagates everywhere on next build.
 
@@ -85,7 +85,7 @@ Trading852-v2/
 │   │
 │   ├── index.html              ← Homepage (layout: index)
 │   ├── feed.xml                ← RSS feed (copied as-is)
-│   ├── favicon.ico             ← Root favicon (copied to dist/favicon.ico — required by Google + GSC, not just /assets/)
+│   ├── favicon.ico             ← Root favicon (copied to dist/favicon.ico, required by Google + GSC, not just /assets/)
 │   │
 │   ├── analyses/               ← Published articles (layout: article)
 │   │   ├── *.html
@@ -123,7 +123,7 @@ The script:
 2. Copies `assets/` → `dist/assets/`.
 3. Walks `src/` (skipping `_partials` and any name starting with `_` or `.`).
 4. For every `.html` source file: parses `CONFIG` + `JSONLD` blocks, picks the right CSS files based on `layout`, assembles `<head>` + navbar + body + footer + scroll script.
-5. For every non-HTML file: copies as-is, preserving the relative path. **This is how images travel into `dist/`** — drop a file under `src/analyses/images/` and it shows up at `/analyses/images/...` on the live site.
+5. For every non-HTML file: copies as-is, preserving the relative path. **This is how images travel into `dist/`**: drop a file under `src/analyses/images/` and it shows up at `/analyses/images/...` on the live site.
 6. Generates the scorecard positions from the published articles and writes `dist/assets/scorecard-recos.json` (see "Scorecard" below). Prints `Scorecard: N stock positions + 1 benchmark generated`.
 
 No npm install, no node_modules, no watcher. Pure `fs` + `path`.
@@ -157,21 +157,21 @@ Every page in `src/` (except `_partials/`) follows the same structure:
   ...
 </div>
 
-<!-- body content only — NO <head>, NO <body>, NO navbar, NO footer -->
+<!-- body content only: NO <head>, NO <body>, NO navbar, NO footer -->
 ```
 
 ### CONFIG fields
 
 | Key | Required | Notes |
 |---|---|---|
-| `layout` | yes | `article` · `index` · `static` · `scorecard` — drives CSS + footer + nav variant |
-| `title` | yes | Full `<title>`. Static pages keep the ` · Trading852` suffix; **ticker analyses drop it** — see SEO pattern below (brand sits in `og:site_name`). |
+| `layout` | yes | `article` · `index` · `static` · `scorecard`: drives CSS + footer + nav variant |
+| `title` | yes | Full `<title>`. Static pages keep the ` · Trading852` suffix; **ticker analyses drop it**: see SEO pattern below (brand sits in `og:site_name`). |
 | `ogTitle` | yes | Open Graph + Twitter title (no suffix) |
 | `description` | yes | `<meta name="description">` + OG/Twitter description |
 | `canonical` | yes | Absolute URL, no `.html` (cleanUrls is on) |
 | `ogType` | yes | `article` for analyses, `website` for static pages |
 | `ogImage` | yes | Absolute URL |
-| `pubDate` | articles only | `YYYY-MM-DD` — drives `<meta property="article:published_time">` |
+| `pubDate` | articles only | `YYYY-MM-DD`: drives `<meta property="article:published_time">` |
 | `scorecardName` | optional | Short display name for the scorecard (e.g. `Midea Group`). Defaults to a cleaned `about.name` if omitted. See Scorecard. |
 | `scorecardEntryDate` | optional | `YYYY-MM-DD`: scorecard entry date when it differs from `pubDate` (e.g. the Apr-10 inaugural issue). Defaults to `pubDate`. |
 
@@ -192,14 +192,14 @@ Optional. If present, the inner JSON is wrapped in `<script type="application/ld
 
 ## SEO pattern (mandatory for all ticker analyses)
 
-Locked May 2026 after applying it to the 8 published articles. Reference template: any DRAFT with the `-SEO-OPTIMIZED.html` suffix in [DRAFT/](DRAFT/) — canonical example is `DRAFT/1913-prada-SEO-OPTIMIZED.html`.
+Locked May 2026 after applying it to the 8 published articles. Reference template: any DRAFT with the `-SEO-OPTIMIZED.html` suffix in [DRAFT/](DRAFT/), canonical example is `DRAFT/1913-prada-SEO-OPTIMIZED.html`.
 
 ### CONFIG block
 
 | Field | Rule |
 |---|---|
-| `title` | **≤ 60 chars total** (Google clips around 580px ≈ 55–60 chars on desktop). Format: `{Name} ({Ticker}.HK) Stock Analysis: {compact hook}`. **No ` · Trading852` suffix** — brand sits in `og:site_name` and the schema `publisher`, dropping it from the title is free SEO. Primary keyword "Stock Analysis" appears early. |
-| `ogTitle` | Keeps the editorial hook intact — no `Stock Analysis` keyword. This is what shows on social cards; voice wins over search. |
+| `title` | **≤ 60 chars total** (Google clips around 580px ≈ 55–60 chars on desktop). Format: `{Name} ({Ticker}.HK) Stock Analysis: {compact hook}`. **No ` · Trading852` suffix**: brand sits in `og:site_name` and the schema `publisher`, dropping it from the title is free SEO. Primary keyword "Stock Analysis" appears early. |
+| `ogTitle` | Keeps the editorial hook intact: no `Stock Analysis` keyword. This is what shows on social cards; voice wins over search. |
 | `description` | 150–165 chars. Opens with `{Name} ({Ticker}.HK) stock analysis:` then the arithmetic + main long-tail. |
 | `canonical`, `ogType`, `ogImage`, `pubDate` | Unchanged from the standard CONFIG rules above. |
 
@@ -216,9 +216,9 @@ Standard fields stay (`headline`, `author`, `publisher`, `mainEntityOfPage`, `ab
 | `isPartOf` | `CollectionPage` object pointing to `https://trading852.com/analyses/{sector}` |
 | `keywords` | Comma-separated. Must include: `{Name} stock analysis`, `{Ticker}.HK`, `{name} thesis 2026`. Plus 3–5 article-specific long-tails (e.g. `{name} vs {peer}`, `{catalyst} explained`, etc.) |
 
-> **`dateModified` semantics.** `datePublished` is locked to the original publication date and never changes. `dateModified` must be bumped to the **actual** date a meaningful update was made — not just SEO refreshes (re-titling, schema enrichment, H2 changes), but also factual corrections, post-earnings updates, and price-target revisions. Stale `dateModified` on a page that *did* change suppresses Google re-crawl frequency and weakens YMYL freshness signals. Bump it. Bump the matching sitemap `lastmod` at the same time (see Step 6).
+> **`dateModified` semantics.** `datePublished` is locked to the original publication date and never changes. `dateModified` must be bumped to the **actual** date a meaningful update was made, not just SEO refreshes (re-titling, schema enrichment, H2 changes), but also factual corrections, post-earnings updates, and price-target revisions. Stale `dateModified` on a page that *did* change suppresses Google re-crawl frequency and weakens YMYL freshness signals. Bump it. Bump the matching sitemap `lastmod` at the same time (see Step 6).
 
-### BreadcrumbList JSON-LD (automatic — no per-article work)
+### BreadcrumbList JSON-LD (automatic: no per-article work)
 
 `build.js` extracts the in-body `<div class="article-breadcrumb">` of every article (any page with `layout: article` and a breadcrumb element) and emits a `BreadcrumbList` JSON-LD block in the `<head>`. The leaf item is the article's `ogTitle` (falling back to `title`). Category hub pages and the homepage correctly skip it.
 
@@ -229,7 +229,7 @@ Implication for new articles: keep the standard breadcrumb pattern (`<a href="/"
 | Element | Rule |
 |---|---|
 | H1 + subtitle | Never modified for SEO. Editorial integrity wins. |
-| H2s | At least one H2 must include the entity name. Format: `Why {Company} Trades at a Discount` and/or `What {Company} Is Actually Worth`. Avoid generic H2s like `What the Company Is Worth` or `Why the Discount Exists` — they leave SEO weight on the table. |
+| H2s | At least one H2 must include the entity name. Format: `Why {Company} Trades at a Discount` and/or `What {Company} Is Actually Worth`. Avoid generic H2s like `What the Company Is Worth` or `Why the Discount Exists`: they leave SEO weight on the table. |
 | Risk callout labels | Use `<h3 class="risk-callout__label">` (not `<div>`). Same visual styling, but the H3 is parseable by Google's passage-extraction and helps AI summarisers attribute risks to the correct section. |
 | `What {Company} Does` first paragraph | Must explicitly state `{Name} ({Ticker}.HK)` and the HKEX listing context. This is the canonical entity-establishment paragraph for Google + AI extractors. |
 | Inline link | At least one inline link from the body to the article's sector hub (`/analyses/{sector}`). Anchor text = a natural noun phrase (e.g. `luxury sector`, `electric two-wheeler`, `biotechs`, `negative enterprise value`). |
@@ -270,10 +270,10 @@ Always set `width`, `height`, `alt`. Below-fold images get `loading="lazy" decod
 
 [vercel.json](vercel.json) settings:
 
-- `buildCommand: "node build.js"` — Vercel runs the build on every push.
-- `outputDirectory: "dist"` — Vercel serves the build output, not `src/`.
-- `installCommand: ""` — no npm install (zero-dep build).
-- `cleanUrls: true` — `.html` is stripped from URLs. **Rewrite destinations and canonicals must NOT include `.html`**.
+- `buildCommand: "node build.js"`: Vercel runs the build on every push.
+- `outputDirectory: "dist"`: Vercel serves the build output, not `src/`.
+- `installCommand: ""`: no npm install (zero-dep build).
+- `cleanUrls: true`: `.html` is stripped from URLs. **Rewrite destinations and canonicals must NOT include `.html`**.
 - `trailingSlash: false`.
 
 ### Rewrite gotcha
@@ -283,7 +283,7 @@ Always set `width`, `height`, `alt`. Below-fold images get `loading="lazy" decod
 ❌ { "source": "/scorecard", "destination": "/static/scorecard.html" }   // 404 with cleanUrls
 ```
 
-### Footer / internal links — absolute paths only
+### Footer / internal links: absolute paths only
 
 Relative paths like `about.html` break under cleanUrls. Always use `/about`, `/disclaimer`, `/legal-notice`, etc.
 
@@ -295,25 +295,25 @@ Set globally in `vercel.json`: `X-Content-Type-Options: nosniff`, `X-Frame-Optio
 
 ## Editorial workflow
 
-### Step 1 — Find the source material
+### Step 1: Find the source material
 
 Stock analyses: look up the ticker in `TRADING/Trading-research/HK Stocks/Experts analysis/`. Folder pattern: `{TICKER} - {Company} - {CONVICTION|MONITOR|AVOID}`. The verdict is whatever the expert analysis returns (`CONVICTION`, `MONITOR`, or `AVOID`). All three publish; the label drives how the article is framed and how it surfaces on the homepage, the sector hub eyebrow, the scorecard eyebrow, and the meta-verdict pill. Apply the verdict consistently across all four surfaces from day one.
 
 Market thesis articles: source `.md` lives outside the repo (e.g. `TRADING/Trading852/BD/Briefs-ChatGPT/`).
 
-### Step 2 — Read the style guide
+### Step 2: Read the style guide
 
 Open the local style guide at [instructions/blog-style-guide.md](instructions/blog-style-guide.md) and the voice guide at [../../Voix Marc/VOIX-Marc.md](../../Voix%20Marc/VOIX-Marc.md). Key rules:
 
-- **7 canonical sections** — Hook → Company/Context → Discount → Catalyst → Valuation → Risks → Decision
+- **7 canonical sections**: Hook → Company/Context → Discount → Catalyst → Valuation → Risks → Decision
 - **No bullet points** in the body (except numbered catalyst points and scenario tables)
 - **No superlatifs**, no conditional mou, no disclaimers
-- **Numbers always precise** — `HKD 2 354 millions`, `+14 %`, never "environ"
-- **Title formula**: `[Subject] — [Concrete arithmetic fact that surprises]`
+- **Numbers always precise**: `HKD 2 354 millions`, `+14 %`, never "environ"
+- **Title formula**: `[Subject]: [Concrete arithmetic fact that surprises]`
 - **Target length**: 1 000–1 400 words (ideal ~1 200)
 - **Marc's voice**: accessible, direct, "montrer sans dire"
 
-### Step 3 — Article structure
+### Step 3: Article structure
 
 | # | Section | Words |
 |---|---|---|
@@ -325,7 +325,7 @@ Open the local style guide at [instructions/blog-style-guide.md](instructions/bl
 | 6 | Risks (2 max, named in bold) | 180–250 |
 | 7 | Decision (with scenario table) | 180–250 |
 
-### Step 4 — Create the source file
+### Step 4: Create the source file
 
 Stock analysis: copy `src/analyses/1913-prada.html`. Market thesis: copy `src/analyses/hsi-35-year-trendline.html`. Edit the `CONFIG` and `JSONLD` blocks first, then the body.
 
@@ -334,10 +334,10 @@ Required body elements:
 - Key takeaway box
 - Section h2s, data tables
 - Scenario table (3 rows max) at the end
-- **Sources section** — `<div class="sources-section">` + `<h2>Sources</h2>` + `<ul>` with one `<li>` per source. Never plain `<h2>` + `<p>`.
-- Article footer with disclaimer + back link (already in `footer-analysis.html` partial — do not duplicate)
+- **Sources section**: `<div class="sources-section">` + `<h2>Sources</h2>` + `<ul>` with one `<li>` per source. Never plain `<h2>` + `<p>`.
+- Article footer with disclaimer + back link (already in `footer-analysis.html` partial: do not duplicate)
 
-### Step 5 — Update the homepage
+### Step 5: Update the homepage
 
 Two sections in [src/index.html](src/index.html):
 
@@ -360,7 +360,7 @@ Two sections in [src/index.html](src/index.html):
 - [ ] All existing items renumbered down by one
 - [ ] Item count in Identified Situations = (total published articles) − 3
 
-### Step 6 — Update feed.xml + sitemap.xml
+### Step 6: Update feed.xml + sitemap.xml
 
 [src/feed.xml](src/feed.xml): add a new `<item>` at the top, update `<lastBuildDate>`.
 
@@ -389,31 +389,31 @@ Two sections in [src/index.html](src/index.html):
 
 **Article update items in feed.xml** (post-earnings, factual corrections, thesis changes):
 
-Add a new `UPDATE:` item at the top with a unique `guid` (`#update-YYYYMMDD`). When a second update follows for the same article, **collapse the previous update item** — shorten its `<description>` to one line summary — before inserting the new one above it. This keeps the feed readable as updates accumulate.
+Add a new `UPDATE:` item at the top with a unique `guid` (`#update-YYYYMMDD`). When a second update follows for the same article, **collapse the previous update item**, shorten its `<description>` to one line summary, before inserting the new one above it. This keeps the feed readable as updates accumulate.
 
 ```xml
 <!-- New update: full description -->
 <item>
-  <title>UPDATE: Company (TICKER.HK) Q2 2026 — one-line hook</title>
+  <title>UPDATE: Company (TICKER.HK) Q2 2026: one-line hook</title>
   <link>https://trading852.com/analyses/SLUG</link>
   <guid>https://trading852.com/analyses/SLUG#update-YYYYMMDD</guid>
   <pubDate>Day, DD Mon YYYY 00:00:00 +0800</pubDate>
-  <description>Full detail — key numbers, scenario check, next catalyst.</description>
+  <description>Full detail: key numbers, scenario check, next catalyst.</description>
 </item>
 
 <!-- Previous update: collapsed to one line -->
 <item>
-  <title>UPDATE: Company (TICKER.HK) Q1 2026 — one-line hook</title>
+  <title>UPDATE: Company (TICKER.HK) Q1 2026: one-line hook</title>
   <link>https://trading852.com/analyses/SLUG</link>
   <guid>https://trading852.com/analyses/SLUG#update-YYYYMMDD</guid>
   <pubDate>Day, DD Mon YYYY 00:00:00 +0800</pubDate>
-  <description>Q1 2026: Revenue +X%, net profit +Y%. Base case met. [Collapsed — see Q2 update above.]</description>
+  <description>Q1 2026: Revenue +X%, net profit +Y%. Base case met. [Collapsed, see Q2 update above.]</description>
 </item>
 ```
 
 Same rule applies to the **update notice block inside the article**: the most recent update sits at the top; prior updates are collapsed to a single `<p>` with date + one-line summary, then a "see update above" note.
 
-### Step 7 — Build, verify locally, commit
+### Step 7: Build, verify locally, commit
 
 ```bash
 cd "TRADING/Trading852-v2"
@@ -428,7 +428,7 @@ Vercel rebuilds and deploys on push.
 
 ---
 
-## Scorecard — live performance tracker
+## Scorecard: live performance tracker
 
 Public accountability page at [trading852.com/scorecard](https://trading852.com/scorecard). 100% client-side, zero backend.
 
@@ -442,7 +442,7 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 
 **Last price**: `meta.regularMarketPrice` from the Yahoo Finance response is used as the primary source (always current, no OHLC lag). Falls back to the close array scan only if the meta field is absent or pre-entry. This prevents thinly traded HK stocks (e.g. 0113.HK) from showing a stale entry-day close in the Last column.
 
-**Stop-loss rule (trailing, one-way ratchet — picks published 2026-05-05 onward)**: the stop tightens as the position appreciates and never loosens.
+**Stop-loss rule (trailing, one-way ratchet, picks published 2026-05-05 onward)**: the stop tightens as the position appreciates and never loosens.
 
 | Peak gain since entry | Stop level | Locked return if hit |
 |---|---|---|
@@ -456,7 +456,7 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 
 **Legacy stop (picks published before 2026-05-05)**: flat −10 % from entry, no trailing. Triggered on intraday low ≤ entry × 0.90, locks at −10 %. The cutoff is enforced by `TRAILING_STOP_FROM = Date.UTC(2026, 4, 5)` in `assets/scorecard.js`. The 7 picks from the inaugural issue (Apr 10 / Apr 25 / May 4 pubs) keep the legacy rule for life.
 
-**Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick — it is the market reference since the April 10 inaugural issue. Do not reorder it. **The benchmark is excluded from the average return and from the winners/losers tally** — it is a reference line only, not a contributor to the headline number.
+**Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick, it is the market reference since the April 10 inaugural issue. Do not reorder it. **The benchmark is excluded from the average return and from the winners/losers tally**, it is a reference line only, not a contributor to the headline number.
 
 **Average return**: simple arithmetic mean of every line's `pct`, benchmark excluded. Each pick counts equally. Computed in both `renderStrip` (homepage teaser) and `renderTable` (`/scorecard`) by filtering on `!r.isBenchmark` before summing.
 
@@ -464,7 +464,7 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 
 **Overrides**: curated short names and the Apr-10 inaugural issue dates live in the `SCORECARD_OVERRIDES` map in `build.js`. A single article can also override via CONFIG: `scorecardName` (display name) and `scorecardEntryDate` (`YYYY-MM-DD`, when the issue/entry date differs from `pubDate`). The 2800.HK Tracker Fund benchmark is a fixed entry (`SCORECARD_BENCHMARK` in `build.js`), not derived from an article.
 
-**Article and scorecard entry are inseparable — by construction**: positions are derived from the articles themselves, so a scorecard row cannot exist without its published article.
+**Article and scorecard entry are inseparable, by construction**: positions are derived from the articles themselves, so a scorecard row cannot exist without its published article.
 
 **To add a pick**: just publish the stock article with the standard hero (`meta-ticker` + `meta-verdict`). The next `node build.js` registers it automatically (Vercel runs `build.js` on deploy, so commit and push is enough). Set `scorecardName` in CONFIG only if you want a shorter display name than the schema `about.name`.
 
@@ -472,7 +472,7 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 
 ## Site plumbing
 
-### Header nav — 4 items, identical on every page
+### Header nav: 4 items, identical on every page
 
 ```
 Analyses · Scorecard · HSI · About
@@ -495,7 +495,7 @@ All footers use a flex row (`justify-content:space-between`): tagline on the lef
 
 ---
 
-## Drafts — pending price trigger
+## Drafts: pending price trigger
 
 | File | Ticker | Title | Trigger to publish |
 |---|---|---|---|
@@ -511,7 +511,7 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 |---|---|---|---|
 | [src/analyses/spy-747-level.html](src/analyses/spy-747-level.html) | SPY | The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One. | 2026-05-11 |
 
-> **SPY structural level methodology note:** all calculations (level formula, ceiling, distance, backtest data) use **unadjusted SPY prices — dividends off**. When verifying on TradingView or any charting tool, turn off dividend adjustment before reading price vs. level distances. Adjusted prices produce different distances and will not match the published levels.
+> **SPY structural level methodology note:** all calculations (level formula, ceiling, distance, backtest data) use **unadjusted SPY prices, dividends off**. When verifying on TradingView or any charting tool, turn off dividend adjustment before reading price vs. level distances. Adjusted prices produce different distances and will not match the published levels.
 | [src/analyses/1698-tencent-music.html](src/analyses/1698-tencent-music.html) | 1698.HK | Profit +66%, Stock -66% from ATH. Spotify Trades at Four Times the Multiple. | 2026-05-04 |
 | [src/analyses/6690-haier.html](src/analyses/6690-haier.html) | 6690.HK | The World's Largest Appliance Maker Trades at 6.85×. Midea at 12×. Electrolux at 14×. | 2026-04-25 |
 | [src/analyses/9988-alibaba.html](src/analyses/9988-alibaba.html) | 9988.HK | EBITA Down 57%. Cloud Up 36%. This Is What Amazon Looked Like in 2014. | 2026-04-14 |
@@ -519,7 +519,7 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 | [src/analyses/1167-jacobio.html](src/analyses/1167-jacobio.html) | 1167.HK | AstraZeneca Paid US$100M for One Molecule. The Rest Trades at US$507M. | 2026-04-14 |
 | [src/analyses/1913-prada.html](src/analyses/1913-prada.html) | 1913.HK | EPS Down 74%. Revenue Up 9%. One of These Numbers Is a Distraction. | 2026-04-12 |
 | [src/analyses/0113-dickson-concepts.html](src/analyses/0113-dickson-concepts.html) | 0113.HK | The Market Is Paying You HKD 375M to Buy This Company | 2026-04-11 |
-| [src/analyses/hsi-35-year-trendline.html](src/analyses/hsi-35-year-trendline.html) | — | Six Bounces. One Break. Now the Retest. | 2026-04-11 |
+| [src/analyses/hsi-35-year-trendline.html](src/analyses/hsi-35-year-trendline.html) |: | Six Bounces. One Break. Now the Retest. | 2026-04-11 |
 
 ---
 
@@ -530,23 +530,23 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 - Section title as a teaser: "What's next?", "The bottom line"
 - A number without its source date or document
 - A risk framed as hypothetical when it is documented
-- **Any em dash** (`—` or `&mdash;`) anywhere: articles, scorecard, metadata, titles, methodology, changelogs. Use a period, a colon, or restructure the sentence. The middle dot `·` is the only permitted title separator.
+- **Any em dash** (`, ` or `, `) anywhere: articles, scorecard, metadata, titles, methodology, changelogs. Use a period, a colon, or restructure the sentence. The middle dot `·` is the only permitted title separator.
 - **Any reference to internal research notes**. The published article is presented as the analyst's view, not the output of a prior pipeline. Never write "the original valuation work", "our prior note", "since we filed", "in our May analysis", "the earlier analysis flagged", or any phrase that implies a non-public preceding document. Public market data is fine (`+9% over the past three weeks`, `since the IPO`, `since the FY2025 release`); references to internal research are not. This is a specialisation of the broader "cuisine interne" rule in [instructions/blog-style-guide.md](instructions/blog-style-guide.md). When the urge appears, rewrite using a public anchor date instead.
 
 ---
 
 ## SEO checklist (every page)
 
-The `head.html` partial already wires most of this — confirm the `CONFIG` block is complete:
+The `head.html` partial already wires most of this, confirm the `CONFIG` block is complete:
 
 - [ ] `canonical` is absolute, self-referencing, no `.html`
-- [ ] RSS autodiscovery (`<link rel="alternate" type="application/rss+xml">`) — already in `head.html`
-- [ ] Twitter card + og:* tags — driven by `ogTitle` / `description` / `ogImage`
+- [ ] RSS autodiscovery (`<link rel="alternate" type="application/rss+xml">`): already in `head.html`
+- [ ] Twitter card + og:* tags: driven by `ogTitle` / `description` / `ogImage`
 - [ ] JSON-LD block present (`Article` for analyses, `WebSite` for index)
-- [ ] BreadcrumbList JSON-LD — emitted automatically by `build.js` from the in-body breadcrumb; verify the breadcrumb HTML pattern is intact
+- [ ] BreadcrumbList JSON-LD: emitted automatically by `build.js` from the in-body breadcrumb; verify the breadcrumb HTML pattern is intact
 - [ ] Images: `width` + `height` + `alt`, lazy below the fold
 
-### Ticker analyses (additional — see SEO pattern above)
+### Ticker analyses (additional: see SEO pattern above)
 
 - [ ] `title` ≤ 60 chars, opens with `{Name} ({Ticker}.HK) Stock Analysis:`, **no ` · Trading852` suffix**
 - [ ] `description` 150–165 chars, opens with `{Name} ({Ticker}.HK) stock analysis:`
@@ -564,7 +564,7 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] Source material identified, read
 - [ ] Style guide + VOIX-Marc read
 - [ ] CONFIG + JSONLD blocks complete and JSON-valid
-- [ ] **SEO pattern applied** — see "SEO pattern (mandatory for all ticker analyses)" section above. Diff against `DRAFT/1913-prada-SEO-OPTIMIZED.html` to verify
+- [ ] **SEO pattern applied**: see "SEO pattern (mandatory for all ticker analyses)" section above. Diff against `DRAFT/1913-prada-SEO-OPTIMIZED.html` to verify
 - [ ] No bullet points in body text
 - [ ] Every number has a date or source
 - [ ] Valuation / NAV table present
@@ -576,11 +576,11 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] First paragraph of `What X Does` establishes ticker + HKEX listing
 - [ ] At least one inline link to a sector hub (`/analyses/{sector}`)
 - [ ] Image (if any) dropped in `src/analyses/images/` with relative `<img src="images/...">`
-- [ ] Homepage updated — new article in featured card, old cards shifted, evicted card prepended as item 04 in Identified Situations, all items renumbered, item count = (total published) − 3
+- [ ] Homepage updated: new article in featured card, old cards shifted, evicted card prepended as item 04 in Identified Situations, all items renumbered, item count = (total published) − 3
 - [ ] feed.xml: new `<item>` + `<lastBuildDate>` updated
 - [ ] sitemap.xml: new `<url>` + homepage `<lastmod>` updated. **Refresh of an existing article** = bump that article's `<lastmod>` AND the homepage `<lastmod>` AND JSON-LD `dateModified` to the refresh date
 - [ ] Scorecard: **automatic** (no action) for stock articles with `meta-ticker` + `meta-verdict` in the hero. Set CONFIG `scorecardName` only if a shorter display name is wanted
-- [ ] No em dash anywhere (`grep -rn "—\|&mdash;" src/ assets/` returns nothing)
+- [ ] No em dash anywhere (`grep -rn ", \|, " src/ assets/` returns nothing)
 - [ ] `node build.js` runs clean
 - [ ] Spot-checked `dist/analyses/<slug>.html` in a browser
 - [ ] Committed and pushed
@@ -610,27 +610,27 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - **Sitemap `<lastmod>` bumped to 2026-05-07** for the 7 hub URLs to reflect the schema addition.
 - **Audit items still open** (tracked in the audit doc): HSI article missed the May 6 SEO pattern upgrade (no `image`, `inLanguage`, `wordCount`, `articleSection`, `isPartOf`); no sitewide `Organization` entity in `head.html`; sitemap `<priority>` and `<changefreq>` are dead weight (Google ignores both).
 
-### May 7, 2026 — Scorecard: post-stop live price + 1167 verdict correction
+### May 7, 2026: Scorecard: post-stop live price + 1167 verdict correction
 
 - **Live last close shown under the entry price for stopped rows**. New `now: XX.XX` line, small green text right-aligned in the Entry column. Locked `pct` stays frozen at the stop tier; the live price is informational, never feeds the average. Wired in `assets/scorecard.js` (`currentPrice` preserved separately from `last`) and styled in `src/styles/scorecard.css` (`.sc-now`). Methodology paragraph updated.
 - **1167.HK Jacobio verdict corrected from CONVICTION to MONITOR.** The expert analysis returned MONITOR; the article was labelled CONVICTION at the Apr 14 publication in error. The correct call has always been MONITOR. Updated in five places: meta-verdict pill on the analysis page, new Correction notice block at the top of `src/analyses/1167-jacobio.html`, biotech category card eyebrow on `src/analyses/biotech.html`, the verdict-tag on the Identified Situations row in `src/index.html`, and the scorecard eyebrow on the Jacobio row in `assets/scorecard.js` (`Biotech` → `Biotech · Monitor`). Reasoning: binary Phase III futility risk, NRDL adoption pace unverified through one full reporting cycle (H1 2026 interim due Jul or Aug), CEO Wang Yinxiang silent in the secondary market since his HK$96M purchase between Jul and Sep 2025 at HK$8.56. The arithmetic and valuation framework in the article are unchanged.
 - **Editorial rule clarification (Step 1 + Step 5)**: the verdict is whatever the expert analysis returns (CONVICTION, MONITOR, or AVOID). All three publish. The label drives framing and surface treatment across the four canonical places: meta-verdict pill, sector card eyebrow, homepage verdict-tag, scorecard eyebrow.
 
-### May 6, 2026 — Sitemap refresh + favicon at root (SEO follow-up)
+### May 6, 2026: Sitemap refresh + favicon at root (SEO follow-up)
 
-- **Sitemap `<lastmod>` bumped to 2026-05-06** for the 7 SEO-refreshed ticker articles + homepage. Without this, Google sees the May 6 schema/H2/title restructure as if it never happened — re-crawl frequency depends on the `<lastmod>` signal, not on actual change detection.
+- **Sitemap `<lastmod>` bumped to 2026-05-06** for the 7 SEO-refreshed ticker articles + homepage. Without this, Google sees the May 6 schema/H2/title restructure as if it never happened: re-crawl frequency depends on the `<lastmod>` signal, not on actual change detection.
 - **JSON-LD `dateModified` bumped to 2026-05-06** in the same 7 articles. Sitemap and JSON-LD freshness must agree.
-- **`/favicon.ico` added at the site root** (was returning 404). Google Search Console and many crawlers fetch `/favicon.ico` directly rather than reading `<link rel="icon">` declarations — the missing root favicon was producing a placeholder avatar in GSC's property selector. Built from the existing 32×32 PNG; `head.html` now also declares the legacy `<link rel="shortcut icon">`.
-- **README**: SEO pattern doc expanded with `dateModified` semantics rule, sitemap refresh rule in Step 6, pre-publish checklist updated, folder structure shows `src/favicon.ico`. Title field rule clarified — static pages keep ` · Trading852` suffix, ticker analyses drop it.
+- **`/favicon.ico` added at the site root** (was returning 404). Google Search Console and many crawlers fetch `/favicon.ico` directly rather than reading `<link rel="icon">` declarations: the missing root favicon was producing a placeholder avatar in GSC's property selector. Built from the existing 32×32 PNG; `head.html` now also declares the legacy `<link rel="shortcut icon">`.
+- **README**: SEO pattern doc expanded with `dateModified` semantics rule, sitemap refresh rule in Step 6, pre-publish checklist updated, folder structure shows `src/favicon.ico`. Title field rule clarified: static pages keep ` · Trading852` suffix, ticker analyses drop it.
 
-### May 6, 2026 — Auto-generated BreadcrumbList JSON-LD + TO DO folder
+### May 6, 2026: Auto-generated BreadcrumbList JSON-LD + TO DO folder
 
-- `build.js` now emits `BreadcrumbList` JSON-LD for every article page by parsing the existing in-body `<div class="article-breadcrumb">`. New token `{{BREADCRUMB_JSONLD}}` added to `head.html`. Zero per-article edits — all 7 stock analyses + the HSI thesis page get the schema; category hubs and homepage correctly skip it.
-- `TO DO/` folder created. First entry: `per-article-og-images.md` — spec for replacing the shared `og-image.png` with one unique 1200×630 PNG per article (manual Figma path or auto-generated Puppeteer path), highest social CTR move available.
+- `build.js` now emits `BreadcrumbList` JSON-LD for every article page by parsing the existing in-body `<div class="article-breadcrumb">`. New token `{{BREADCRUMB_JSONLD}}` added to `head.html`. Zero per-article edits: all 7 stock analyses + the HSI thesis page get the schema; category hubs and homepage correctly skip it.
+- `TO DO/` folder created. First entry: `per-article-og-images.md`: spec for replacing the shared `og-image.png` with one unique 1200×630 PNG per article (manual Figma path or auto-generated Puppeteer path), highest social CTR move available.
 
-### May 6, 2026 — SEO pattern locked, applied to all 8 published articles
+### May 6, 2026: SEO pattern locked, applied to all 8 published articles
 
-- Added "SEO pattern (mandatory for all ticker analyses)" section to README — title/description format, JSONLD additions (image, articleSection, inLanguage, wordCount, isPartOf, expanded keywords), H2 entity-name rule, body ticker+HKEX establishment paragraph, inline sector-hub link, h3 risk callout labels.
+- Added "SEO pattern (mandatory for all ticker analyses)" section to README: title/description format, JSONLD additions (image, articleSection, inLanguage, wordCount, isPartOf, expanded keywords), H2 entity-name rule, body ticker+HKEX establishment paragraph, inline sector-hub link, h3 risk callout labels.
 - Pre-publish checklist updated with 8 new SEO line items.
 - 8 SEO-optimized DRAFTs created in `DRAFT/`, one per published article (Tencent Music, Haier, Alibaba, Yadea, Jacobio, Prada, Dickson, HSI 35-year). Pattern was first developed and validated on `1913-prada-SEO-OPTIMIZED.html`, which is the canonical reference.
 - All titles trimmed to ≤ 60 chars, ` · Trading852` suffix dropped (brand sits in `og:site_name` + schema `publisher`, so dropping it from title is free SEO).
@@ -640,42 +640,42 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - New `POST SUGGESTION/` folder cross-referencing FinRatios CONVICTION ≥ 7.5 with active investor research themes.
 - `instructions/seo/SEO-STRATEGY.md` cleaned: methodology pages (`/method/*`) abandoned. MOFU served by sectoral hubs + comparatifs + screens + thesis articles instead. The methodology stays a moat.
 
-### Apr 29, 2026 — Homepage pub date + mobile menu dividers
+### Apr 29, 2026: Homepage pub date + mobile menu dividers
 
 - Recent Analyses cards (homepage) now show the pub date in 45%-opacity grey after the ticker: `Sector · Ticker · Mon DD, YYYY`. Ticker stays bold; date is regular weight. New `.eyebrow-date` class in `src/styles/index.css`.
-- Mobile hamburger menu: divider lines between Analyses / Scorecard / HSI / About bumped from `rgba(255,255,255,0.08)` to `0.14` (+75%) — they were nearly invisible on dark backgrounds.
+- Mobile hamburger menu: divider lines between Analyses / Scorecard / HSI / About bumped from `rgba(255,255,255,0.08)` to `0.14` (+75%): they were nearly invisible on dark backgrounds.
 
-### Apr 29, 2026 — Link `instructions/` from README
+### Apr 29, 2026: Link `instructions/` from README
 
 - Top of README now lists the editorial + SEO references in [instructions/](instructions/) (style guide + 5 SEO docs).
 - Folder structure block updated to show `instructions/` and its `seo/` subfolder.
 - Step 2 of the editorial workflow now points to the local `instructions/blog-style-guide.md` instead of the v1 path.
 
-### Apr 29, 2026 — Scorecard: average methodology, benchmark exclusion, stopped-row restyle
+### Apr 29, 2026: Scorecard: average methodology, benchmark exclusion, stopped-row restyle
 
 - **Methodology block** rewritten to explain the average calculation: simple arithmetic mean of every line's % change, each ticker counts equally, benchmark excluded.
 - **Tracker Fund (2800.HK) excluded from the average** and from the winners/losers tally on both `/scorecard` and the homepage strip. The benchmark stays visible at the bottom of the table as a reference line only. Implemented by filtering `!r.isBenchmark` in `renderStrip` and `renderTable` before reducing.
 - **Stopped rows restyled**: opacity-based grey-out replaced by a very light red background (`#fdf3f3`, hover `#fbe9e9`). The previous opacity treatment looked too similar to the benchmark row's grey, blurring the difference between "we hit the stop" and "this is the market reference".
 - **Stopped % cell** now shows the locked `−10.0%` value with a small uppercase "Stopped" caption underneath (instead of replacing the number with text). Locked −10% still feeds the average.
-- Removed the "past performance on a three-figure sample is not a track record" line from the methodology — readers can draw their own conclusions.
+- Removed the "past performance on a three-figure sample is not a track record" line from the methodology: readers can draw their own conclusions.
 
-### Apr 28, 2026 — Remove Galaxy from scorecard, enforce article-first rule
+### Apr 28, 2026: Remove Galaxy from scorecard, enforce article-first rule
 
 - 0027.HK Galaxy Entertainment removed from `RECOS`. No article was published, so no scorecard entry should exist.
 - Rule added to README: article and scorecard entry are inseparable. Never add a ticker to `RECOS` without a live article in `src/analyses/`. No article = no scorecard entry.
 
-### Apr 27, 2026 — Scorecard engine, SEO fixes, category pages
+### Apr 27, 2026: Scorecard engine, SEO fixes, category pages
 
 **Scorecard engine**
 - Entry price: first close strictly AFTER `pubDate` (`ts * 1000 > recoPubDate`). Weekend pub (Sat/Sun) → Monday open instead of close. Haier (Apr 25 = Saturday) uses Apr 28 open.
 - Last price: `meta.regularMarketPrice` used as primary source; OHLC close array as fallback. Fixes thinly traded stocks (e.g. 0113.HK) where the OHLC array lags and returns the entry-day close as "last".
-**SEO — high priority**
+**SEO, high priority**
 - Homepage H1 added (visually hidden) for correct heading hierarchy.
 - Mobile hamburger menu added: button, CSS `.is-open` panel, JS toggle with `aria-expanded` and click-outside close.
 - About page expanded from 253 to ~600 words: Who I am / Why Hong Kong / How I work / What this is not. Person JSON-LD schema added.
 - All article source citations hyperlinked (previously plain text) using HKEX News search URLs + IR pages.
 
-**SEO — medium priority**
+**SEO, medium priority**
 - `/legal-notice` added to `sitemap.xml`.
 - 7 sector/category pages created in `src/analyses/`: `luxury`, `special-situations`, `biotech`, `technology`, `consumer-discretionary`, `electric-vehicles`, `market-thesis`. Each has a hero H1, sector intro paragraph, and `.category-article-card` components linking to published analyses.
 - Article breadcrumb labels made into links pointing to their category page.
@@ -686,17 +686,17 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - Dickson Concepts (0113.HK) classified in both Luxury and Special Situations category pages.
 - Manifesto: "public filings" → "public sources".
 
-### Apr 27, 2026 — Scorecard rules, nav rename, image fix, OG tags
+### Apr 27, 2026: Scorecard rules, nav rename, image fix, OG tags
 
-- **Scorecard — weekend pub entry**: weekday pub → first close after `pubDate`; weekend pub (Sat/Sun) → Monday open price. Haier (Apr 25 = Sat) was the first case. Entry cell shows "open" label when applicable.
-- **Scorecard — benchmark row**: 2800.HK pinned to bottom via `isBenchmark: true` + `sort()`. Grey background (`sc-row-benchmark`). Eyebrow changed to "Benchmark".
-- **Scorecard — copy**: "recommendation" replaced by "article" everywhere in scorecard page and meta description.
+- **Scorecard: weekend pub entry**: weekday pub → first close after `pubDate`; weekend pub (Sat/Sun) → Monday open price. Haier (Apr 25 = Sat) was the first case. Entry cell shows "open" label when applicable.
+- **Scorecard: benchmark row**: 2800.HK pinned to bottom via `isBenchmark: true` + `sort()`. Grey background (`sc-row-benchmark`). Eyebrow changed to "Benchmark".
+- **Scorecard: copy**: "recommendation" replaced by "article" everywhere in scorecard page and meta description.
 - **Navbar**: "Hong Kong" renamed to "HSI". Footer: "Hong Kong" renamed to "Hang Seng Index".
-- **Article images**: `max-width: 100%; height: auto` added to `.article-body img` — prevents 1280px images from overflowing the 46rem content column.
-- **OG image**: added `og:image:width`, `og:image:height`, `og:image:type` to `head.html` — required by WhatsApp for link preview thumbnail.
+- **Article images**: `max-width: 100%; height: auto` added to `.article-body img`: prevents 1280px images from overflowing the 46rem content column.
+- **OG image**: added `og:image:width`, `og:image:height`, `og:image:type` to `head.html`: required by WhatsApp for link preview thumbnail.
 - **Git**: `Trading852-v2/.git` was a broken ghost (no config/objects). Re-initialized and connected to `Marcvrick/trading852-v2`. `git push` from this folder now triggers Vercel auto-deploy.
 
-### Apr 26, 2026 — README v2 created
+### Apr 26, 2026: README v2 created
 
 - Documents the new `src/` → `dist/` build pipeline, partials, source page format (`CONFIG` + `JSONLD` comments, no `<head>` / nav / footer in source), images convention (`src/analyses/images/<slug>.jpg`), Vercel cleanUrls gotcha.
 - Editorial workflow (style guide, 7-section structure, scorecard, drafts, published articles, "what to never write", SEO checklist) carried over from the v1 README.
