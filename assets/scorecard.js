@@ -252,6 +252,11 @@
     fetch(RECOS_URL, { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (recos) {
+        // Update the scorecard hero count (picks, excluding the benchmark).
+        var WORDS = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen","Twenty","Twenty-one","Twenty-two","Twenty-three","Twenty-four","Twenty-five"];
+        var picks = recos.filter(function (r) { return !r.isBenchmark; }).length;
+        var countEl = document.getElementById("sc-article-count");
+        if (countEl) countEl.textContent = WORDS[picks] || String(picks);
         // Convert the build-time "YYYY-MM-DD" issue date into the pubDate fetchOne expects.
         recos.forEach(function (rec) {
           var p = String(rec.issueDate || "").split("-");
