@@ -9,7 +9,7 @@ tags:
 category: Trading/Blog
 type: readme
 created: 2026-04-26
-updated: 2026-05-07
+updated: 2026-06-03
 ---
 
 # Trading852 v2 — Build Pipeline + Editorial Workflow
@@ -124,6 +124,7 @@ The script:
 3. Walks `src/` (skipping `_partials` and any name starting with `_` or `.`).
 4. For every `.html` source file: parses `CONFIG` + `JSONLD` blocks, picks the right CSS files based on `layout`, assembles `<head>` + navbar + body + footer + scroll script.
 5. For every non-HTML file: copies as-is, preserving the relative path. **This is how images travel into `dist/`** — drop a file under `src/analyses/images/` and it shows up at `/analyses/images/...` on the live site.
+6. Generates the scorecard positions from the published articles and writes `dist/assets/scorecard-recos.json` (see "Scorecard" below). Prints `Scorecard: N stock positions + 1 benchmark generated`.
 
 No npm install, no node_modules, no watcher. Pure `fs` + `path`.
 
@@ -171,6 +172,8 @@ Every page in `src/` (except `_partials/`) follows the same structure:
 | `ogType` | yes | `article` for analyses, `website` for static pages |
 | `ogImage` | yes | Absolute URL |
 | `pubDate` | articles only | `YYYY-MM-DD` — drives `<meta property="article:published_time">` |
+| `scorecardName` | optional | Short display name for the scorecard (e.g. `Midea Group`). Defaults to a cleaned `about.name` if omitted. See Scorecard. |
+| `scorecardEntryDate` | optional | `YYYY-MM-DD`: scorecard entry date when it differs from `pubDate` (e.g. the Apr-10 inaugural issue). Defaults to `pubDate`. |
 
 ### JSONLD
 
@@ -430,9 +433,9 @@ Vercel rebuilds and deploys on push.
 Public accountability page at [trading852.com/scorecard](https://trading852.com/scorecard). 100% client-side, zero backend.
 
 **Data flow**:
-1. [assets/scorecard.js](assets/scorecard.js) holds the editorial `RECOS` array (ticker, slug, eyebrow, company, **per-reco `pubDate`**).
-2. On page load, each ticker hits the [yahoo-proxy Cloudflare worker](https://yahoo-proxy.marccharnal.workers.dev/) for 3-mo daily OHLC.
-3. Script computes entry = first close strictly after `pubDate`, scans intraday lows for the −10% stop, renders the table.
+1. **Positions are auto-generated at build time.** `build.js` (`generateScorecardData()`) scans `src/analyses/` and registers every article whose hero carries an HK ticker (`NNNN.HK`) **and** a verdict, then writes `dist/assets/scorecard-recos.json` (ticker, company, eyebrow, slug, `issueDate`). There is **no hand-maintained list**: publishing a stock article registers it automatically.
+2. On page load, [assets/scorecard.js](assets/scorecard.js) fetches that JSON, then each ticker hits the [yahoo-proxy Cloudflare worker](https://yahoo-proxy.marccharnal.workers.dev/) for 3-mo daily OHLC.
+3. Script computes entry = first close strictly after the entry date, scans intraday lows for the stop, renders the table.
 4. Same `scorecard.js` powers the homepage strip teaser (`<div id="scorecard-strip">`).
 
 **Entry price rule**: weekday pub → first close strictly after `pubDate` (uses `ts * 1000 > recoPubDate`). Weekend pub (Sat/Sun) → opening price of the next trading day (Monday open). The "open" label appears in the Entry column for weekend publications.
@@ -449,7 +452,7 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 
 A stop fires when the intraday low ≤ the active stop level for that bar. Once a tighter tier activates, the stop never reverts even if the peak recedes. Stopped rows are highlighted in light red (`sc-row-stopped`, `#fdf3f3`) with a "Stopped" badge next to the ticker, exit date under the Last column, and the locked return in the % cell with a small uppercase "Stopped" label underneath. The locked return still feeds the average.
 
-**Post-stop live price**: once a position is stopped, the % column stays frozen at the locked tier (no re-entry, no recovery if the stock bounces back above entry). The live last close keeps refreshing and is shown as a small green `now: XX.XX` line under the entry price, right-aligned in the Entry column. It is informational only — it never feeds `pct` or the average. Wired in `fetchOne` (preserves `currentPrice` separately from `last`) and rendered in `renderTable` via `.sc-now`.
+**Post-stop live price**: once a position is stopped, the % column stays frozen at the locked tier (no re-entry, no recovery if the stock bounces back above entry). The live last close keeps refreshing and is shown as a small `now: XX.XX` line under the entry price, right-aligned in the Entry column. It is colored **green when the live price is at/above the stop level and red when below it** (`.sc-now-pos` / `.sc-now-neg`), so a glance shows whether the stop was vindicated. It is informational only: it never feeds `pct` or the average. Wired in `fetchOne` (preserves `currentPrice` separately from `last`) and rendered in `renderTable` via `.sc-now`.
 
 **Legacy stop (picks published before 2026-05-05)**: flat −10 % from entry, no trailing. Triggered on intraday low ≤ entry × 0.90, locks at −10 %. The cutoff is enforced by `TRAILING_STOP_FROM = Date.UTC(2026, 4, 5)` in `assets/scorecard.js`. The 7 picks from the inaugural issue (Apr 10 / Apr 25 / May 4 pubs) keep the legacy rule for life.
 
@@ -457,9 +460,13 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 
 **Average return**: simple arithmetic mean of every line's `pct`, benchmark excluded. Each pick counts equally. Computed in both `renderStrip` (homepage teaser) and `renderTable` (`/scorecard`) by filtering on `!r.isBenchmark` before summing.
 
-**Rule — article and scorecard entry are inseparable**: never add a ticker to `RECOS` without a published article in `src/analyses/`. No article = no scorecard entry, regardless of `noLink`. The two ship together or not at all.
+**What counts as a position (automatic)**: any `src/analyses/*.html` whose hero has both a `meta-ticker` matching `NNNN.HK` and a `meta-verdict`. The SPY/HSI market-thesis pages and the sector hubs have no stock ticker, so they are excluded automatically. ticker / eyebrow (sector + ` · Monitor` when the verdict is MONITOR) / slug are read from the article; entry date defaults to `pubDate`.
 
-**To add a reco**: edit the `RECOS` array. Set `pubDate: Date.UTC(YYYY, M-1, DD)` per entry (months are 0-indexed: 3 = April). Weekend publications (Sat/Sun) automatically use Monday open as entry. No rebuild needed — commit and push.
+**Overrides**: curated short names and the Apr-10 inaugural issue dates live in the `SCORECARD_OVERRIDES` map in `build.js`. A single article can also override via CONFIG: `scorecardName` (display name) and `scorecardEntryDate` (`YYYY-MM-DD`, when the issue/entry date differs from `pubDate`). The 2800.HK Tracker Fund benchmark is a fixed entry (`SCORECARD_BENCHMARK` in `build.js`), not derived from an article.
+
+**Article and scorecard entry are inseparable — by construction**: positions are derived from the articles themselves, so a scorecard row cannot exist without its published article.
+
+**To add a pick**: just publish the stock article with the standard hero (`meta-ticker` + `meta-verdict`). The next `node build.js` registers it automatically (Vercel runs `build.js` on deploy, so commit and push is enough). Set `scorecardName` in CONFIG only if you want a shorter display name than the schema `about.name`.
 
 ---
 
@@ -503,6 +510,8 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 | File | Ticker | Title | Date |
 |---|---|---|---|
 | [src/analyses/spy-747-level.html](src/analyses/spy-747-level.html) | SPY | The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One. | 2026-05-11 |
+
+> **SPY structural level methodology note:** all calculations (level formula, ceiling, distance, backtest data) use **unadjusted SPY prices — dividends off**. When verifying on TradingView or any charting tool, turn off dividend adjustment before reading price vs. level distances. Adjusted prices produce different distances and will not match the published levels.
 | [src/analyses/1698-tencent-music.html](src/analyses/1698-tencent-music.html) | 1698.HK | Profit +66%, Stock -66% from ATH. Spotify Trades at Four Times the Multiple. | 2026-05-04 |
 | [src/analyses/6690-haier.html](src/analyses/6690-haier.html) | 6690.HK | The World's Largest Appliance Maker Trades at 6.85×. Midea at 12×. Electrolux at 14×. | 2026-04-25 |
 | [src/analyses/9988-alibaba.html](src/analyses/9988-alibaba.html) | 9988.HK | EBITA Down 57%. Cloud Up 36%. This Is What Amazon Looked Like in 2014. | 2026-04-14 |
@@ -522,6 +531,7 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 - A number without its source date or document
 - A risk framed as hypothetical when it is documented
 - **Any em dash** (`—` or `&mdash;`) anywhere: articles, scorecard, metadata, titles, methodology, changelogs. Use a period, a colon, or restructure the sentence. The middle dot `·` is the only permitted title separator.
+- **Any reference to internal research notes**. The published article is presented as the analyst's view, not the output of a prior pipeline. Never write "the original valuation work", "our prior note", "since we filed", "in our May analysis", "the earlier analysis flagged", or any phrase that implies a non-public preceding document. Public market data is fine (`+9% over the past three weeks`, `since the IPO`, `since the FY2025 release`); references to internal research are not. This is a specialisation of the broader "cuisine interne" rule in [instructions/blog-style-guide.md](instructions/blog-style-guide.md). When the urge appears, rewrite using a public anchor date instead.
 
 ---
 
@@ -569,6 +579,8 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 - [ ] Homepage updated — new article in featured card, old cards shifted, evicted card prepended as item 04 in Identified Situations, all items renumbered, item count = (total published) − 3
 - [ ] feed.xml: new `<item>` + `<lastBuildDate>` updated
 - [ ] sitemap.xml: new `<url>` + homepage `<lastmod>` updated. **Refresh of an existing article** = bump that article's `<lastmod>` AND the homepage `<lastmod>` AND JSON-LD `dateModified` to the refresh date
+- [ ] Scorecard: **automatic** (no action) for stock articles with `meta-ticker` + `meta-verdict` in the hero. Set CONFIG `scorecardName` only if a shorter display name is wanted
+- [ ] No em dash anywhere (`grep -rn "—\|&mdash;" src/ assets/` returns nothing)
 - [ ] `node build.js` runs clean
 - [ ] Spot-checked `dist/analyses/<slug>.html` in a browser
 - [ ] Committed and pushed
@@ -576,6 +588,20 @@ The `head.html` partial already wires most of this — confirm the `CONFIG` bloc
 ---
 
 ## Changelog
+
+### June 3, 2026 · Scorecard auto-generated from articles + live SPY tracking + em-dash scrub
+
+- **Scorecard positions now build from the articles.** `build.js` (`generateScorecardData()`) scans `/analyses`, registers every article with an HK ticker + verdict, and writes `dist/assets/scorecard-recos.json`, which `scorecard.js` fetches. The hand-maintained `RECOS` array is gone. Publishing a stock article auto-registers it; curated short names and the Apr-10 inaugural entry dates are preserved via `SCORECARD_OVERRIDES`, plus optional per-article `scorecardName` / `scorecardEntryDate` CONFIG fields. Non-picks (SPY/HSI theses, sector hubs) are excluded automatically; the 2800.HK benchmark is a fixed entry.
+- **Post-stop `now:` price colored** green at/above the stop level, red below (`.sc-now-pos` / `.sc-now-neg`).
+- **SPY $747 banner is live.** `spy-747-level.html` fetches SPY on each load via the yahoo-proxy worker and recomputes the level distance, advancing ceiling, and friction-zone day count, with a within-1%-of-ceiling highlight. Dark panel for contrast, no accent border, static May-29 snapshot as fallback.
+- **Homepage SPY card turns red** when SPY is within 1% of the advancing ceiling (`scorecard.js`, `#spy-zone-card`).
+- **Site-wide em-dash scrub.** All 67 em dashes removed across articles, homepage, RSS feed, static pages, and `scorecard.js`, replaced with context-correct punctuation (colon, comma, parentheses, period). The scorecard "no value" placeholder is now `n/a`. Already banned in "What to never write".
+- **Midea Group (0300.HK)** published (MONITOR, Kuka robotics angle) and added as the first auto-tracked position. **Lenovo (0992.HK) discarded** (thesis stale after a +50% move).
+
+### May 31, 2026 · SPY article update + unadjusted-price convention
+
+- **Live update banner added** to `spy-747-level.html`: SPY at $756.48 (May 29 close), +1.3% above $747, ~3.1% to calculated ceiling (~$781), 164 trading days in friction zone.
+- **Unadjusted-price rule documented** in banner and README: all structural level distances must be read on a chart with dividends off. Adjusted prices produce different values and do not match the published levels.
 
 ### May 7, 2026 · SEO architecture audit + CollectionPage schema for 7 sector hubs
 
