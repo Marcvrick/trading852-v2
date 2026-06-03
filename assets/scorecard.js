@@ -46,6 +46,7 @@
     { t: "2800.HK", company: "Tracker Fund (HSI)", eyebrow: "Benchmark",               slug: "hsi-35-year-trendline",   pubDate: Date.UTC(2026, 3, 10), isBenchmark: true },
     { t: "6690.HK", company: "Haier Smart Home",   eyebrow: "Consumer Discretionary",  slug: "6690-haier",              pubDate: Date.UTC(2026, 3, 25) },
     { t: "1698.HK", company: "Tencent Music",      eyebrow: "Technology",              slug: "1698-tencent-music",      pubDate: Date.UTC(2026, 4, 4) },
+    { t: "0300.HK", company: "Midea Group",        eyebrow: "Consumer Discretionary · Monitor", slug: "0300-midea",   pubDate: Date.UTC(2026, 5, 2) },
   ];
 
   var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
