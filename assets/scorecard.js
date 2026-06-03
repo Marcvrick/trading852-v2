@@ -37,17 +37,10 @@
   // Picks published on/after this date use the trailing 3-tier ratchet above.
   var TRAILING_STOP_FROM = Date.UTC(2026, 4, 5); // 2026-05-05
 
-  var RECOS = [
-    { t: "0113.HK", company: "Dickson Concepts",   eyebrow: "Luxury",                  slug: "0113-dickson-concepts",   pubDate: Date.UTC(2026, 3, 10) },
-    { t: "1913.HK", company: "Prada",              eyebrow: "Luxury",                  slug: "1913-prada",              pubDate: Date.UTC(2026, 3, 10) },
-    { t: "1167.HK", company: "Jacobio",            eyebrow: "Biotech · Monitor",       slug: "1167-jacobio",            pubDate: Date.UTC(2026, 3, 10) },
-    { t: "1585.HK", company: "Yadea",              eyebrow: "Electric Vehicles",       slug: "1585-yadea",              pubDate: Date.UTC(2026, 3, 10) },
-    { t: "9988.HK", company: "Alibaba",            eyebrow: "Technology",              slug: "9988-alibaba",            pubDate: Date.UTC(2026, 3, 10) },
-    { t: "2800.HK", company: "Tracker Fund (HSI)", eyebrow: "Benchmark",               slug: "hsi-35-year-trendline",   pubDate: Date.UTC(2026, 3, 10), isBenchmark: true },
-    { t: "6690.HK", company: "Haier Smart Home",   eyebrow: "Consumer Discretionary",  slug: "6690-haier",              pubDate: Date.UTC(2026, 3, 25) },
-    { t: "1698.HK", company: "Tencent Music",      eyebrow: "Technology",              slug: "1698-tencent-music",      pubDate: Date.UTC(2026, 4, 4) },
-    { t: "0300.HK", company: "Midea Group",        eyebrow: "Consumer Discretionary · Monitor", slug: "0300-midea",   pubDate: Date.UTC(2026, 5, 2) },
-  ];
+  // RECOS are generated at build time from the published stock articles
+  // (see build.js → generateScorecardData) and fetched as scorecard-recos.json.
+  // Each entry: { t, company, eyebrow, slug, issueDate, isBenchmark? }.
+  var RECOS_URL = "/assets/scorecard-recos.json";
 
   var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
   var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
@@ -256,16 +249,27 @@
   }
 
   function boot() {
-    Promise.all(RECOS.map(fetchOne)).then(function (rows) {
-      // Benchmark always last
-      rows.sort(function (a, b) {
-        if (a.isBenchmark) return 1;
-        if (b.isBenchmark) return -1;
-        return 0;
-      });
-      renderStrip(rows);
-      renderTable(rows);
-    });
+    fetch(RECOS_URL, { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (recos) {
+        // Convert the build-time "YYYY-MM-DD" issue date into the pubDate fetchOne expects.
+        recos.forEach(function (rec) {
+          var p = String(rec.issueDate || "").split("-");
+          rec.pubDate = (p.length === 3) ? Date.UTC(+p[0], +p[1] - 1, +p[2]) : PUB_DATE_UTC;
+        });
+        return Promise.all(recos.map(fetchOne));
+      })
+      .then(function (rows) {
+        // Benchmark always last
+        rows.sort(function (a, b) {
+          if (a.isBenchmark) return 1;
+          if (b.isBenchmark) return -1;
+          return 0;
+        });
+        renderStrip(rows);
+        renderTable(rows);
+      })
+      .catch(function () { renderStrip([]); renderTable([]); });
   }
 
   if (document.readyState === "loading") {

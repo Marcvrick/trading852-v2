@@ -195,6 +195,54 @@ function walkSrc(dir, files = []) {
   return files;
 }
 
+// ── Scorecard auto-generation ────────────────────────────────────────────────
+// The scorecard tracks every published stock article automatically. A pick is any
+// article in /analyses with an HK ticker (NNNN.HK) AND a verdict in its hero.
+// ticker / verdict / sector / slug are read from the article; entry date defaults
+// to its pubDate. Curated short names and the Apr-10 inaugural-issue entry dates are
+// preserved via OVERRIDES; a new article can also override via CONFIG.scorecardName
+// and CONFIG.scorecardEntryDate. The HSI Tracker Fund benchmark is a fixed entry.
+const SCORECARD_OVERRIDES = {
+  '0113-dickson-concepts': { name: 'Dickson Concepts', entryDate: '2026-04-10' },
+  '1913-prada':            { name: 'Prada',            entryDate: '2026-04-10' },
+  '1167-jacobio':          { name: 'Jacobio',          entryDate: '2026-04-10' },
+  '1585-yadea':            { name: 'Yadea',            entryDate: '2026-04-10' },
+  '9988-alibaba':          { name: 'Alibaba',          entryDate: '2026-04-10' },
+  '6690-haier':            { name: 'Haier Smart Home' },
+  '1698-tencent-music':    { name: 'Tencent Music' },
+  '0300-midea':            { name: 'Midea Group' },
+};
+const SCORECARD_BENCHMARK = {
+  t: '2800.HK', company: 'Tracker Fund (HSI)', eyebrow: 'Benchmark',
+  slug: 'hsi-35-year-trendline', issueDate: '2026-04-10', isBenchmark: true,
+};
+function cleanCompanyName(s) {
+  if (!s) return '';
+  return s.replace(/\s*(Group Holdings? Ltd\.?|Holdings? Ltd\.?|International Ltd\.?|Co\.,?\s*Ltd\.?|S\.p\.A\.|Inc\.?|,?\s*Ltd\.?)\s*$/i, '').trim() || s;
+}
+function generateScorecardData() {
+  const dir = path.join(SRC, 'analyses');
+  const picks = [];
+  for (const f of fs.readdirSync(dir)) {
+    if (!f.endsWith('.html')) continue;
+    const raw = fs.readFileSync(path.join(dir, f), 'utf8');
+    const ticker  = (raw.match(/class="meta-ticker">([^<]+)</)  || [])[1] || '';
+    const verdict = (raw.match(/class="meta-verdict">([^<]+)</) || [])[1] || '';
+    if (!/^\d{3,4}\.HK$/.test(ticker) || !verdict) continue; // only HK stock picks
+    const { config } = parseSource(raw);
+    const slug = f.replace(/\.html$/, '');
+    const sector = ((raw.match(/\/analyses\/[a-z-]+"[^>]*>([^<]+)<\/a>\s*<\/div>/) || [])[1] || '').trim();
+    const about  = (raw.match(/"about":\s*\{[^}]*?"name":\s*"([^"]+)"/) || [])[1] || '';
+    const ov = SCORECARD_OVERRIDES[slug] || {};
+    const company   = config.scorecardName || ov.name || cleanCompanyName(about) || slug;
+    const issueDate = config.scorecardEntryDate || ov.entryDate || config.pubDate || '';
+    const eyebrow   = sector + (verdict.trim().toUpperCase() === 'MONITOR' ? ' · Monitor' : '');
+    picks.push({ t: ticker, company, eyebrow, slug, issueDate });
+  }
+  picks.sort((a, b) => (a.issueDate < b.issueDate ? -1 : a.issueDate > b.issueDate ? 1 : (a.t < b.t ? -1 : 1)));
+  return picks.concat([SCORECARD_BENCHMARK]);
+}
+
 // ── Main ───────────────────────────────────────────────────────────────────────
 function build() {
   fs.rmSync(DIST, { recursive: true, force: true });
@@ -219,6 +267,16 @@ function build() {
       fs.copyFileSync(file, outPath);
       copied++;
     }
+  }
+
+  // Auto-generate scorecard positions from published stock articles.
+  try {
+    const recos = generateScorecardData();
+    fs.mkdirSync(path.join(DIST, 'assets'), { recursive: true });
+    fs.writeFileSync(path.join(DIST, 'assets', 'scorecard-recos.json'), JSON.stringify(recos, null, 2));
+    console.log(`Scorecard: ${recos.length - 1} stock positions + 1 benchmark generated`);
+  } catch (e) {
+    console.error('Scorecard generation failed:', e.message);
   }
 
   console.log(`Built ${built} HTML pages, copied ${copied} files → dist/`);
