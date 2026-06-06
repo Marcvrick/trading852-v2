@@ -111,7 +111,12 @@ a.recent-update__link {
 
 .node-mode-recent_update--featured a.recent-update__link { padding: 2.5rem; }
 
-/* SPY topping-zone alert: card turns red when SPY enters the zone (class toggled by scorecard.js). */
+/* SPY market-top card: orange by default (watch state); turns red when SPY is
+   within 1% of the ceiling (.spy-in-zone toggled by scorecard.js). */
+#spy-zone-card { border-color: rgba(255, 150, 60, 0.85); }
+#spy-zone-card a.recent-update__link,
+#spy-zone-card a.recent-update__link:hover,
+#spy-zone-card a.recent-update__link:focus { background: #9a4b12; }
 #spy-zone-card.spy-in-zone { border-color: rgba(255, 90, 90, 0.9); }
 #spy-zone-card.spy-in-zone a.recent-update__link,
 #spy-zone-card.spy-in-zone a.recent-update__link:hover,
