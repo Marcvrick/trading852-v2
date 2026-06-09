@@ -142,6 +142,7 @@
           stopLevel: stopLevel,
           lockedPct: lockedPct,
           peakGainPct: (peakHigh - entry) / entry * 100,
+          useTrailing: useTrailing,
         });
       })
       .catch(function (e) {
@@ -238,6 +239,7 @@
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) +
             (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') +
+            (!r.isBenchmark ? '<div class="sc-stop-rule ' + (r.useTrailing ? 'sc-stop-rule-trailing' : 'sc-stop-rule-legacy') + '">' + (r.useTrailing ? 'trailing stop' : 'flat −10 %') + '</div>' : '') +
             (r.stopped && r.currentPrice != null ? '<div class="sc-now ' + (r.currentPrice >= r.stopLevel ? 'sc-now-pos' : 'sc-now-neg') + '">now: ' + fmtPrice(r.currentPrice) + '</div>' : '') +
           '</td>' +
           '<td class="num">' + lastCell + '</td>' +
