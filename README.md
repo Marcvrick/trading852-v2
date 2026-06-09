@@ -587,9 +587,12 @@ The `head.html` partial already wires most of this, confirm the `CONFIG` block i
 
 ## Changelog
 
-### June 9, 2026 · Scorecard: trailing stop applies to all picks
+### June 9, 2026 · Scorecard: trailing stop fix + post-stop display + HSI alpha row
 
 - **Removed the date-based legacy stop gate.** All picks now use the 3-tier trailing ratchet from day one — no flat −10 % exception for picks published before May 5. `TRAILING_STOP_FROM` deleted from `scorecard.js`.
+- **Post-stop now: price shows % from entry.** Stopped rows display `now: XX.XX / −x.xx %` under the entry price. Color is green when current price is above entry, red when below (was previously compared against stop level, which was misleading).
+- **Benchmark row darker.** Background bumped from `#f5f5f5` to `#dadada` so the HSI row is visually distinct from regular picks.
+- **Portfolio vs HSI alpha row.** A dark footer row (`sc-row-alpha`, `#1a1a2e` background) sits below the benchmark and shows the spread between the portfolio average and the HSI return in percentage points (e.g. `+3.24 pp`). Green if portfolio leads, red if it trails.
 
 ### June 3, 2026 · Scorecard auto-generated from articles + live SPY tracking + em-dash scrub
 
