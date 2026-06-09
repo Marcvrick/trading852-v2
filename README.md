@@ -442,7 +442,7 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 
 **Last price**: `meta.regularMarketPrice` from the Yahoo Finance response is used as the primary source (always current, no OHLC lag). Falls back to the close array scan only if the meta field is absent or pre-entry. This prevents thinly traded HK stocks (e.g. 0113.HK) from showing a stale entry-day close in the Last column.
 
-**Stop-loss rule (trailing, one-way ratchet, picks published 2026-05-05 onward)**: the stop tightens as the position appreciates and never loosens.
+**Stop-loss rule (trailing, one-way ratchet, all picks)**: the stop tightens as the position appreciates and never loosens.
 
 | Peak gain since entry | Stop level | Locked return if hit |
 |---|---|---|
@@ -453,8 +453,6 @@ Public accountability page at [trading852.com/scorecard](https://trading852.com/
 A stop fires when the intraday low ≤ the active stop level for that bar. Once a tighter tier activates, the stop never reverts even if the peak recedes. Stopped rows are highlighted in light red (`sc-row-stopped`, `#fdf3f3`) with a "Stopped" badge next to the ticker, exit date under the Last column, and the locked return in the % cell with a small uppercase "Stopped" label underneath. The locked return still feeds the average.
 
 **Post-stop live price**: once a position is stopped, the % column stays frozen at the locked tier (no re-entry, no recovery if the stock bounces back above entry). The live last close keeps refreshing and is shown as a small `now: XX.XX` line under the entry price, right-aligned in the Entry column. It is colored **green when the live price is at/above the stop level and red when below it** (`.sc-now-pos` / `.sc-now-neg`), so a glance shows whether the stop was vindicated. It is informational only: it never feeds `pct` or the average. Wired in `fetchOne` (preserves `currentPrice` separately from `last`) and rendered in `renderTable` via `.sc-now`.
-
-**Legacy stop (picks published before 2026-05-05)**: flat −10 % from entry, no trailing. Triggered on intraday low ≤ entry × 0.90, locks at −10 %. The cutoff is enforced by `TRAILING_STOP_FROM = Date.UTC(2026, 4, 5)` in `assets/scorecard.js`. The 7 picks from the inaugural issue (Apr 10 / Apr 25 / May 4 pubs) keep the legacy rule for life.
 
 **Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick, it is the market reference since the April 10 inaugural issue. Do not reorder it. **The benchmark is excluded from the average return and from the winners/losers tally**, it is a reference line only, not a contributor to the headline number.
 
@@ -588,6 +586,10 @@ The `head.html` partial already wires most of this, confirm the `CONFIG` block i
 ---
 
 ## Changelog
+
+### June 9, 2026 · Scorecard: trailing stop applies to all picks
+
+- **Removed the date-based legacy stop gate.** All picks now use the 3-tier trailing ratchet from day one — no flat −10 % exception for picks published before May 5. `TRAILING_STOP_FROM` deleted from `scorecard.js`.
 
 ### June 3, 2026 · Scorecard auto-generated from articles + live SPY tracking + em-dash scrub
 
