@@ -4,14 +4,11 @@
  * Fetches the daily HK OHLC series for each blog recommendation via the
  * yahoo-proxy Cloudflare worker. Computes:
  *   - entry price = first close after the pub date
- *   - stop loss   = depends on pub date:
- *       pubDate <  TRAILING_STOP_FROM → flat −10 % from entry (legacy rule)
- *       pubDate >= TRAILING_STOP_FROM → trailing 3-tier ratchet armed by
- *         intraday HIGH since entry:
- *           peak ≥ +10 %  → stop = entry        (locks 0 %)
- *           peak ≥ +5 %   → stop = entry × 0.95 (locks −5 %)
- *           else          → stop = entry × 0.90 (locks −10 %)
- *         One-way ratchet: tightens only, never loosens. Triggered on intraday low.
+ *   - stop loss   = trailing 3-tier ratchet, all picks:
+ *         peak ≥ +10 %  → stop = entry        (locks 0 %)
+ *         peak ≥ +5 %   → stop = entry × 0.95 (locks −5 %)
+ *         else          → stop = entry × 0.90  (locks −10 %)
+ *       One-way ratchet: tightens only, never loosens. Triggered on intraday low.
  *   - return      = pct change from entry to last close, OR locked tier % if stopped
  *
  * Two render targets supported on the same page:
@@ -32,10 +29,6 @@
     { triggerPct:  5, stopMul: 0.95, lockedPct:  -5 },
     { triggerPct:  0, stopMul: 0.90, lockedPct: -10 },
   ];
-
-  // Picks published before this date keep the original flat −10 % stop.
-  // Picks published on/after this date use the trailing 3-tier ratchet above.
-  var TRAILING_STOP_FROM = Date.UTC(2026, 4, 5); // 2026-05-05
 
   // RECOS are generated at build time from the published stock articles
   // (see build.js → generateScorecardData) and fetched as scorecard-recos.json.
@@ -82,24 +75,21 @@
         // +pct trigger has been reached by the running intraday HIGH; otherwise
         // keep the base −10 % tier. Then check if the bar's intraday LOW breaches
         // the active stop level. Tiers ratchet tighter only.
-        var useTrailing = recoPubDate >= TRAILING_STOP_FROM;
         var activeTier = STOP_TIERS[STOP_TIERS.length - 1];
         var stopLevel = entry * activeTier.stopMul;
         var lockedPct = activeTier.lockedPct;
         var peakHigh = entry;
         var stopped = false, stopDate = null;
         for (var k = entryIdx + 1; k < ts.length; k++) {
-          if (useTrailing) {
-            var hi = highs[k];
-            if (hi != null && hi > peakHigh) peakHigh = hi;
-            var peakGainPct = (peakHigh - entry) / entry * 100;
-            for (var ti = 0; ti < STOP_TIERS.length; ti++) {
-              if (peakGainPct >= STOP_TIERS[ti].triggerPct) {
-                activeTier = STOP_TIERS[ti];
-                stopLevel = entry * activeTier.stopMul;
-                lockedPct = activeTier.lockedPct;
-                break;
-              }
+          var hi = highs[k];
+          if (hi != null && hi > peakHigh) peakHigh = hi;
+          var peakGainPct = (peakHigh - entry) / entry * 100;
+          for (var ti = 0; ti < STOP_TIERS.length; ti++) {
+            if (peakGainPct >= STOP_TIERS[ti].triggerPct) {
+              activeTier = STOP_TIERS[ti];
+              stopLevel = entry * activeTier.stopMul;
+              lockedPct = activeTier.lockedPct;
+              break;
             }
           }
           var lo = lows[k];
@@ -142,7 +132,6 @@
           stopLevel: stopLevel,
           lockedPct: lockedPct,
           peakGainPct: (peakHigh - entry) / entry * 100,
-          useTrailing: useTrailing,
         });
       })
       .catch(function (e) {
@@ -239,7 +228,6 @@
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) +
             (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') +
-            (!r.isBenchmark ? '<div class="sc-stop-rule ' + (r.useTrailing ? 'sc-stop-rule-trailing' : 'sc-stop-rule-legacy') + '">' + (r.useTrailing ? 'trailing stop' : 'flat −10 %') + '</div>' : '') +
             (r.stopped && r.currentPrice != null ? '<div class="sc-now ' + (r.currentPrice >= r.stopLevel ? 'sc-now-pos' : 'sc-now-neg') + '">now: ' + fmtPrice(r.currentPrice) + '</div>' : '') +
           '</td>' +
           '<td class="num">' + lastCell + '</td>' +

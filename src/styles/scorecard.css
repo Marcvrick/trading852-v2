@@ -179,17 +179,6 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
 .sc-now.sc-now-pos { color: #0f9d66; }
 .sc-now.sc-now-neg { color: #c93338; }
 
-.sc-stop-rule {
-  display: block;
-  font-size: 0.62rem;
-  font-weight: 500;
-  margin-top: 0.15rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-.sc-stop-rule-trailing { color: #2563eb; }
-.sc-stop-rule-legacy   { color: #9ca3af; }
-
 .sc-loading {
   padding: 3rem 1rem;
   text-align: center;
