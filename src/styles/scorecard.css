@@ -179,6 +179,23 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
 .sc-now.sc-now-pos { color: #0f9d66; }
 .sc-now.sc-now-neg { color: #c93338; }
 
+.sc-table tr.sc-row-alpha td {
+  background: #1a1a2e;
+  border-top: 2px solid #2d2d4a;
+}
+.sc-alpha-label {
+  font-size: var(--fs-13);
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-left: 1rem;
+}
+.sc-table tr.sc-row-alpha td.num {
+  font-size: var(--fs-15);
+  font-weight: 700;
+}
+
 .sc-loading {
   padding: 3rem 1rem;
   text-align: center;

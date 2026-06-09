@@ -209,6 +209,7 @@
           '<th class="num">Last / Stop</th>' +
           '<th class="num">% since</th>' +
         '</tr></thead><tbody>';
+    var benchmarkPct = null;
     rows.forEach(function (r) {
       var pctCls = r.pct == null ? "" : r.pct >= 0 ? "pos" : "neg";
       var pctCell = r.stopped
@@ -222,6 +223,7 @@
         ? '<span class="sc-last-stop">' + fmtPrice(r.stopLevel) + '</span>' +
           '<div class="sc-stop-date">stop hit ' + fmtDate(r.stopDate) + '</div>'
         : fmtPrice(r.last);
+      if (r.isBenchmark && r.pct != null) benchmarkPct = r.pct;
       html +=
         '<tr class="' + rowCls + '">' +
           '<td class="sc-ticker">' + (r.noLink ? r.t : '<a href="/analyses/' + r.slug + '">' + r.t + '</a>') + badge + '</td>' +
@@ -234,6 +236,15 @@
           '<td class="num ' + pctCls + '">' + pctCell + '</td>' +
         '</tr>';
     });
+    if (avg != null && benchmarkPct != null) {
+      var alpha = avg - benchmarkPct;
+      var alphaCls = alpha >= 0 ? 'pos' : 'neg';
+      html +=
+        '<tr class="sc-row-alpha">' +
+          '<td colspan="4" class="sc-alpha-label">Portfolio vs HSI</td>' +
+          '<td class="num ' + alphaCls + '">' + (alpha >= 0 ? '+' : '') + alpha.toFixed(2) + ' pp</td>' +
+        '</tr>';
+    }
     html += '</tbody></table>';
     el.innerHTML = html;
   }
