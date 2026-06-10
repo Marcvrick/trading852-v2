@@ -229,7 +229,7 @@
           '<td class="sc-ticker">' + (r.noLink ? r.t : '<a href="/analyses/' + r.slug + '">' + r.t + '</a>') + badge + '</td>' +
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) +
-            (r.entryIsOpen ? '<div class="sc-stop-date">open</div>' : '') +
+            (r.entryIsOpen ? '<div class="sc-stop-date">open ' + fmtDate(r.entryDate) + '</div>' : '') +
             (r.stopped && r.currentPrice != null ? '<div class="sc-now ' + (r.currentPrice >= r.entry ? 'sc-now-pos' : 'sc-now-neg') + '">now: ' + fmtPrice(r.currentPrice) + ' / ' + fmtPct((r.currentPrice - r.entry) / r.entry * 100) + '</div>' : '') +
           '</td>' +
           '<td class="num">' + lastCell + '</td>' +
