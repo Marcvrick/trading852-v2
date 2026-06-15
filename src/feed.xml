@@ -5,8 +5,16 @@
     <link>https://trading852.com</link>
     <description>Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.</description>
     <language>en</language>
-    <lastBuildDate>Tue, 02 Jun 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 15 Jun 2026 00:00:00 +0800</lastBuildDate>
     <atom:link href="https://trading852.com/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>UPDATE: Alibaba (9988.HK) Downgraded CONVICTION → MONITOR on FY2026 FCF Reversal</title>
+      <link>https://trading852.com/analyses/9988-alibaba</link>
+      <guid>https://trading852.com/analyses/9988-alibaba#update-20260615</guid>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 +0800</pubDate>
+      <description>The full FY2026 annual filing forces a downgrade from CONVICTION to MONITOR. Free cash flow swung to −RMB 46.6B, the first negative FCF since listing (from +RMB 73.9B); GAAP EBIT fell 64% and Non-GAAP net income fell 62%; ROIC dropped to 4.4%, below cost of capital. The capex thesis is intact — net cash rose to RMB 260.8B and cloud revenue grew 34% (adjusted EBITA +35%) — but the April "10.8× EV/EBIT" no longer holds: on trailing FY2026 EBIT the multiple is ~31×, with the valuation case now resting on a consensus earnings recovery. The May 24 re-rating call (HK$165–200) has not played out; the stock is HK$109.3, near its 52-week low. MONITOR holds until FCF turns positive for two consecutive quarters (first observable: Q1 FY2027, August 2026).</description>
+    </item>
 
     <item>
       <title>Midea Group (0300.HK): It Owns One of the World's Four Big Robot Makers. The Market Prices It as a Washing-Machine Company.</title>
