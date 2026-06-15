@@ -507,6 +507,8 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 
 | File | Ticker | Title | Date |
 |---|---|---|---|
+| [src/analyses/0027-galaxy.html](src/analyses/0027-galaxy.html) | 0027.HK | The Only Debt-Free Casino in Macau Just Hit a 52-Week Low. | 2026-06-15 |
+| [src/analyses/0300-midea.html](src/analyses/0300-midea.html) | 0300.HK | It Owns One of the World's Four Big Robot Makers. The Market Prices It as a Washing-Machine Company. | 2026-06-02 |
 | [src/analyses/spy-747-level.html](src/analyses/spy-747-level.html) | SPY | The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One. | 2026-05-11 |
 
 > **SPY structural level methodology note:** all calculations (level formula, ceiling, distance, backtest data) use **unadjusted SPY prices, dividends off**. When verifying on TradingView or any charting tool, turn off dividend adjustment before reading price vs. level distances. Adjusted prices produce different distances and will not match the published levels.
