@@ -111,6 +111,24 @@
           </div>
         </div>
         <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.65;"><span id="spy-lead">The $747 level was crossed.</span> The calculated ceiling advances ~$0.83 per trading day and sits near <strong id="spy-ceiling-prose" style="color:rgba(255,255,255,0.92);">$781</strong> as of <span id="spy-asof-prose">May 29</span>, the maximum overshoot the historical envelope allows. No confirmed peak yet: the post-peak volume signal (20 sessions after the high vs. trailing 12-month average) has not triggered. At <span id="spy-friction-prose">164</span> trading days in the friction zone, the approach remains in the fast category (threshold: 252 days). All prices unadjusted. Verify on a chart with dividends off.</p>
+
+        <!-- Post-peak volume tracker: counts trading sessions since the cycle-high close.
+             At 20 sessions, the post-peak vs trailing-12-month volume ratio is final
+             (confirmed tops historically >=1.46x, clean breakouts <=1.24x). -->
+        <div id="spy-hh-block" style="margin-top:1.15rem;padding-top:1.15rem;border-top:1px solid rgba(255,255,255,0.1);">
+          <div style="display:flex;gap:2.5rem;flex-wrap:wrap;align-items:flex-start;margin-bottom:0.6rem;">
+            <div>
+              <div id="spy-days-since-high" style="font-size:21px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.1;">&middot; days</div>
+              <div id="spy-days-since-high-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">since the cycle high (signal at 20)</div>
+            </div>
+            <div>
+              <div id="spy-vol-ratio" style="font-size:21px;font-weight:700;color:rgba(255,255,255,0.6);line-height:1.1;">&middot;</div>
+              <div id="spy-vol-ratio-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">post-peak volume vs 12-mo avg</div>
+            </div>
+          </div>
+          <p id="spy-hh-prose" style="margin:0;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.65;">Counting trading sessions since the cycle-high close. The post-peak volume signal becomes final 20 sessions after the high.</p>
+        </div>
+
         <div id="spy-live-note" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:0.75rem;">Live &middot; refreshes from Yahoo Finance each time this page loads.</div>
       </div>
       <script>
@@ -134,6 +152,67 @@
           var n = 0, c = a + 86400000;
           while (c <= b) { var w = new Date(c).getUTCDay(); if (w !== 0 && w !== 6) n++; c += 86400000; }
           return n;
+        }
+        var POST_PEAK_N = 20;                 // sessions after the high to average
+        var TRAIL_N = 252;                    // trailing ~12-month volume window
+        var TOP_RATIO = 1.46;                 // confirmed-top floor (historical)
+        var BREAKOUT_RATIO = 1.24;            // clean-breakout ceiling (historical)
+        // Find the cycle-high close, count sessions since, and compute the post-peak
+        // volume ratio (avg of up to 20 sessions after the high / trailing 12-mo avg).
+        function analyze(ts, closes, vols) {
+          if (!ts || !closes || ts.length < 30) return null;
+          var last = closes.length - 1;
+          while (last >= 0 && closes[last] == null) last--;
+          if (last < 0) return null;
+          var peak = 0, pc = -Infinity, i;
+          for (i = 0; i <= last; i++) { if (closes[i] != null && closes[i] > pc) { pc = closes[i]; peak = i; } }
+          var since = last - peak;                       // trading sessions since the high
+          var tStart = Math.max(0, peak - TRAIL_N), tSum = 0, tN = 0, j;
+          for (j = tStart; j < peak; j++) { if (vols[j] != null) { tSum += vols[j]; tN++; } }
+          var trail = tN ? tSum / tN : null;
+          var pEnd = Math.min(last, peak + POST_PEAK_N), pSum = 0, pN = 0, k;
+          for (k = peak + 1; k <= pEnd; k++) { if (vols[k] != null) { pSum += vols[k]; pN++; } }
+          var post = pN ? pSum / pN : null;
+          return {
+            peakClose: pc, peakDate: new Date(ts[peak] * 1000), since: since,
+            sessions: pN, ratio: (trail && post) ? post / trail : null,
+            complete: since >= POST_PEAK_N
+          };
+        }
+        function verdict(r) {
+          if (r >= TOP_RATIO) return ["distribution / confirmed-top zone", "#ff5c5c"];
+          if (r <= BREAKOUT_RATIO) return ["clean-breakout zone", "#56d49f"];
+          return ["watch zone (no historical observations)", "rgba(71,96,255,0.9)"];
+        }
+        function renderHH(a) {
+          if (!a) return;
+          var rEl = document.getElementById("spy-vol-ratio");
+          set("spy-days-since-high", a.since + (a.since === 1 ? " day" : " days"));
+          if (a.since === 0) {
+            set("spy-vol-ratio", "·"); if (rEl) rEl.style.color = "rgba(255,255,255,0.6)";
+            set("spy-vol-ratio-sub", "post-peak volume vs 12-mo avg");
+            set("spy-days-since-high-sub", "since the cycle high (signal at 20)");
+            set("spy-hh-prose", "No confirmed peak yet: SPY closed at its cycle high ($" + a.peakClose.toFixed(2) + ") on " + fD(a.peakDate) + ". The 20-session post-peak volume clock starts the session after price rolls over from the high.");
+            return;
+          }
+          if (a.ratio != null) {
+            var v = verdict(a.ratio);
+            set("spy-vol-ratio", a.ratio.toFixed(2) + "×"); if (rEl) rEl.style.color = v[1];
+            if (a.complete) {
+              set("spy-vol-ratio-sub", "post-peak volume vs 12-mo avg · 20 sessions");
+              set("spy-days-since-high-sub", "since the cycle high · signal live");
+              set("spy-hh-prose", "Cycle high $" + a.peakClose.toFixed(2) + " on " + fD(a.peakDate) + ", " + a.since + " trading sessions ago. Post-peak volume (first 20 sessions) ran " + a.ratio.toFixed(2) + "× the trailing 12-month average → " + v[0] + ". Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.");
+            } else {
+              set("spy-vol-ratio-sub", "provisional · " + a.sessions + "/20 sessions");
+              set("spy-days-since-high-sub", "since the cycle high (signal at 20)");
+              set("spy-hh-prose", "Cycle high $" + a.peakClose.toFixed(2) + " on " + fD(a.peakDate) + ", " + a.since + " of 20 sessions elapsed. Provisional post-peak volume " + a.ratio.toFixed(2) + "× the trailing 12-month average; the read becomes final at 20 sessions (confirmed tops ≥1.46×, clean breakouts ≤1.24×).");
+            }
+          } else {
+            set("spy-vol-ratio", "·"); if (rEl) rEl.style.color = "rgba(255,255,255,0.6)";
+            set("spy-vol-ratio-sub", "post-peak volume vs 12-mo avg");
+            set("spy-days-since-high-sub", "since the cycle high (signal at 20)");
+            set("spy-hh-prose", "Cycle high $" + a.peakClose.toFixed(2) + " on " + fD(a.peakDate) + ", " + a.since + " sessions ago. Volume data incomplete for the ratio.");
+          }
         }
         function render(price, d) {
           var dUTC = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
@@ -159,18 +238,21 @@
           set("spy-live-note", "Live · refreshed from Yahoo Finance on page load (" + fD(d) + ").");
         }
         function boot() {
-          var u = PROXY + encodeURIComponent(CHART + "SPY?range=5d&interval=1d");
+          var u = PROXY + encodeURIComponent(CHART + "SPY?range=2y&interval=1d");
           fetch(u, { cache: "no-store" })
             .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
             .then(function (j) {
               var res = j && j.chart && j.chart.result && j.chart.result[0]; if (!res) throw 0;
+              var ts = res.timestamp || [];
+              var quote = res.indicators && res.indicators.quote && res.indicators.quote[0] || {};
+              var closes = quote.close || [], vols = quote.volume || [];
               var p = res.meta && res.meta.regularMarketPrice, t = res.meta && res.meta.regularMarketTime;
               if (p == null) {
-                var q = res.indicators.quote[0].close, ts = res.timestamp;
-                for (var i = q.length - 1; i >= 0; i--) { if (q[i] != null) { p = q[i]; t = ts[i]; break; } }
+                for (var i = closes.length - 1; i >= 0; i--) { if (closes[i] != null) { p = closes[i]; t = ts[i]; break; } }
               }
               if (p == null) throw 0;
               render(p, t ? new Date(t * 1000) : new Date());
+              renderHH(analyze(ts, closes, vols));
             })
             .catch(function () { /* keep the static May-29 snapshot already in the DOM */ });
         }
