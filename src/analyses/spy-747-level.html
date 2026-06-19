@@ -251,6 +251,29 @@
                 for (var i = closes.length - 1; i >= 0; i--) { if (closes[i] != null) { p = closes[i]; t = ts[i]; break; } }
               }
               if (p == null) throw 0;
+              // Yahoo's daily array carries the latest session as a trailing slot whose
+              // close is still null (data not finalized) while meta.regularMarketPrice
+              // already holds that close. analyze() skips null closes, so "days since the
+              // cycle high" trails the price tile by a session. Backfill the latest session
+              // from meta (filling an existing null slot, or appending a new bar) so both
+              // tiles count the same day.
+              if (t && p != null && ts.length) {
+                var dayU = function (sec) { var x = new Date(sec * 1000); return Date.UTC(x.getUTCFullYear(), x.getUTCMonth(), x.getUTCDate()); };
+                var metaVol = res.meta && res.meta.regularMarketVolume != null ? res.meta.regularMarketVolume : null;
+                var lnn = closes.length - 1;
+                while (lnn >= 0 && closes[lnn] == null) lnn--;
+                var dMeta = dayU(t);
+                if (lnn < 0 || dMeta > dayU(ts[lnn])) {
+                  var slot = -1, q;
+                  for (q = closes.length - 1; q > lnn; q--) { if (dayU(ts[q]) === dMeta) { slot = q; break; } }
+                  if (slot >= 0) {
+                    closes[slot] = p;
+                    if (vols[slot] == null) vols[slot] = metaVol;
+                  } else {
+                    ts = ts.concat([t]); closes = closes.concat([p]); vols = vols.concat([metaVol]);
+                  }
+                }
+              }
               render(p, t ? new Date(t * 1000) : new Date());
               renderHH(analyze(ts, closes, vols));
             })
