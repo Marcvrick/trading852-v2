@@ -11,13 +11,14 @@
  *       One-way ratchet: tightens only, never loosens. Triggered on intraday low.
  *   - return      = pct change from entry to last close, OR locked tier % if stopped
  *
- * Dividends: on an ex-dividend day the price gaps down by ~the payout, which is
- * not a loss to a holder (they receive the cash). Any dividend that goes ex AFTER
- * the entry bar is folded back into the return (total return) so the mechanical
- * ex-div drop is not counted against the pick, and is also added to the price path
- * the trailing stop sees so an ex-div gap cannot falsely trigger the stop. Displayed
- * entry / last prices stay raw (chart-verifiable). Dividends with an ex-date on or
- * before the entry bar are already in the entry price and are excluded.
+ * Dividends: on an ex-dividend day the price gaps down by ~the payout. That drop is
+ * a mechanical adjustment, not a fall in value, so it must not count as a loss. Any
+ * dividend that goes ex AFTER the entry bar is adjusted out of the return (the
+ * one-off ex-div drop is cancelled) and out of the price path the trailing stop
+ * sees, so an ex-div gap cannot falsely trigger the stop. The dividend is NOT added
+ * as income: only the artificial drop is removed. Displayed entry / last prices stay
+ * raw (chart-verifiable). Dividends with an ex-date on or before the entry bar are
+ * already in the entry price and are excluded.
  *
  * Two render targets supported on the same page:
  *   #scorecard-strip  : compact 1-line summary for the homepage
@@ -79,9 +80,9 @@
         }
         if (entry == null) throw new Error("no_entry_bar");
 
-        // Dividends that go ex strictly AFTER the entry bar. Folded back in as
-        // total return (the holder receives the cash), so the ex-div price drop
-        // is neutralised in both the stop scan and the headline %.
+        // Dividends that go ex strictly AFTER the entry bar. The one-off ex-div
+        // price drop is adjusted out of both the stop scan and the headline %, so
+        // it is not counted as a loss against the pick.
         var entryTs = ts[entryIdx];
         var divs = [];
         var divObj = result.events && result.events.dividends;
@@ -112,8 +113,8 @@
         var peakVal = entry;
         var stopped = false, stopDate = null;
         for (var k = entryIdx + 1; k < ts.length; k++) {
-          // Dividends received by this bar keep the value path continuous across
-          // the ex-div gap: compare value (= raw price + cash received), not raw price.
+          // Adjust the ex-div drop out: by this bar the price has shed any dividend
+          // gone ex since entry, so add it back to keep the path continuous.
           var cd = cumDivThrough(ts[k]);
           var hi = highs[k];
           if (hi != null && (hi + cd) > peakVal) peakVal = hi + cd;
@@ -250,7 +251,7 @@
       var pctCell = r.stopped
         ? fmtPct(r.pct) + '<div class="sc-stopped-label">Stopped</div>'
         : fmtPct(r.pct) + (r.dividendSinceEntry > 0
-            ? '<div class="sc-div-note" title="Total return. HKD ' + r.dividendSinceEntry.toFixed(3) + ' per share has gone ex-dividend since entry and is folded back in, so the ex-dividend price drop is not counted as a loss.">incl. div</div>'
+            ? '<div class="sc-div-note" title="HKD ' + r.dividendSinceEntry.toFixed(3) + ' per share went ex-dividend after entry. That one-off ex-dividend price drop is adjusted out, so it is not counted as a loss. The dividend is not added as income.">ex-div adj</div>'
             : '');
       var rowCls = r.stopped ? "sc-row-stopped" : r.isBenchmark ? "sc-row-benchmark" : "";
       var badge = r.stopped
