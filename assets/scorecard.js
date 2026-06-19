@@ -11,6 +11,14 @@
  *       One-way ratchet: tightens only, never loosens. Triggered on intraday low.
  *   - return      = pct change from entry to last close, OR locked tier % if stopped
  *
+ * Dividends: on an ex-dividend day the price gaps down by ~the payout, which is
+ * not a loss to a holder (they receive the cash). Any dividend that goes ex AFTER
+ * the entry bar is folded back into the return (total return) so the mechanical
+ * ex-div drop is not counted against the pick, and is also added to the price path
+ * the trailing stop sees so an ex-div gap cannot falsely trigger the stop. Displayed
+ * entry / last prices stay raw (chart-verifiable). Dividends with an ex-date on or
+ * before the entry bar are already in the entry price and are excluded.
+ *
  * Two render targets supported on the same page:
  *   #scorecard-strip  : compact 1-line summary for the homepage
  *   #scorecard-table  : full table on /scorecard
@@ -39,7 +47,7 @@
   var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
 
   function fetchOne(rec) {
-    var url = PROXY + encodeURIComponent(CHART + rec.t + "?range=3mo&interval=1d");
+    var url = PROXY + encodeURIComponent(CHART + rec.t + "?range=3mo&interval=1d&events=div");
     return fetch(url, { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (j) {
@@ -71,6 +79,29 @@
         }
         if (entry == null) throw new Error("no_entry_bar");
 
+        // Dividends that go ex strictly AFTER the entry bar. Folded back in as
+        // total return (the holder receives the cash), so the ex-div price drop
+        // is neutralised in both the stop scan and the headline %.
+        var entryTs = ts[entryIdx];
+        var divs = [];
+        var divObj = result.events && result.events.dividends;
+        if (divObj) {
+          Object.keys(divObj).forEach(function (key) {
+            var d = divObj[key];
+            if (d && d.amount != null && d.date != null && d.date > entryTs) {
+              divs.push({ ts: d.date, amount: d.amount });
+            }
+          });
+        }
+        function cumDivThrough(barTs) {
+          var s = 0;
+          for (var di = 0; di < divs.length; di++) {
+            if (divs[di].ts <= barTs) s += divs[di].amount;
+          }
+          return s;
+        }
+        var divSinceEntry = divs.reduce(function (a, d) { return a + d.amount; }, 0);
+
         // Scan subsequent bars: if trailing eligible, arm the tightest tier whose
         // +pct trigger has been reached by the running intraday HIGH; otherwise
         // keep the base −10 % tier. Then check if the bar's intraday LOW breaches
@@ -78,12 +109,15 @@
         var activeTier = STOP_TIERS[STOP_TIERS.length - 1];
         var stopLevel = entry * activeTier.stopMul;
         var lockedPct = activeTier.lockedPct;
-        var peakHigh = entry;
+        var peakVal = entry;
         var stopped = false, stopDate = null;
         for (var k = entryIdx + 1; k < ts.length; k++) {
+          // Dividends received by this bar keep the value path continuous across
+          // the ex-div gap: compare value (= raw price + cash received), not raw price.
+          var cd = cumDivThrough(ts[k]);
           var hi = highs[k];
-          if (hi != null && hi > peakHigh) peakHigh = hi;
-          var peakGainPct = (peakHigh - entry) / entry * 100;
+          if (hi != null && (hi + cd) > peakVal) peakVal = hi + cd;
+          var peakGainPct = (peakVal - entry) / entry * 100;
           for (var ti = 0; ti < STOP_TIERS.length; ti++) {
             if (peakGainPct >= STOP_TIERS[ti].triggerPct) {
               activeTier = STOP_TIERS[ti];
@@ -94,7 +128,7 @@
           }
           var lo = lows[k];
           if (lo == null) continue;
-          if (lo <= stopLevel) {
+          if ((lo + cd) <= stopLevel) {
             stopped = true;
             stopDate = new Date(ts[k] * 1000);
             break;
@@ -116,7 +150,7 @@
         }
         if (last == null) throw new Error("no_close");
 
-        var pct = stopped ? lockedPct : (last - entry) / entry * 100;
+        var pct = stopped ? lockedPct : (last + divSinceEntry - entry) / entry * 100;
 
         return Object.assign({}, rec, {
           entry: entry,
@@ -131,7 +165,8 @@
           stopDate: stopDate,
           stopLevel: stopLevel,
           lockedPct: lockedPct,
-          peakGainPct: (peakHigh - entry) / entry * 100,
+          peakGainPct: (peakVal - entry) / entry * 100,
+          dividendSinceEntry: divSinceEntry,
         });
       })
       .catch(function (e) {
@@ -214,7 +249,9 @@
       var pctCls = r.pct == null ? "" : r.pct >= 0 ? "pos" : "neg";
       var pctCell = r.stopped
         ? fmtPct(r.pct) + '<div class="sc-stopped-label">Stopped</div>'
-        : fmtPct(r.pct);
+        : fmtPct(r.pct) + (r.dividendSinceEntry > 0
+            ? '<div class="sc-div-note" title="Total return. HKD ' + r.dividendSinceEntry.toFixed(3) + ' per share has gone ex-dividend since entry and is folded back in, so the ex-dividend price drop is not counted as a loss.">incl. div</div>'
+            : '');
       var rowCls = r.stopped ? "sc-row-stopped" : r.isBenchmark ? "sc-row-benchmark" : "";
       var badge = r.stopped
         ? ' <span class="sc-badge sc-badge-stopped">Stopped</span>'

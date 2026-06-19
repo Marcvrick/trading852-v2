@@ -134,6 +134,17 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   margin-top: 0.15rem;
 }
 
+.sc-div-note {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #0f9d66;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+  cursor: help;
+}
+
 .sc-table tr.sc-row-benchmark td { background: #dadada; }
 .sc-table tr.sc-row-benchmark:hover td { background: #cecece; }
 

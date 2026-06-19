@@ -588,6 +588,12 @@ The `head.html` partial already wires most of this, confirm the `CONFIG` block i
 
 ## Changelog
 
+### June 19, 2026 · Scorecard: ex-dividend aware returns (total return)
+
+- **The scorecard no longer counts an ex-dividend price drop as a loss.** `scorecard.js` now requests Yahoo dividend events (`&events=div`) and, for any dividend that goes ex strictly after a pick's entry bar, folds the payout back into the return (total return). Trigger: 0300.HK Midea went ex on a 4.367 HKD/share dividend (Jun 18), so the raw close-to-close drop showed the pick down ~5pp more than its real move (raw −7.5% vs total-return −2.7% from the Jun 3 entry). Mirrors the HK Portfolio app's Jun 18 ex-div fold (commit `be66e99` there): displayed entry / last prices stay raw and chart-verifiable, only the % is adjusted.
+- **The trailing stop is ex-div aware too.** The stop scan now compares value (raw price + dividends received since entry), not the raw price, so an ex-dividend gap can no longer falsely trip a stop that has ratcheted to the −5% or breakeven tier. Previously a ~5% ex-div drop could stop out a position that had not actually fallen.
+- **General, not one-off.** Applies to every tracked ticker and the 2800.HK benchmark, so the portfolio average and the HSI reference are compared on the same total-return basis. Dividends with an ex-date on or before the entry bar (e.g. 1698.HK Tencent Music's Apr 1 payout vs its May 4 entry) are already in the entry price and stay excluded. Affected rows show a small `incl. div` caption under the % with a tooltip stating the per-share dividend folded in.
+
 ### June 9, 2026 · Scorecard: trailing stop fix + post-stop display + HSI alpha row
 
 - **Removed the date-based legacy stop gate.** All picks now use the 3-tier trailing ratchet from day one — no flat −10 % exception for picks published before May 5. `TRAILING_STOP_FROM` deleted from `scorecard.js`.
