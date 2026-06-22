@@ -9,7 +9,7 @@ tags:
 category: Trading/Blog
 type: readme
 created: 2026-04-26
-updated: 2026-06-03
+updated: 2026-06-22
 ---
 
 # Trading852 v2: Build Pipeline + Editorial Workflow
@@ -511,6 +511,7 @@ Drafts live at [src/drafts/](src/drafts/). They are built into `dist/drafts/` bu
 
 | File | Ticker | Title | Date |
 |---|---|---|---|
+| [src/analyses/hong-kong-discount-cheap-two-ways.html](src/analyses/hong-kong-discount-cheap-two-ways.html) | — | Cheap Is a Question, Not an Answer | 2026-06-21 |
 | [src/analyses/0300-midea.html](src/analyses/0300-midea.html) | 0300.HK | It Owns One of the World's Four Big Robot Makers. The Market Prices It as a Washing-Machine Company. | 2026-06-02 |
 | [src/analyses/spy-747-level.html](src/analyses/spy-747-level.html) | SPY | The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One. | 2026-05-11 |
 
@@ -591,6 +592,11 @@ The `head.html` partial already wires most of this, confirm the `CONFIG` block i
 ---
 
 ## Changelog
+
+### June 22, 2026 · Homepage cards: grey key-number added to small cards + mobile truncation fix
+
+- **`card-key-number` added to both small cards.** The grey "frame" line was exclusive to the featured card; small cards felt half-built without it. 0300.HK gets `"Robot Maker. Washing-Machine Multiple."`, SPY gets `"Two Levels. Same Distance."` Both follow the same `card-key-number` CSS (bold, 45%-opacity white, ellipsis on desktop).
+- **Featured card mobile truncation fixed.** `card-key-number` had `white-space: nowrap` globally, so at the 1.5rem mobile floor the 34-char key-number overflowed and got ellipsized. Added a `@media (max-width: 48rem)` override: `white-space: normal; font-size: 1.125rem` on `.node-mode-recent_update--featured .card-key-number`. The text now wraps cleanly instead of truncating.
 
 ### June 19, 2026 · Scorecard: ex-dividend adjusted returns
 
