@@ -534,6 +534,29 @@ Jamais de recommandation sur quand acheter, quand vendre, combien investir, ou c
 
 > Cas réel (hong-kong-discount-cheap-two-ways, 22 juin 2026) : (1) le paragraphe Green Tea fermait sur *"The business is growing into the discount, not out of trouble. The cheaper the stock gets, the wider that gap with its peers becomes."* — métaphore retournée + seconde phrase circulaire (un prix plus bas = un écart plus large, tautologie). Retour Dany : *"this paragraph conclusion is not very clear. what do you actually want to say?"*. Réécrit en deux phrases directes. (2) La section 4 fermait sur *"The price is the same kind of low. The reason is the opposite."* — opposition à deux temps qui rebouclait un paragraphe déjà clair (le contraste venait d'être livré : top four rendent du cash, bottom two le gardent). Retour Dany : *"i do not understand this sentence. why is it necessary?"*. Coupée. Le test simple : si on supprime l'antithèse et que le paragraphe ne perd aucune information, c'était du remplissage.
 
+### Construire la phrase claire — la recette (modèle Dickson, 22 juin 2026)
+
+La règle 0 dit ce qu'il faut ÉVITER. Voici comment CONSTRUIRE une phrase claire quand l'idée met en jeu plusieurs parties (qui contrôle, qui gagne, qui perd) — le piège le plus courant des paragraphes de thèse, parce que le lecteur doit suivre deux acteurs à la fois.
+
+**L'ordre qui fait atterrir l'idée en une seule lecture :**
+1. **La situation**, en mots concrets et physiques. *"the cash stays locked in the company"* (pas *"the cash accrues to no one"*).
+2. **Qui décide de l'issue.** *"whether a minority shareholder ever sees it is decided by the same family"*.
+3. **Le conflit / la bascule, sur la même clause.** *"that just tried to keep it for itself"*.
+
+Les trois temps tiennent dans **une seule phrase**. Le lecteur lit une fois et tient la situation, le levier et le piège, sans revenir en arrière.
+
+**Trois contraintes qui gardent la phrase nette :**
+- **Fusionner quand deux phrases servent une seule idée.** Si la 2e phrase ne fait que renvoyer à la 1re (*"That is the same family…"*), le lecteur doit re-relier les parties par-dessus la frontière de phrase — c'est exactement là qu'il confond qui est qui. Une seule phrase supprime ce saut.
+- **Deux parties nommées ne doivent jamais pouvoir être confondues.** *"minority shareholder"* et *"family"* restent distinctes ; aucune tournure ne doit laisser croire que l'une est l'autre.
+- **Un pronom = un seul référent dans toute la phrase.** Ici *"it"* = le cash, du début à la fin. Jamais un *"it"* qui glisse d'un sens à l'autre.
+
+**La progression réelle (chaque version corrige la précédente, et c'est la leçon) :**
+- ❌ v1 : *"…whether the cash ever reaches an outside shareholder rests with the same family that tried to acquire them at a discount."* — *them* sans référent net, *at a discount* sans ancre.
+- ❌ v2 : *"…a minority shareholder only ever sees it if the family decides to pay it out. That is the same family that just tried to keep it for itself."* — deux phrases ; le *"That is the same family"* fait confondre le minoritaire et la famille.
+- ✅ v3 : *"So the cash stays locked in the company, and whether a minority shareholder ever sees it is decided by the same family that just tried to keep it for itself."*
+
+Retour Dany sur la v3 : *"this is SO MUCH better"*. La leçon dure : **même un premier correctif peut réintroduire une ambiguïté ailleurs.** Le test final n'est donc pas *"ai-je retiré le pronom flou ?"* mais *"un lecteur peut-il encore confondre deux parties, ou doit-il relire pour relier l'idée ?"*. Tant que la réponse n'est pas non, la phrase n'est pas finie.
+
 ---
 
 ### Longueur des phrases
