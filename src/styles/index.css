@@ -411,6 +411,10 @@ a.our-work__link:focus .verdict-tag {
   .block-scorecard-strip .strip-link { gap: 0.5rem; }
   .field-name--field_recent_updates { flex-direction: column; }
   .node-mode-recent_update--featured { flex: 0 0 auto; min-height: 18rem; }
+  .node-mode-recent_update--featured .card-key-number {
+    white-space: normal;
+    font-size: 1.125rem;
+  }
   .card-stack { flex: 0 0 auto; gap: 1rem; }
   .node-mode-recent_update--small { flex: 0 0 auto; min-height: 15rem; }
   .work-index, .verdict-tag { display: none; }
