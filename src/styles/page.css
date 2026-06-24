@@ -178,3 +178,20 @@
   .page-body .container { grid-template-columns: 1fr; padding-inline: var(--gutter); }
   .page-body .container > * { grid-column: 1; }
 }
+
+/* HSI live quote (Hang Seng Index Research hero) */
+.hsi-quote{margin:0 0 30px;padding:18px 20px 14px;border:1px solid var(--dp-c-gray-border);border-radius:10px;background:var(--dp-c-white);}
+.hsi-quote__head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.hsi-quote__label{font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:#444;}
+.hsi-quote__ticker{color:#aaa;font-weight:600;}
+.hsi-quote__meta{font-size:.76rem;color:#8a8a90;white-space:nowrap;}
+.hsi-quote__row{display:flex;align-items:baseline;gap:12px;margin-top:5px;}
+.hsi-quote__value{font-size:2.1rem;font-weight:700;line-height:1;letter-spacing:-.015em;}
+.hsi-quote__chg{font-size:.95rem;font-weight:700;}
+.hsi-quote__chg--pos{color:#17926a;}
+.hsi-quote__chg--neg{color:#d83a3d;}
+.hsi-quote__abs{font-weight:500;opacity:.65;}
+.hsi-quote__spark{display:block;width:100%;height:92px;margin:14px 0 7px;}
+.hsi-quote__axis{display:flex;justify-content:space-between;gap:12px;font-size:.71rem;color:#a0a0a6;}
+.hsi-quote__axis span:nth-child(2){text-align:center;}
+@media (max-width:560px){.hsi-quote__value{font-size:1.65rem;}.hsi-quote__head{flex-wrap:wrap;}.hsi-quote__axis span:nth-child(2){display:none;}}
