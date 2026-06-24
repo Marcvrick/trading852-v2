@@ -120,6 +120,11 @@
   color: var(--dp-c-gray-2);
   margin-bottom: 0.5rem;
 }
+.ca-date {
+  font-weight: 400;
+  opacity: 0.7;
+}
+.ca-date::before { content: "\00B7  "; }
 
 .ca-title {
   font-family: var(--ff-serif);
