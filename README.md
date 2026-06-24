@@ -430,6 +430,287 @@ Vercel rebuilds and deploys on push.
 
 ---
 
+## ⚠️ EDITORIAL WORKFLOW (MANDATORY PROCEDURE)
+
+**Important — this section replaced the old Step 2 description. Read it entirely before drafting.**
+
+### Rule: Articles must pass DRAFT + review before publication
+
+**Absolute sequence:**
+1. Claude drafts → deposits in `DRAFT/` folder
+2. Dany reviews and validates
+3. Dany requests publication → Claude moves to `src/analyses/`, updates homepage, updates feed/sitemap, commits
+4. Claude never publishes directly to `src/analyses/` without prior review
+
+**Why:** The style guide is comprehensive. Articles that skip review publish with endemic voice/style errors that read as corporate templates, not Marc's perspective. Review before publication is not optional.
+
+---
+
+## Voice of Marc: Style Guide & Editorial Standards
+
+This section codifies the voice, narrative structure, sentence-level rules, and editorial guardrails for every Trading852 article. It supersedes any prior instructions on writing style. **This is the source of truth.**
+
+Reference documents:
+- [instructions/blog-style-guide.md](instructions/blog-style-guide.md) — Full style guide with pre-flight tests, 7-section structure, sentence rules, common pitfalls
+- [../../Voix Marc/VOIX-Marc.md](../../Voix%20Marc/VOIX-Marc.md) — Marc's core voice parameters (tone, pronouns, examples, anti-patterns)
+
+### Marc's Voice: Core Parameters
+
+**Formality level:** Position 3 — Professional yet accessible. Like a professional you'd call by first name. Neither distant nor buddy-buddy.
+
+**Certainty:** Position 4 — Confident but humble. Affirm what's proven. Nuance what's complex. Admit limits.
+
+**Sentence rhythm:** Position 3 — 15–25 words average. Never more than 30. Variation prevents monotony.
+
+**Pronouns (priority order):**
+1. **"We"** (80%) — The team / plural authority
+2. **"Marc"** (15%) — Personal anecdote / strategic personalization only
+3. **"You"** (constant) — Direct dialogue
+4. **"One"** (occasional) — Universal / inclusive
+
+**What Marc's voice DOES:**
+- ✅ Contextualizes with field observation ("As each winter arrives...")
+- ✅ Poses rhetorical questions ("Are you wondering if...?")
+- ✅ Uses concrete examples instead of abstractions
+- ✅ Cites precise numbers: "HKD 2,354 millions", "+14%", never "environ" or "roughly"
+- ✅ Presents studies without jargon: "Research shows..."
+- ✅ Reassures explicitly: "This is normal, no concern"
+- ✅ Shares uncertainty honestly: "Opinions diverge on..."
+
+**What Marc's voice NEVER does:**
+- ❌ Unexplained jargon
+- ❌ Alarmism or fearmongering
+- ❌ Corporate speak
+- ❌ Superlatifs ("incredible", "exceptional", "revolutionary")
+- ❌ "You must absolutely..." (preachy)
+- ❌ Condescension ("It's actually simple...")
+- ❌ "It's worth noting that" / "It goes without saying" (filler)
+- ❌ Em-dashes (`—`), double hyphens (`--`) as punctuation. Use periods, colons, or rephrase.
+
+**Test before publishing (read aloud):**
+"If I said this to someone I know well, would they hear the same person?" If you stumble, it's not Marc.
+
+---
+
+### Pre-Flight Checklist: 4 Tests Before Writing
+
+These four tests take 5 minutes and prevent total rewrites later. If any test fails, change the article angle — not the prose.
+
+#### Test 1: Company acronym map
+List every in-house acronym/segment/product name that appears in your sources (earnings, expert analysis, filings). For each, write a 5-word public translation.
+
+*Example (Lenovo):*
+- IDG → the PC business
+- ISG → the server segment
+- SSG → the services arm
+
+**Rule:** Define the acronym once on first use (inline, 3–5 words). Then replace it with the translation everywhere after. Do not define and keep it. Replace it.
+
+#### Test 2: Central number(s)
+Identify the one or two numbers that carry the thesis. These go in the title and the hook. Every other number serves these central ones — contextualizing or contradicting them. If a number stands alone and parallel, it belongs in the Data Snapshot, not the body.
+
+#### Test 3: Thread question
+Write in one sentence the question the reader cannot resolve without finishing the article. This question is never stated explicitly — it lives implicitly in the hook's paradox. If the reader can guess the answer after section 2, the question is too weak.
+
+#### Test 4: Anchor price (MANDATORY)
+**Before writing one word, fetch the CURRENT live price of the ticker.**
+
+- HK: FinMC parquet `cache/{TICKER}.HK_daily_local.parquet` (latest EOD bar) → if >1 biz day stale, run `fetch_price_robust.py {TICKER}.HK`
+- US: `fetch_price_robust.py {TICKER}`
+- Real-time intraday: ask Dany for TradingView Pro quote
+
+**Never reuse** a price from an earnings report, press release, or prior FinRatios analysis. Those prices are frozen at their publication date and may be weeks old.
+
+**Rule:** Every price figure in the article is followed by its adjacent date. ✅ "closed at HKD 13.19 on May 20, 2026" ✅ "HKD 109.3 on June 14". ❌ "closes at HKD 10" (implicit date invites stale reuse).
+
+---
+
+### Narrative Arc: The Escalator (7 Sections)
+
+The reader invests attention. Each section must escalate — give them a reason to continue.
+
+| Section | Reader's reaction at the end |
+|---------|-----|
+| **0. Key Takeaway** | "Here are the numbers I need to know." |
+| **1. Hook (no header)** | "Wait — that shouldn't be possible." |
+| **2. What the company does** | "I understand the business. But why this price?" |
+| **3. Why the discount exists** | "The reason exists, but does it hold?" |
+| **4. Catalyst / main signal** | "Ah. That's where it resolves." |
+| **5. Valuation** | "The math confirms what I understood." |
+| **6. Risks** | "I know what could prove me wrong — and what I'm watching." |
+| **7. Decision** | "I know exactly when I'd be right and when I'd be wrong." |
+
+**Thread question rule:** The hook plants a question the reader cannot resolve without finishing the article. This question is never asked explicitly — it lives in the paradox. Sections 2–3 escalate without answering. Section 4 resolves it. If the reader can guess the answer after section 2, the question was not strong enough.
+
+**Section ending rule:** The last sentence of sections 1–5 cannot be conclusive. It must leave an asperty — an incompletely explained fact that demands the next section. Not a teaser ("we will now see..."). A fact that only makes sense in the section that follows.
+
+---
+
+### Sentence-Level Rules (Apply to Every Paragraph)
+
+#### Sentence length: 15–25 words average. Never >30.
+
+**Test:** Use `awk '{n=split($0,a," "); if(n>30) print n" words: "$0}'` or count by hand. Sentences over 30 words force two things to be held in memory before resolution. Readers lose the thread.
+
+**Exceptions (rare):**
+- *Tripled declarative* (three short sentences stacked as rhythm): "The peak came at $477.71. The level was $477.58. The gap was $0.13."
+- *Emphasis phrase* (5–10 words, alone on a line): "We did it." / "At HKD 6.10."
+
+#### Density of numbers: Max 3 consecutive "number sentences"
+
+A *number sentence* is one whose main value is a number (revenue, margin, multiple, growth %, cash, etc.). After 3 consecutive number sentences, readers stop retaining and the article becomes a table disguised as prose.
+
+The 4th sentence must be an *interpretation sentence*: no new number. Just plain English saying what the number cluster means.
+
+**Correct form:**
+> "Lenovo closed at HKD 10.00 on May 20. At that price, the company is worth US$15.9 billion. Three months prior, Lenovo disclosed US$15.5 billion in orders on the book. The two numbers are nearly identical. One is the market's price for the entire business. The other is unfulfilled orders in a single segment."
+
+Four numbers, surrounded by interpretation. Reader retains the two that matter (15.9 and 15.5) and understands why they matter.
+
+**Incorrect form:**
+> "Lenovo reported Q3 revenue of US$22.2 billion (+18% YoY), a record third quarter. Solutions & Services generated US$2.7 billion at 22% margin. AI revenue grew +70% and accounts for roughly a third of group total. The stock closes at HKD 10.00 at 7.7 times trailing P/E versus HP at 9.0× and Dell at 10.3×."
+
+Eight numbers in four sentences, zero interpretation. Readers see a list, not a thesis.
+
+#### Recast every key number in human scale
+
+Not: *"ISG order pipeline of US$15.5B."*
+But: *"Customers have already placed orders for US$15.5 billion of AI servers. Not delivered yet. Just on the order book."*
+
+No new information factually, but the reader *sees* the order, sees the wait, understands this is unrecognized demand.
+
+#### Introduce before referencing (absolute rule)
+
+Never reference something the reader hasn't seen yet.
+
+❌ *"The ones documented here are the four that acted as X."* (Which four? Four what?)
+✅ *"A formula generates a series of structural price levels. Four of those levels have acted as major ceilings over 25 years."*
+
+---
+
+### Anti-Patterns & Forbidden Structures
+
+#### No em-dashes anywhere
+
+**Forbidden:** `—` (em-dash), `--` (double hyphen) as punctuation.
+
+**Use instead:** Period, comma, colon, parentheses, or rephrase into two sentences.
+
+❌ "The index approaches the ceiling — the upper bound of its mature range — for the first time."
+✅ "The index approaches the ceiling for the first time. This ceiling is the upper bound of its mature range."
+
+❌ "Risk 1 — The line breaks cleanly."
+✅ "Risk 1: The line breaks cleanly." (colon)
+
+#### One concept, one pass (absolute rule)
+
+Express each concept once, directly, on the first try. Never loop around an idea three times before arriving at the point.
+
+**Forbidden:**
+- Reformulate the same idea before stating the real conclusion
+- Pose a generality, then precisions that say the same thing
+
+**Test:** Identify the sentence that carries the real point. Do sentences before it say the same thing differently? Delete them. The paragraph starts with that sentence.
+
+#### Max 2 forward-deferrals per article
+
+**Forbidden:** "the next print will tell us" / "future quarters will answer" / "on saura au prochain trimestre" scattered through the body.
+
+This tic deflects analysis to a calendar date instead of substantiating it now.
+
+**Allowed (2 max):**
+1. Closing punchline (signature rhythm end): "The next four quarters tell us whether the conclusion was complete or just early."
+2. Trigger table in Decision section (where timing is actionable)
+
+**Substitute in every body paragraph:** Replace "the next print will tell us" with "the thesis holds if X" (the operati
+
+onal condition, not the date).
+
+#### Filler phrases = deleted
+
+Forbidden:
+- "It's worth noting that"
+- "This is important to highlight"
+- "The implications are significant"
+
+Test: Delete the phrase. Does the paragraph lose information? No? It was filler. Cut it.
+
+#### No internal research references
+
+Never mention:
+- "the original valuation work"
+- "our prior note"
+- "since we filed"
+- "the earlier analysis flagged"
+
+The published article is presented as Marc's analysis, not the output of an internal pipeline. Public anchors are fine ("since the IPO", "+9% over the past three weeks", "since FY2025 release").
+
+---
+
+### The Pendulum Phrase (Howard Marks technique)
+
+After describing a risk or consensus, add one short sentence naming where sentiment has swung to extremes.
+
+**Existing (banned):**
+- "Pessimism this acute against fundamentals this durable is not a stable state." ← 1913-prada
+- "Three forces compressed the price. None of them changed the cash flow." ← 6690-haier
+
+**How to write a new one:**
+Do NOT start from a template. Start from the most striking fact in the article.
+
+**Valid directions (unused):**
+- Name the gap between the current multiple and cash flow: "The price implies a business in decline. The accounts show a business accumulating cash."
+- Name the silent buyer: "The company is buying its own shares at HKD 20.76. The market is selling them."
+- Name time: "The filing is public. The price implies no one has read it."
+
+**Rule of scarcity:** One per article. The rarity prevents it from becoming a tic. Two or more = cut the weaker one.
+
+---
+
+### Key Takeaway vs Hook: Absolute Separation
+
+These two must never contain the same information in the same order.
+
+- **Key Takeaway:** Leads with conclusion. Angle of entry = the "so what", the most distinctive fact, or the catalyst named. Attacker by the answer.
+- **Hook:** Attacks by a different door (price, scene, paradox). Builds revelation step by step. Often withholds the catalyst until section 4.
+
+**Test:** Place the first sentence of Key Takeaway next to the first sentence of the hook. If they open on the same number in the same order, rewrite the Key Takeaway to enter by a different angle.
+
+---
+
+### Pre-Publication Checklist (All Articles)
+
+Before committing:
+
+- [ ] **DRAFT folder route:** Article in `DRAFT/` for review, not published to `src/analyses/` yet
+- [ ] **Pre-flight tests pass:** Acronym map, central number(s), thread question, anchor price
+- [ ] **No em-dashes:** 0 occurrences of `—` or `--` as punctuation
+- [ ] **Sentence length:** No sentence >30 words
+- [ ] **Number density:** Max 3 consecutive number-sentences, then interpretation
+- [ ] **No jargon without definition:** Every financial term is defined on first use
+- [ ] **One concept, one pass:** Paragraphs don't loop before stating the point
+- [ ] **Pendulum phrase:** One per article, or zero (never two)
+- [ ] **Forward-deferral:** ≤2 in the entire article (closing + trigger table only)
+- [ ] **Filler phrases:** None ("it's worth noting", "implications are significant", etc.)
+- [ ] **No internal references:** No Sophie, finratios, expert analysis, internal framework names
+- [ ] **Key Takeaway ≠ hook:** Different angles, different opening order
+- [ ] **Data Snapshot:** Present with all required fields
+- [ ] **Valuation table:** Two columns, sourced, discount badge visible
+- [ ] **Scenario table:** 3 rows max, decision section
+- [ ] **Risks:** Named in bold, mechanisms + history + reframe (not scare)
+- [ ] **Sources section:** Present with `<div class="sources-section">` and `<h2>Sources</h2>`
+- [ ] **Word count:** 1,000–1,400 (ideal ~1,200)
+- [ ] **No financial advice:** No "when to buy/sell", "position sizing", "don't exit until X date"
+- [ ] **Read aloud test:** No stumbling, no corporate sound, sounds like Marc
+- [ ] **Homepage updated:** New article featured, old cards rotated, evicted item 04 added, renumbered
+- [ ] `feed.xml` updated with new item + `<lastBuildDate>`
+- [ ] `sitemap.xml` updated with new article + homepage/hub `<lastmod>`
+- [ ] `node build.js` runs clean
+- [ ] `dist/analyses/<slug>.html` spot-checked in browser
+- [ ] Committed with clear message
+
+---
+
 ## Scorecard: live performance tracker
 
 Public accountability page at [trading852.com/scorecard](https://trading852.com/scorecard). 100% client-side, zero backend.
@@ -592,6 +873,23 @@ The `head.html` partial already wires most of this, confirm the `CONFIG` block i
 ---
 
 ## Changelog
+
+### June 24, 2026: README expanded with Voice of Marc + Editorial Standards
+
+**Major update:** Added complete "Voice of Marc: Style Guide & Editorial Standards" section to README as the single source of truth for article writing.
+
+- **Editorial workflow formalized:** Articles must pass DRAFT → Dany review → publication sequence. Claude never publishes directly to `src/analyses/` without prior review.
+- **Voice of Marc codified:** Core parameters (formality level 3, certainty 4, rhythm 15-25 words), pronouns priority, what the voice does/never does, read-aloud test.
+- **Pre-flight checklist added:** 4 mandatory tests before writing (acronym map, central number(s), thread question, anchor price).
+- **Narrative arc documented:** Escalator principle with 7-section structure + thread question progression.
+- **Sentence-level rules detailed:** Sentence length (15-25 words, never >30), number density (max 3 consecutive number-sentences), human-scale recasting, introduction precedence, one-concept-one-pass rule.
+- **Anti-patterns catalogued:** Forbidden em-dashes, forward-deferral limits (max 2 per article), filler phrases, internal research references, jargon rules.
+- **Pendulum phrase explained:** Howard Marks technique with banned examples and how to write new ones.
+- **Key Takeaway vs hook:** Absolute separation rule with test for angle differentiation.
+- **Pre-publication checklist expanded:** 25+ checkpoints covering style, structure, SEO, procedure, and accessibility.
+- **References:** Full cross-links to [instructions/blog-style-guide.md](instructions/blog-style-guide.md) and [../../Voix Marc/VOIX-Marc.md](../../Voix%20Marc/VOIX-Marc.md).
+
+This section supersedes all prior instructions on writing style. It is the source of truth.
 
 ### June 22, 2026 · Homepage cards: grey key-number added to small cards + mobile truncation fix
 
