@@ -96,14 +96,20 @@
 /* ── Category article cards ───────────────────────────────────────────────────── */
 .category-article-card {
   display: block;
+  background: var(--dp-c-gray-pale);
   border: 0.0625rem solid var(--dp-c-gray-border);
+  border-radius: 0.625rem;
   padding: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
-.category-article-card:hover { border-color: var(--dp-c-black); }
+.category-article-card:hover {
+  border-color: var(--dp-c-black);
+  background: var(--dp-c-white);
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.08);
+}
 
 .ca-eyebrow {
   font-family: var(--ff-sans);
