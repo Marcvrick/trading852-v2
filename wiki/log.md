@@ -1,0 +1,178 @@
+---
+title: "Trading852 v2, Changelog"
+tags: [trading852, wiki, log, changelog]
+category: Trading/Blog
+type: wiki
+created: 2026-06-24
+updated: 2026-06-24
+---
+
+# Trading852 v2, Changelog
+
+Part of the [Trading852 wiki](index.md).
+
+## Changelog
+
+### June 24, 2026 · HSI hub: nav repoint, live index quote, card restyle, footer signature
+
+- **Header `HSI` now points to the Hang Seng Index Research hub** ([`/analyses/market-thesis`](../src/analyses/market-thesis.html)) instead of the single `hsi-35-year-trendline` article. The hub H1 was renamed from "Market Thesis" to "Hang Seng Index Research"; the URL, breadcrumb label, `articleSection`, and card eyebrows keep "Market Thesis" so cross-references stay intact. One edit in [src/_partials/navbar.html](../src/_partials/navbar.html), propagated to all 25 pages on build.
+- **Live HSI quote + 5-year sparkline added atop the hub** (`.hsi-quote`, value + day change + weekly-close area chart, styled in [src/styles/page.css](../src/styles/page.css)). Build-time snapshot dated "close DD Mon YYYY", refreshed by [scripts/update-hsi-quote.py](../scripts/update-hsi-quote.py) (Yahoo `^HSI`, idempotent). See "Live HSI quote on the market-thesis hub". A double-clickable [preview-trading852.command](../preview-trading852.command) was added for local preview.
+  - *Gotcha logged:* the script first used `<!-- ... -->` marker comments; the interactive zsh history-expansion of `!` rewrote `<!--` to `<\!--` and broke the comments. It now locates the block by its `<div class="hsi-quote">`, no HTML comments.
+- **Published-analysis cards restyled for contrast.** `.category-article-card` got a pale-gray fill (`--dp-c-gray-pale`), rounded corners (matching the quote box), and a white + shadow lift on hover. Applies to every sector hub, not just HSI.
+- **market-thesis intro generalized.** Removed the luxury-discount line and the two trendline-specific paragraphs (the intro was narrated entirely around the first published article). Replaced with a general, regime-level framing in Marc's voice.
+- **Hub cards sorted newest-first, with publication dates.** "Cheap Is a Question" (Jun 21) now sits above "Six Bounces. One Break." (Apr 11). Each card eyebrow shows the date via a new `.ca-date` span.
+- **Footer signature restored on static pages.** [src/_partials/footer-static.html](../src/_partials/footer-static.html) carried only the left tagline; the category and static pages (all `layout: static`) were missing "Be water, My friend." Added the two-tagline block so they match the article/home footers, which makes the existing "all footers" claim under Per-layout footer true.
+- **Note:** the China / Hang Seng GDP-paradox market-thesis article is drafted in `DRAFT/hang-seng-gdp-paradox.html` and remains unpublished, pending review (not pushed).
+
+### June 24, 2026: README expanded with Voice of Marc + Editorial Standards
+
+**Major update:** Added complete "Voice of Marc: Style Guide & Editorial Standards" section to README as the single source of truth for article writing.
+
+- **Editorial workflow formalized:** Articles must pass DRAFT → Dany review → publication sequence. Claude never publishes directly to `src/analyses/` without prior review.
+- **Voice of Marc codified:** Core parameters (formality level 3, certainty 4, rhythm 15-25 words), pronouns priority, what the voice does/never does, read-aloud test.
+- **Pre-flight checklist added:** 4 mandatory tests before writing (acronym map, central number(s), thread question, anchor price).
+- **Narrative arc documented:** Escalator principle with 7-section structure + thread question progression.
+- **Sentence-level rules detailed:** Sentence length (15-25 words, never >30), number density (max 3 consecutive number-sentences), human-scale recasting, introduction precedence, one-concept-one-pass rule.
+- **Anti-patterns catalogued:** Forbidden em-dashes, forward-deferral limits (max 2 per article), filler phrases, internal research references, jargon rules.
+- **Pendulum phrase explained:** Howard Marks technique with banned examples and how to write new ones.
+- **Key Takeaway vs hook:** Absolute separation rule with test for angle differentiation.
+- **Pre-publication checklist expanded:** 25+ checkpoints covering style, structure, SEO, procedure, and accessibility.
+- **References:** Full cross-links to [instructions/blog-style-guide.md](../instructions/blog-style-guide.md) and [../../Voix Marc/VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md).
+
+This section supersedes all prior instructions on writing style. It is the source of truth.
+
+### June 22, 2026 · Homepage cards: grey key-number added to small cards + mobile truncation fix
+
+- **`card-key-number` added to both small cards.** The grey "frame" line was exclusive to the featured card; small cards felt half-built without it. 0300.HK gets `"Robot Maker. Washing-Machine Multiple."`, SPY gets `"Two Levels. Same Distance."` Both follow the same `card-key-number` CSS (bold, 45%-opacity white, ellipsis on desktop).
+- **Featured card mobile truncation fixed.** `card-key-number` had `white-space: nowrap` globally, so at the 1.5rem mobile floor the 34-char key-number overflowed and got ellipsized. Added a `@media (max-width: 48rem)` override: `white-space: normal; font-size: 1.125rem` on `.node-mode-recent_update--featured .card-key-number`. The text now wraps cleanly instead of truncating.
+
+### June 19, 2026 · Scorecard: ex-dividend adjusted returns
+
+- **The scorecard no longer counts an ex-dividend price drop as a loss.** `scorecard.js` now requests Yahoo dividend events (`&events=div`) and, for any dividend that goes ex strictly after a pick's entry bar, adjusts that one-off ex-dividend drop out of the return. The dividend is **not** added as income and the displayed entry / last prices stay raw and chart-verifiable: only the percentage changes, so it shows the price move with the mechanical ex-dividend gap removed. Trigger: 0300.HK Midea went ex on a 4.367 HKD/share dividend (Jun 18), so the raw return showed the pick at −6.1% from its Jun 2 entry when the move with the ex-dividend drop removed was −1.3%. Mirrors the HK Portfolio app's Jun 18 ex-dividend fix (commit `be66e99` there).
+- **The trailing stop is ex-div aware too.** The stop scan adjusts the ex-dividend drop out the same way (it compares the price path with the gap removed), so an ex-dividend gap can no longer falsely trip a stop that has ratcheted to the −5% or breakeven tier. Previously a ~5% ex-div drop could stop out a position that had not actually fallen.
+- **General, not one-off.** Applies to every tracked ticker and the 2800.HK benchmark, so the portfolio average and the HSI reference are compared on the same basis. Dividends with an ex-date on or before the entry bar (e.g. 1698.HK Tencent Music's Apr 1 payout vs its May 4 entry) are already in the entry price and stay excluded. Affected rows show a small `ex-div adj` caption under the % with a tooltip stating the per-share dividend adjusted out.
+- **SPY 747 "days since the cycle high" no longer trails the price tile by a session.** Same Yahoo quirk, different symptom: the daily OHLC array carries the latest session as a trailing slot whose `close` is still `null` (not finalized) while `meta.regularMarketPrice` already holds that close. The price tile reads `meta` so it looked current, but the days-since counter ran off the OHLC array, which `analyze()` walks back past the null to the prior session, so it showed 11 when the price already reflected the newer day (12). Fix: before `analyze()` runs, backfill the latest session from `meta` (fill the existing null slot, or append a bar if absent) so both tiles count the same day. Volume from `meta.regularMarketVolume` feeds the post-peak ratio too. **Lesson (applies to any live-data widget): the last-price tile and every counter/ratio derived from the OHLC array must read the same most-recent session. `meta` leads the array by a bar, so either source everything from `meta` or backfill the array from `meta` first, never mix.** See the generalized "Last price" rule in the Scorecard section.
+
+### June 9, 2026 · Scorecard: trailing stop fix + post-stop display + HSI alpha row
+
+- **Removed the date-based legacy stop gate.** All picks now use the 3-tier trailing ratchet from day one — no flat −10 % exception for picks published before May 5. `TRAILING_STOP_FROM` deleted from `scorecard.js`.
+- **Post-stop now: price shows % from entry.** Stopped rows display `now: XX.XX / −x.xx %` under the entry price. Color is green when current price is above entry, red when below (was previously compared against stop level, which was misleading).
+- **Benchmark row darker.** Background bumped from `#f5f5f5` to `#dadada` so the HSI row is visually distinct from regular picks.
+- **Portfolio vs HSI alpha row.** A dark footer row (`sc-row-alpha`, `#1a1a2e` background) sits below the benchmark and shows the spread between the portfolio average and the HSI return in percentage points (e.g. `+3.24 pp`). Green if portfolio leads, red if it trails.
+
+### June 3, 2026 · Scorecard auto-generated from articles + live SPY tracking + em-dash scrub
+
+- **Scorecard positions now build from the articles.** `build.js` (`generateScorecardData()`) scans `/analyses`, registers every article with an HK ticker + verdict, and writes `dist/assets/scorecard-recos.json`, which `scorecard.js` fetches. The hand-maintained `RECOS` array is gone. Publishing a stock article auto-registers it; curated short names and the Apr-10 inaugural entry dates are preserved via `SCORECARD_OVERRIDES`, plus optional per-article `scorecardName` / `scorecardEntryDate` CONFIG fields. Non-picks (SPY/HSI theses, sector hubs) are excluded automatically; the 2800.HK benchmark is a fixed entry.
+- **Post-stop `now:` price colored** green at/above the stop level, red below (`.sc-now-pos` / `.sc-now-neg`).
+- **SPY $747 banner is live.** `spy-747-level.html` fetches SPY on each load via the yahoo-proxy worker and recomputes the level distance, advancing ceiling, and friction-zone day count, with a within-1%-of-ceiling highlight. Dark panel for contrast, no accent border, static May-29 snapshot as fallback.
+- **Homepage SPY card turns red** when SPY is within 1% of the advancing ceiling (`scorecard.js`, `#spy-zone-card`).
+- **Site-wide em-dash scrub.** All 67 em dashes removed across articles, homepage, RSS feed, static pages, and `scorecard.js`, replaced with context-correct punctuation (colon, comma, parentheses, period). The scorecard "no value" placeholder is now `n/a`. Already banned in "What to never write".
+- **Midea Group (0300.HK)** published (MONITOR, Kuka robotics angle) and added as the first auto-tracked position. **Lenovo (0992.HK) discarded** (thesis stale after a +50% move).
+
+### May 31, 2026 · SPY article update + unadjusted-price convention
+
+- **Live update banner added** to `spy-747-level.html`: SPY at $756.48 (May 29 close), +1.3% above $747, ~3.1% to calculated ceiling (~$781), 164 trading days in friction zone.
+- **Unadjusted-price rule documented** in banner and README: all structural level distances must be read on a chart with dividends off. Adjusted prices produce different values and do not match the published levels.
+
+### May 7, 2026 · SEO architecture audit + CollectionPage schema for 7 sector hubs
+
+- **Audit deliverable** at [instructions/seo/SEO-ARCHITECTURE-AUDIT-2026-05-07.md](../instructions/seo/SEO-ARCHITECTURE-AUDIT-2026-05-07.md). Full-site review of schema, sitemap, and hreflang. 0 critical, 12 high-severity items. Hreflang N/A (English-only).
+- **CollectionPage + ItemList JSON-LD added to all 7 sector hubs**: luxury, biotech, technology, electric-vehicles, consumer-discretionary, special-situations, market-thesis. Closes the dangling `isPartOf` `@id` references that every ticker article was already emitting (each article declares "I belong to /analyses/luxury", but those hub URLs previously had no schema entity at the destination). Each hub `@id` and `name` are kept consistent with the article-side reference. Build script unchanged: hubs use the existing `<!-- JSONLD ... -->` comment pattern picked up by `build.js`.
+- **Sitemap `<lastmod>` bumped to 2026-05-07** for the 7 hub URLs to reflect the schema addition.
+- **Audit items still open** (tracked in the audit doc): HSI article missed the May 6 SEO pattern upgrade (no `image`, `inLanguage`, `wordCount`, `articleSection`, `isPartOf`); no sitewide `Organization` entity in `head.html`; sitemap `<priority>` and `<changefreq>` are dead weight (Google ignores both).
+
+### May 7, 2026: Scorecard: post-stop live price + 1167 verdict correction
+
+- **Live last close shown under the entry price for stopped rows**. New `now: XX.XX` line, small green text right-aligned in the Entry column. Locked `pct` stays frozen at the stop tier; the live price is informational, never feeds the average. Wired in `assets/scorecard.js` (`currentPrice` preserved separately from `last`) and styled in `src/styles/scorecard.css` (`.sc-now`). Methodology paragraph updated.
+- **1167.HK Jacobio verdict corrected from CONVICTION to MONITOR.** The expert analysis returned MONITOR; the article was labelled CONVICTION at the Apr 14 publication in error. The correct call has always been MONITOR. Updated in five places: meta-verdict pill on the analysis page, new Correction notice block at the top of `src/analyses/1167-jacobio.html`, biotech category card eyebrow on `src/analyses/biotech.html`, the verdict-tag on the Identified Situations row in `src/index.html`, and the scorecard eyebrow on the Jacobio row in `assets/scorecard.js` (`Biotech` → `Biotech · Monitor`). Reasoning: binary Phase III futility risk, NRDL adoption pace unverified through one full reporting cycle (H1 2026 interim due Jul or Aug), CEO Wang Yinxiang silent in the secondary market since his HK$96M purchase between Jul and Sep 2025 at HK$8.56. The arithmetic and valuation framework in the article are unchanged.
+- **Editorial rule clarification (Step 1 + Step 5)**: the verdict is whatever the expert analysis returns (CONVICTION, MONITOR, or AVOID). All three publish. The label drives framing and surface treatment across the four canonical places: meta-verdict pill, sector card eyebrow, homepage verdict-tag, scorecard eyebrow.
+
+### May 6, 2026: Sitemap refresh + favicon at root (SEO follow-up)
+
+- **Sitemap `<lastmod>` bumped to 2026-05-06** for the 7 SEO-refreshed ticker articles + homepage. Without this, Google sees the May 6 schema/H2/title restructure as if it never happened: re-crawl frequency depends on the `<lastmod>` signal, not on actual change detection.
+- **JSON-LD `dateModified` bumped to 2026-05-06** in the same 7 articles. Sitemap and JSON-LD freshness must agree.
+- **`/favicon.ico` added at the site root** (was returning 404). Google Search Console and many crawlers fetch `/favicon.ico` directly rather than reading `<link rel="icon">` declarations: the missing root favicon was producing a placeholder avatar in GSC's property selector. Built from the existing 32×32 PNG; `head.html` now also declares the legacy `<link rel="shortcut icon">`.
+- **README**: SEO pattern doc expanded with `dateModified` semantics rule, sitemap refresh rule in Step 6, pre-publish checklist updated, folder structure shows `src/favicon.ico`. Title field rule clarified: static pages keep ` · Trading852` suffix, ticker analyses drop it.
+
+### May 6, 2026: Auto-generated BreadcrumbList JSON-LD + TO DO folder
+
+- `build.js` now emits `BreadcrumbList` JSON-LD for every article page by parsing the existing in-body `<div class="article-breadcrumb">`. New token `{{BREADCRUMB_JSONLD}}` added to `head.html`. Zero per-article edits: all 7 stock analyses + the HSI thesis page get the schema; category hubs and homepage correctly skip it.
+- `TO DO/` folder created. First entry: `per-article-og-images.md`: spec for replacing the shared `og-image.png` with one unique 1200×630 PNG per article (manual Figma path or auto-generated Puppeteer path), highest social CTR move available.
+
+### May 6, 2026: SEO pattern locked, applied to all 8 published articles
+
+- Added "SEO pattern (mandatory for all ticker analyses)" section to README: title/description format, JSONLD additions (image, articleSection, inLanguage, wordCount, isPartOf, expanded keywords), H2 entity-name rule, body ticker+HKEX establishment paragraph, inline sector-hub link, h3 risk callout labels.
+- Pre-publish checklist updated with 8 new SEO line items.
+- 8 SEO-optimized DRAFTs created in `DRAFT/`, one per published article (Tencent Music, Haier, Alibaba, Yadea, Jacobio, Prada, Dickson, HSI 35-year). Pattern was first developed and validated on `1913-prada-SEO-OPTIMIZED.html`, which is the canonical reference.
+- All titles trimmed to ≤ 60 chars, ` · Trading852` suffix dropped (brand sits in `og:site_name` + schema `publisher`, so dropping it from title is free SEO).
+- All Article schemas now include `image` field (Google explicit recommendation).
+- All `risk-callout__label` divs converted to `<h3>` for passage-extraction by Google + AI summarisers.
+- New `SEO/` folder with `keywords-funnel.md` (TOFU/MOFU/BOFU keyword strategy without Ahrefs).
+- New `POST SUGGESTION/` folder cross-referencing FinRatios CONVICTION ≥ 7.5 with active investor research themes.
+- `instructions/seo/SEO-STRATEGY.md` cleaned: methodology pages (`/method/*`) abandoned. MOFU served by sectoral hubs + comparatifs + screens + thesis articles instead. The methodology stays a moat.
+
+### Apr 29, 2026: Homepage pub date + mobile menu dividers
+
+- Recent Analyses cards (homepage) now show the pub date in 45%-opacity grey after the ticker: `Sector · Ticker · Mon DD, YYYY`. Ticker stays bold; date is regular weight. New `.eyebrow-date` class in `src/styles/index.css`.
+- Mobile hamburger menu: divider lines between Analyses / Scorecard / HSI / About bumped from `rgba(255,255,255,0.08)` to `0.14` (+75%): they were nearly invisible on dark backgrounds.
+
+### Apr 29, 2026: Link `instructions/` from README
+
+- Top of README now lists the editorial + SEO references in [instructions/](../instructions/) (style guide + 5 SEO docs).
+- Folder structure block updated to show `instructions/` and its `seo/` subfolder.
+- Step 2 of the editorial workflow now points to the local `instructions/blog-style-guide.md` instead of the v1 path.
+
+### Apr 29, 2026: Scorecard: average methodology, benchmark exclusion, stopped-row restyle
+
+- **Methodology block** rewritten to explain the average calculation: simple arithmetic mean of every line's % change, each ticker counts equally, benchmark excluded.
+- **Tracker Fund (2800.HK) excluded from the average** and from the winners/losers tally on both `/scorecard` and the homepage strip. The benchmark stays visible at the bottom of the table as a reference line only. Implemented by filtering `!r.isBenchmark` in `renderStrip` and `renderTable` before reducing.
+- **Stopped rows restyled**: opacity-based grey-out replaced by a very light red background (`#fdf3f3`, hover `#fbe9e9`). The previous opacity treatment looked too similar to the benchmark row's grey, blurring the difference between "we hit the stop" and "this is the market reference".
+- **Stopped % cell** now shows the locked `−10.0%` value with a small uppercase "Stopped" caption underneath (instead of replacing the number with text). Locked −10% still feeds the average.
+- Removed the "past performance on a three-figure sample is not a track record" line from the methodology: readers can draw their own conclusions.
+
+### Apr 28, 2026: Remove Galaxy from scorecard, enforce article-first rule
+
+- 0027.HK Galaxy Entertainment removed from `RECOS`. No article was published, so no scorecard entry should exist.
+- Rule added to README: article and scorecard entry are inseparable. Never add a ticker to `RECOS` without a live article in `src/analyses/`. No article = no scorecard entry.
+
+### Apr 27, 2026: Scorecard engine, SEO fixes, category pages
+
+**Scorecard engine**
+- Entry price: first close strictly AFTER `pubDate` (`ts * 1000 > recoPubDate`). Weekend pub (Sat/Sun) → Monday open instead of close. Haier (Apr 25 = Saturday) uses Apr 28 open.
+- Last price: `meta.regularMarketPrice` used as primary source; OHLC close array as fallback. Fixes thinly traded stocks (e.g. 0113.HK) where the OHLC array lags and returns the entry-day close as "last".
+**SEO, high priority**
+- Homepage H1 added (visually hidden) for correct heading hierarchy.
+- Mobile hamburger menu added: button, CSS `.is-open` panel, JS toggle with `aria-expanded` and click-outside close.
+- About page expanded from 253 to ~600 words: Who I am / Why Hong Kong / How I work / What this is not. Person JSON-LD schema added.
+- All article source citations hyperlinked (previously plain text) using HKEX News search URLs + IR pages.
+
+**SEO, medium priority**
+- `/legal-notice` added to `sitemap.xml`.
+- 7 sector/category pages created in `src/analyses/`: `luxury`, `special-situations`, `biotech`, `technology`, `consumer-discretionary`, `electric-vehicles`, `market-thesis`. Each has a hero H1, sector intro paragraph, and `.category-article-card` components linking to published analyses.
+- Article breadcrumb labels made into links pointing to their category page.
+- RSS `feed.xml` upgraded with `xmlns:content` namespace and `<content:encoded>` full-text blocks for AI aggregator indexing.
+- "Browse by sector" pill grid added to homepage.
+
+**Editorial**
+- Dickson Concepts (0113.HK) classified in both Luxury and Special Situations category pages.
+- Manifesto: "public filings" → "public sources".
+
+### Apr 27, 2026: Scorecard rules, nav rename, image fix, OG tags
+
+- **Scorecard: weekend pub entry**: weekday pub → first close after `pubDate`; weekend pub (Sat/Sun) → Monday open price. Haier (Apr 25 = Sat) was the first case. Entry cell shows "open" label when applicable.
+- **Scorecard: benchmark row**: 2800.HK pinned to bottom via `isBenchmark: true` + `sort()`. Grey background (`sc-row-benchmark`). Eyebrow changed to "Benchmark".
+- **Scorecard: copy**: "recommendation" replaced by "article" everywhere in scorecard page and meta description.
+- **Navbar**: "Hong Kong" renamed to "HSI". Footer: "Hong Kong" renamed to "Hang Seng Index".
+- **Article images**: `max-width: 100%; height: auto` added to `.article-body img`: prevents 1280px images from overflowing the 46rem content column.
+- **OG image**: added `og:image:width`, `og:image:height`, `og:image:type` to `head.html`: required by WhatsApp for link preview thumbnail.
+- **Git**: `Trading852-v2/.git` was a broken ghost (no config/objects). Re-initialized and connected to `Marcvrick/trading852-v2`. `git push` from this folder now triggers Vercel auto-deploy.
+
+### Apr 26, 2026: README v2 created
+
+- Documents the new `src/` → `dist/` build pipeline, partials, source page format (`CONFIG` + `JSONLD` comments, no `<head>` / nav / footer in source), images convention (`src/analyses/images/<slug>.jpg`), Vercel cleanUrls gotcha.
+- Editorial workflow (style guide, 7-section structure, scorecard, drafts, published articles, "what to never write", SEO checklist) carried over from the v1 README.
+- Triggered by the `hsi-35-year-trendline` broken image (image folder was never migrated from v1 to v2 because the convention was undocumented).
+
+
+---
+[Wiki index](index.md)
