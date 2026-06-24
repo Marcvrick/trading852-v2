@@ -9,7 +9,7 @@ updated: 2026-06-24
 
 # Trading852 v2
 
-Static site for conviction-led HK stock analyses and market-thesis articles. Source pages in [src/](src/) are assembled into `dist/` by [build.js](build.js); Vercel serves `dist/`. Zero dependencies, pure `fs` + `path`.
+Static site for conviction-led HK stock analyses and market-thesis articles. Source pages in [publish/](publish/) are assembled into `dist/` by [build.js](build.js); Vercel serves `dist/`. Zero dependencies, pure `fs` + `path`.
 
 - Live site: [trading852.com](https://trading852.com)
 - GitHub: [Marcvrick/trading852-v2](https://github.com/Marcvrick/trading852-v2)
@@ -29,10 +29,10 @@ Full docs moved to [wiki/](wiki/) on Jun 24 2026. Start at [wiki/index.md](wiki/
 
 - [Build pipeline](wiki/build-pipeline.md): build.js, source format, CONFIG, layouts, Vercel, site plumbing
 - [Editorial](wiki/editorial.md): DRAFT-first workflow, hard voice rules, what to never write, pre-publish checklist
-- [SEO](wiki/seo.md): the mandatory ticker-analysis pattern + per-page checklist
+- [SEO](wiki/seo/index.md): the mandatory ticker-analysis pattern + per-page checklist
 - [Scorecard](wiki/scorecard.md): the auto-generated live performance tracker
 - [Ops](wiki/ops.md): runbooks for build, preview, deploy, and the live HSI quote
 - [Articles](wiki/articles.md): published list + drafts pending a trigger
 - [Log](wiki/log.md): changelog
 
-The canonical article style guide is [instructions/blog-style-guide.md](instructions/blog-style-guide.md); it is not duplicated in the wiki.
+The canonical article style guide is [wiki/style-guide.md](wiki/style-guide.md); it is not duplicated in the wiki.

@@ -26,7 +26,7 @@ Commit and push `main`. Vercel runs `node build.js` and serves `dist/`. There is
 
 ## Refresh the live HSI quote
 
-The Hang Seng value and 5-year chart at the top of the [market-thesis hub](../src/analyses/market-thesis.html) is a build-time snapshot, not a live widget. Refresh before a deploy:
+The Hang Seng value and 5-year chart at the top of the [market-thesis hub](../publish/analyses/market-thesis.html) is a build-time snapshot, not a live widget. Refresh before a deploy:
 
 ```bash
 python3 scripts/update-hsi-quote.py && node build.js
@@ -36,7 +36,7 @@ python3 scripts/update-hsi-quote.py && node build.js
 
 ## Publish an article
 
-Full procedure on [Editorial](editorial.md). In short: move `DRAFT/<slug>.html` to `src/analyses/`, add the homepage card plus feed and sitemap entries, run `node build.js`, commit, push.
+Full procedure on [Editorial](editorial.md). In short: move `DRAFT/<slug>.html` to `publish/analyses/`, add the homepage card plus feed and sitemap entries, run `node build.js`, commit, push.
 
 ---
 [Wiki index](index.md)

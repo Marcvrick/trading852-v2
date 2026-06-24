@@ -3,7 +3,7 @@ const fs   = require('fs');
 const path = require('path');
 
 const ROOT = __dirname;
-const SRC  = path.join(ROOT, 'src');
+const SRC  = path.join(ROOT, 'publish');
 const DIST = path.join(ROOT, 'dist');
 
 // ── Load partials ──────────────────────────────────────────────────────────────

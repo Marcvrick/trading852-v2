@@ -9,11 +9,11 @@ updated: 2026-06-24
 
 # Trading852 v2, SEO
 
-Part of the [Trading852 wiki](index.md).
+Part of the [Trading852 wiki](../index.md).
 
 ## SEO pattern (mandatory for all ticker analyses)
 
-Locked May 2026 after applying it to the 8 published articles. Reference template: any DRAFT with the `-SEO-OPTIMIZED.html` suffix in [DRAFT/](../DRAFT/), canonical example is `DRAFT/1913-prada-SEO-OPTIMIZED.html`.
+Locked May 2026 after applying it to the 8 published articles. Reference template: any DRAFT with the `-SEO-OPTIMIZED.html` suffix in [DRAFT/](../../DRAFT/), canonical example is `DRAFT/1913-prada-SEO-OPTIMIZED.html`.
 
 ### CONFIG block
 
@@ -98,4 +98,4 @@ The `head.html` partial already wires most of this, confirm the `CONFIG` block i
 
 
 ---
-[Wiki index](index.md)
+[Wiki index](../index.md)

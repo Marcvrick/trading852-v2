@@ -26,9 +26,9 @@ source: "[[0113-blog-article]]"
 ```
 
 **Séquence obligatoire :**
-1. Claude rédige → dépose dans `DRAFT/` (jamais dans `src/analyses/` ni `src/drafts/`)
+1. Claude rédige → dépose dans `DRAFT/` (jamais dans `publish/analyses/` ni `publish/drafts/`)
 2. Dany relit et valide
-3. Dany demande la publication → Claude déplace vers `src/analyses/`, met à jour le README, met à jour le nav de l'article précédent, lance `node build.js`
+3. Dany demande la publication → Claude déplace vers `publish/analyses/`, met à jour le README, met à jour le nav de l'article précédent, lance `node build.js`
 
 **Claude ne publie jamais un article directement** sans que Dany ait relu la version dans `DRAFT/`.
 
@@ -225,7 +225,7 @@ Test : si la phrase d'observation est noyée entre deux paragraphes de chiffres,
 
 Ajout du 6 juin 2026. Ce qui suit assouplit délibérément quatre règles du guide pour réintroduire une présence humaine. À lire avec une tension en tête : la rigueur des sections Catalyseur, Valorisation et Risques ne bouge pas. La personnalité vit dans le hook, la description de l'entreprise, et la dernière phrase. La chaleur rationnée se lit comme de la confiance. La chaleur mur à mur se lit comme une newsletter, ce que le guide interdit par ailleurs.
 
-> Note de version : section réversible. La version du guide d'avant cet ajout est sauvegardée dans `instructions/_backups/blog-style-guide_pre-humanite-update_2026-06-06.md`. Pour annuler, restaurer ce fichier par-dessus la version courante.
+> Note de version : section réversible. La version du guide d'avant cet ajout est sauvegardée dans `_backups/blog-style-guide_pre-humanite-update_2026-06-06.md`. Pour annuler, restaurer ce fichier par-dessus la version courante.
 
 ### 1. On ne fait jamais de blague. On arrange les faits.
 

@@ -13,9 +13,9 @@ Part of the [Trading852 wiki](index.md).
 
 ## Hard rules (digest)
 
-The full, canonical style guide is [instructions/blog-style-guide.md](../instructions/blog-style-guide.md): voice, the 7 sections, pre-flight tests, pitfalls. Voice parameters: [VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md). This page keeps the workflow and the absolute guardrails; it does not re-copy the guide.
+The full, canonical style guide is [style-guide.md](style-guide.md): voice, the 7 sections, pre-flight tests, pitfalls. Voice parameters: [VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md). This page keeps the workflow and the absolute guardrails; it does not re-copy the guide.
 
-- **DRAFT first.** Articles are drafted into `DRAFT/` and never published to `src/analyses/` without review.
+- **DRAFT first.** Articles are drafted into `DRAFT/` and never published to `publish/analyses/` without review.
 - **No em dash** (em dash or double hyphen) anywhere: articles, metadata, titles, changelog. Use a period, a colon, or restructure. The middle dot is the only title separator.
 - **7-section escalator:** Hook, Company/Context, Discount, Catalyst, Valuation, Risks, Decision.
 - **Sentences 15 to 25 words, never over 30.** Max 3 consecutive number-sentences, then an interpretation sentence.
@@ -34,7 +34,7 @@ Market thesis articles: source `.md` lives outside the repo (e.g. `TRADING/Tradi
 
 ### Step 2: Read the style guide
 
-Open the local style guide at [instructions/blog-style-guide.md](../instructions/blog-style-guide.md) and the voice guide at [../../Voix Marc/VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md). Key rules:
+Open the local style guide at [style-guide.md](style-guide.md) and the voice guide at [../../Voix Marc/VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md). Key rules:
 
 - **7 canonical sections**: Hook → Company/Context → Discount → Catalyst → Valuation → Risks → Decision
 - **No bullet points** in the body (except numbered catalyst points and scenario tables)
@@ -58,7 +58,7 @@ Open the local style guide at [instructions/blog-style-guide.md](../instructions
 
 ### Step 4: Create the source file
 
-Stock analysis: copy `src/analyses/1913-prada.html`. Market thesis: copy `src/analyses/hsi-35-year-trendline.html`. Edit the `CONFIG` and `JSONLD` blocks first, then the body.
+Stock analysis: copy `publish/analyses/1913-prada.html`. Market thesis: copy `publish/analyses/hsi-35-year-trendline.html`. Edit the `CONFIG` and `JSONLD` blocks first, then the body.
 
 Required body elements:
 - Hero with breadcrumb, meta row, h1, subtitle, tags
@@ -70,9 +70,9 @@ Required body elements:
 
 ### Step 5: Update the homepage
 
-> **NON-NEGOTIABLE — every new article gets a homepage card, in the same commit that publishes it.** A new article is ALWAYS featured in the Recent-Analyses card list (it becomes the featured card) AND always creates a card on the homepage. Publishing the article file + feed + sitemap without touching `src/index.html` ships a page that is live at its URL but unreachable by browsing — it exists only if you already know the link. This happened with `hong-kong-discount-cheap-two-ways` (Jun 2026, commit b50887c): published, in the sitemap, returning 200, but linked from nowhere. Do not let an article reach `main` without its card.
+> **NON-NEGOTIABLE — every new article gets a homepage card, in the same commit that publishes it.** A new article is ALWAYS featured in the Recent-Analyses card list (it becomes the featured card) AND always creates a card on the homepage. Publishing the article file + feed + sitemap without touching `publish/index.html` ships a page that is live at its URL but unreachable by browsing — it exists only if you already know the link. This happened with `hong-kong-discount-cheap-two-ways` (Jun 2026, commit b50887c): published, in the sitemap, returning 200, but linked from nowhere. Do not let an article reach `main` without its card.
 
-Two sections in [src/index.html](../src/index.html):
+Two sections in [publish/index.html](../publish/index.html):
 
 **Recent Analyses cards** (top): 1 featured card (2/3 width) + 2 small cards stacked (1/3 width).
 
@@ -95,7 +95,7 @@ Two sections in [src/index.html](../src/index.html):
 
 ### Step 6: Update feed.xml + sitemap.xml
 
-[src/feed.xml](../src/feed.xml): add a new `<item>` at the top, update `<lastBuildDate>`.
+[publish/feed.xml](../publish/feed.xml): add a new `<item>` at the top, update `<lastBuildDate>`.
 
 ```xml
 <item>
@@ -107,7 +107,7 @@ Two sections in [src/index.html](../src/index.html):
 </item>
 ```
 
-[src/static/sitemap.xml](../src/static/sitemap.xml): add `<url>` entry, update homepage `<lastmod>`.
+[publish/static/sitemap.xml](../publish/static/sitemap.xml): add `<url>` entry, update homepage `<lastmod>`.
 
 ```xml
 <url>
@@ -171,8 +171,8 @@ Vercel rebuilds and deploys on push.
 **Absolute sequence:**
 1. Claude drafts → deposits in `DRAFT/` folder
 2. Dany reviews and validates
-3. Dany requests publication → Claude moves to `src/analyses/`, updates homepage, updates feed/sitemap, commits
-4. Claude never publishes directly to `src/analyses/` without prior review
+3. Dany requests publication → Claude moves to `publish/analyses/`, updates homepage, updates feed/sitemap, commits
+4. Claude never publishes directly to `publish/analyses/` without prior review
 
 **Why:** The style guide is comprehensive. Articles that skip review publish with endemic voice/style errors that read as corporate templates, not Marc's perspective. Review before publication is not optional.
 
@@ -187,7 +187,7 @@ Vercel rebuilds and deploys on push.
 - A number without its source date or document
 - A risk framed as hypothetical when it is documented
 - **Any em dash** (`, ` or `, `) anywhere: articles, scorecard, metadata, titles, methodology, changelogs. Use a period, a colon, or restructure the sentence. The middle dot `·` is the only permitted title separator.
-- **Any reference to internal research notes**. The published article is presented as the analyst's view, not the output of a prior pipeline. Never write "the original valuation work", "our prior note", "since we filed", "in our May analysis", "the earlier analysis flagged", or any phrase that implies a non-public preceding document. Public market data is fine (`+9% over the past three weeks`, `since the IPO`, `since the FY2025 release`); references to internal research are not. This is a specialisation of the broader "cuisine interne" rule in [instructions/blog-style-guide.md](../instructions/blog-style-guide.md). When the urge appears, rewrite using a public anchor date instead.
+- **Any reference to internal research notes**. The published article is presented as the analyst's view, not the output of a prior pipeline. Never write "the original valuation work", "our prior note", "since we filed", "in our May analysis", "the earlier analysis flagged", or any phrase that implies a non-public preceding document. Public market data is fine (`+9% over the past three weeks`, `since the IPO`, `since the FY2025 release`); references to internal research are not. This is a specialisation of the broader "cuisine interne" rule in [style-guide.md](style-guide.md). When the urge appears, rewrite using a public anchor date instead.
 
 ---
 
@@ -208,12 +208,12 @@ Vercel rebuilds and deploys on push.
 - [ ] At least one H2 contains the entity name
 - [ ] First paragraph of `What X Does` establishes ticker + HKEX listing
 - [ ] At least one inline link to a sector hub (`/analyses/{sector}`)
-- [ ] Image (if any) dropped in `src/analyses/images/` with relative `<img src="images/...">`
+- [ ] Image (if any) dropped in `publish/analyses/images/` with relative `<img src="images/...">`
 - [ ] Homepage updated: new article in featured card, old cards shifted, evicted card prepended as item 04 in Identified Situations, all items renumbered, item count = (total published) − 3
 - [ ] feed.xml: new `<item>` + `<lastBuildDate>` updated
 - [ ] sitemap.xml: new `<url>` + homepage `<lastmod>` updated. **Refresh of an existing article** = bump that article's `<lastmod>` AND the homepage `<lastmod>` AND JSON-LD `dateModified` to the refresh date
 - [ ] Scorecard: **automatic** (no action) for stock articles with `meta-ticker` + `meta-verdict` in the hero. Set CONFIG `scorecardName` only if a shorter display name is wanted
-- [ ] No em dash anywhere (`grep -rn ", \|, " src/ assets/` returns nothing)
+- [ ] No em dash anywhere (`grep -rn ", \|, " publish/ assets/` returns nothing)
 - [ ] `node build.js` runs clean
 - [ ] Spot-checked `dist/analyses/<slug>.html` in a browser
 - [ ] Committed and pushed

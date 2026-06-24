@@ -13,7 +13,7 @@ updated: 2026-05-07
 
 # SEO Architecture Audit. Trading852 v2.
 
-Scope: schema markup (JSON-LD), XML sitemap, hreflang. Pulled from `src/` on 2026-05-07. Skill: `/seo-architecture`.
+Scope: schema markup (JSON-LD), XML sitemap, hreflang. Pulled from `publish/` on 2026-05-07. Skill: `/seo-architecture`.
 
 ## Summary
 
@@ -42,7 +42,7 @@ Total: 0 critical, 12 high, 1 medium, 2 low. No blockers, but the 4 stale `lastm
 
 ### Issue 1. HSI article missed the May 6 SEO upgrade. (HIGH)
 
-**File**: `src/analyses/hsi-35-year-trendline.html`.
+**File**: `publish/analyses/hsi-35-year-trendline.html`.
 
 The May 6 changelog claims the SEO pattern was applied to all 8 published articles, but the HSI thesis JSON-LD is still on the pre-May 6 schema:
 
@@ -117,7 +117,7 @@ Note the em dash in `"Luxury — HKEX Research"` is already in the article-side 
 
 ### Issue 3. No standalone Organization entity sitewide. (MEDIUM)
 
-**File**: `src/_partials/head.html`.
+**File**: `publish/_partials/head.html`.
 
 Articles reference `"publisher": { "@type": "Organization", "name": "Trading852", "url": "https://trading852.com" }` inline. There is no canonical `Organization` entity at a stable `@id`. Result: every article repeats a thin Organization stub. Google has no central place to attach the brand identity (logo, social profiles, contact).
 
@@ -150,7 +150,7 @@ If there are no public social profiles to list, drop `sameAs` entirely. Better t
 
 ## Sitemap Findings
 
-**File**: `src/static/sitemap.xml`. 20 URLs total, well below the 50k split threshold. No sitemap index needed.
+**File**: `publish/static/sitemap.xml`. 20 URLs total, well below the 50k split threshold. No sitemap index needed.
 
 ### Issue 4. Stale `<lastmod>` on 4 URLs. (HIGH)
 

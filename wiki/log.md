@@ -13,22 +13,29 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### June 24, 2026 · Rename `src/` to `publish/` + fold `instructions/` into the wiki
+
+- **`src/` renamed to `publish/`.** The authored-pages folder was called `src`, which read like generic boilerplate. It is where articles are published from, so it is now `publish/`. One real path change in [build.js](../build.js) (`const SRC = path.join(ROOT, 'publish')`); `vercel.json` was untouched (it builds via `node build.js` and serves `dist/`). All wiki and README references repointed. `dist/` output is byte-identical, so the live site is unchanged.
+- **`instructions/` folder removed; its content moved into the wiki.** `blog-style-guide.md` is now [style-guide.md](style-guide.md) at the wiki root, listed in Pages as the single source of truth. The six SEO docs moved into a new [seo/](seo/index.md) sub-hub (`patterns.md`, `strategy.md`, `site-structure.md`, `content-calendar.md`, `competitor-analysis.md`, `implementation-roadmap.md`, `architecture-audit-2026-05-07.md`). The old `wiki/seo.md` became `seo/patterns.md`. The pre-humanity style-guide backup moved to [_backups/](_backups/).
+- **`about` page rewritten** in Marc's published voice: sharper hook, a new "What I am trying to do" section, chart-first method. No em dash, deadpan cadence.
+- VOIX-Marc stays the external cross-project voice reference; the style guide is the Trading852 layer on top of it.
+
 ### June 24, 2026 · HSI hub: nav repoint, live index quote, card restyle, footer signature
 
-- **Header `HSI` now points to the Hang Seng Index Research hub** ([`/analyses/market-thesis`](../src/analyses/market-thesis.html)) instead of the single `hsi-35-year-trendline` article. The hub H1 was renamed from "Market Thesis" to "Hang Seng Index Research"; the URL, breadcrumb label, `articleSection`, and card eyebrows keep "Market Thesis" so cross-references stay intact. One edit in [src/_partials/navbar.html](../src/_partials/navbar.html), propagated to all 25 pages on build.
-- **Live HSI quote + 5-year sparkline added atop the hub** (`.hsi-quote`, value + day change + weekly-close area chart, styled in [src/styles/page.css](../src/styles/page.css)). Build-time snapshot dated "close DD Mon YYYY", refreshed by [scripts/update-hsi-quote.py](../scripts/update-hsi-quote.py) (Yahoo `^HSI`, idempotent). See "Live HSI quote on the market-thesis hub". A double-clickable [preview-trading852.command](../preview-trading852.command) was added for local preview.
+- **Header `HSI` now points to the Hang Seng Index Research hub** ([`/analyses/market-thesis`](../publish/analyses/market-thesis.html)) instead of the single `hsi-35-year-trendline` article. The hub H1 was renamed from "Market Thesis" to "Hang Seng Index Research"; the URL, breadcrumb label, `articleSection`, and card eyebrows keep "Market Thesis" so cross-references stay intact. One edit in [publish/_partials/navbar.html](../publish/_partials/navbar.html), propagated to all 25 pages on build.
+- **Live HSI quote + 5-year sparkline added atop the hub** (`.hsi-quote`, value + day change + weekly-close area chart, styled in [publish/styles/page.css](../publish/styles/page.css)). Build-time snapshot dated "close DD Mon YYYY", refreshed by [scripts/update-hsi-quote.py](../scripts/update-hsi-quote.py) (Yahoo `^HSI`, idempotent). See "Live HSI quote on the market-thesis hub". A double-clickable [preview-trading852.command](../preview-trading852.command) was added for local preview.
   - *Gotcha logged:* the script first used `<!-- ... -->` marker comments; the interactive zsh history-expansion of `!` rewrote `<!--` to `<\!--` and broke the comments. It now locates the block by its `<div class="hsi-quote">`, no HTML comments.
 - **Published-analysis cards restyled for contrast.** `.category-article-card` got a pale-gray fill (`--dp-c-gray-pale`), rounded corners (matching the quote box), and a white + shadow lift on hover. Applies to every sector hub, not just HSI.
 - **market-thesis intro generalized.** Removed the luxury-discount line and the two trendline-specific paragraphs (the intro was narrated entirely around the first published article). Replaced with a general, regime-level framing in Marc's voice.
 - **Hub cards sorted newest-first, with publication dates.** "Cheap Is a Question" (Jun 21) now sits above "Six Bounces. One Break." (Apr 11). Each card eyebrow shows the date via a new `.ca-date` span.
-- **Footer signature restored on static pages.** [src/_partials/footer-static.html](../src/_partials/footer-static.html) carried only the left tagline; the category and static pages (all `layout: static`) were missing "Be water, My friend." Added the two-tagline block so they match the article/home footers, which makes the existing "all footers" claim under Per-layout footer true.
+- **Footer signature restored on static pages.** [publish/_partials/footer-static.html](../publish/_partials/footer-static.html) carried only the left tagline; the category and static pages (all `layout: static`) were missing "Be water, My friend." Added the two-tagline block so they match the article/home footers, which makes the existing "all footers" claim under Per-layout footer true.
 - **Note:** the China / Hang Seng GDP-paradox market-thesis article is drafted in `DRAFT/hang-seng-gdp-paradox.html` and remains unpublished, pending review (not pushed).
 
 ### June 24, 2026: README expanded with Voice of Marc + Editorial Standards
 
 **Major update:** Added complete "Voice of Marc: Style Guide & Editorial Standards" section to README as the single source of truth for article writing.
 
-- **Editorial workflow formalized:** Articles must pass DRAFT → Dany review → publication sequence. Claude never publishes directly to `src/analyses/` without prior review.
+- **Editorial workflow formalized:** Articles must pass DRAFT → Dany review → publication sequence. Claude never publishes directly to `publish/analyses/` without prior review.
 - **Voice of Marc codified:** Core parameters (formality level 3, certainty 4, rhythm 15-25 words), pronouns priority, what the voice does/never does, read-aloud test.
 - **Pre-flight checklist added:** 4 mandatory tests before writing (acronym map, central number(s), thread question, anchor price).
 - **Narrative arc documented:** Escalator principle with 7-section structure + thread question progression.
@@ -37,7 +44,7 @@ Part of the [Trading852 wiki](index.md).
 - **Pendulum phrase explained:** Howard Marks technique with banned examples and how to write new ones.
 - **Key Takeaway vs hook:** Absolute separation rule with test for angle differentiation.
 - **Pre-publication checklist expanded:** 25+ checkpoints covering style, structure, SEO, procedure, and accessibility.
-- **References:** Full cross-links to [instructions/blog-style-guide.md](../instructions/blog-style-guide.md) and [../../Voix Marc/VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md).
+- **References:** Full cross-links to [style-guide.md](style-guide.md) and [../../Voix Marc/VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md).
 
 This section supersedes all prior instructions on writing style. It is the source of truth.
 
@@ -76,15 +83,15 @@ This section supersedes all prior instructions on writing style. It is the sourc
 
 ### May 7, 2026 · SEO architecture audit + CollectionPage schema for 7 sector hubs
 
-- **Audit deliverable** at [instructions/seo/SEO-ARCHITECTURE-AUDIT-2026-05-07.md](../instructions/seo/SEO-ARCHITECTURE-AUDIT-2026-05-07.md). Full-site review of schema, sitemap, and hreflang. 0 critical, 12 high-severity items. Hreflang N/A (English-only).
+- **Audit deliverable** at [seo/architecture-audit-2026-05-07.md](seo/architecture-audit-2026-05-07.md). Full-site review of schema, sitemap, and hreflang. 0 critical, 12 high-severity items. Hreflang N/A (English-only).
 - **CollectionPage + ItemList JSON-LD added to all 7 sector hubs**: luxury, biotech, technology, electric-vehicles, consumer-discretionary, special-situations, market-thesis. Closes the dangling `isPartOf` `@id` references that every ticker article was already emitting (each article declares "I belong to /analyses/luxury", but those hub URLs previously had no schema entity at the destination). Each hub `@id` and `name` are kept consistent with the article-side reference. Build script unchanged: hubs use the existing `<!-- JSONLD ... -->` comment pattern picked up by `build.js`.
 - **Sitemap `<lastmod>` bumped to 2026-05-07** for the 7 hub URLs to reflect the schema addition.
 - **Audit items still open** (tracked in the audit doc): HSI article missed the May 6 SEO pattern upgrade (no `image`, `inLanguage`, `wordCount`, `articleSection`, `isPartOf`); no sitewide `Organization` entity in `head.html`; sitemap `<priority>` and `<changefreq>` are dead weight (Google ignores both).
 
 ### May 7, 2026: Scorecard: post-stop live price + 1167 verdict correction
 
-- **Live last close shown under the entry price for stopped rows**. New `now: XX.XX` line, small green text right-aligned in the Entry column. Locked `pct` stays frozen at the stop tier; the live price is informational, never feeds the average. Wired in `assets/scorecard.js` (`currentPrice` preserved separately from `last`) and styled in `src/styles/scorecard.css` (`.sc-now`). Methodology paragraph updated.
-- **1167.HK Jacobio verdict corrected from CONVICTION to MONITOR.** The expert analysis returned MONITOR; the article was labelled CONVICTION at the Apr 14 publication in error. The correct call has always been MONITOR. Updated in five places: meta-verdict pill on the analysis page, new Correction notice block at the top of `src/analyses/1167-jacobio.html`, biotech category card eyebrow on `src/analyses/biotech.html`, the verdict-tag on the Identified Situations row in `src/index.html`, and the scorecard eyebrow on the Jacobio row in `assets/scorecard.js` (`Biotech` → `Biotech · Monitor`). Reasoning: binary Phase III futility risk, NRDL adoption pace unverified through one full reporting cycle (H1 2026 interim due Jul or Aug), CEO Wang Yinxiang silent in the secondary market since his HK$96M purchase between Jul and Sep 2025 at HK$8.56. The arithmetic and valuation framework in the article are unchanged.
+- **Live last close shown under the entry price for stopped rows**. New `now: XX.XX` line, small green text right-aligned in the Entry column. Locked `pct` stays frozen at the stop tier; the live price is informational, never feeds the average. Wired in `assets/scorecard.js` (`currentPrice` preserved separately from `last`) and styled in `publish/styles/scorecard.css` (`.sc-now`). Methodology paragraph updated.
+- **1167.HK Jacobio verdict corrected from CONVICTION to MONITOR.** The expert analysis returned MONITOR; the article was labelled CONVICTION at the Apr 14 publication in error. The correct call has always been MONITOR. Updated in five places: meta-verdict pill on the analysis page, new Correction notice block at the top of `publish/analyses/1167-jacobio.html`, biotech category card eyebrow on `publish/analyses/biotech.html`, the verdict-tag on the Identified Situations row in `publish/index.html`, and the scorecard eyebrow on the Jacobio row in `assets/scorecard.js` (`Biotech` → `Biotech · Monitor`). Reasoning: binary Phase III futility risk, NRDL adoption pace unverified through one full reporting cycle (H1 2026 interim due Jul or Aug), CEO Wang Yinxiang silent in the secondary market since his HK$96M purchase between Jul and Sep 2025 at HK$8.56. The arithmetic and valuation framework in the article are unchanged.
 - **Editorial rule clarification (Step 1 + Step 5)**: the verdict is whatever the expert analysis returns (CONVICTION, MONITOR, or AVOID). All three publish. The label drives framing and surface treatment across the four canonical places: meta-verdict pill, sector card eyebrow, homepage verdict-tag, scorecard eyebrow.
 
 ### May 6, 2026: Sitemap refresh + favicon at root (SEO follow-up)
@@ -92,7 +99,7 @@ This section supersedes all prior instructions on writing style. It is the sourc
 - **Sitemap `<lastmod>` bumped to 2026-05-06** for the 7 SEO-refreshed ticker articles + homepage. Without this, Google sees the May 6 schema/H2/title restructure as if it never happened: re-crawl frequency depends on the `<lastmod>` signal, not on actual change detection.
 - **JSON-LD `dateModified` bumped to 2026-05-06** in the same 7 articles. Sitemap and JSON-LD freshness must agree.
 - **`/favicon.ico` added at the site root** (was returning 404). Google Search Console and many crawlers fetch `/favicon.ico` directly rather than reading `<link rel="icon">` declarations: the missing root favicon was producing a placeholder avatar in GSC's property selector. Built from the existing 32×32 PNG; `head.html` now also declares the legacy `<link rel="shortcut icon">`.
-- **README**: SEO pattern doc expanded with `dateModified` semantics rule, sitemap refresh rule in Step 6, pre-publish checklist updated, folder structure shows `src/favicon.ico`. Title field rule clarified: static pages keep ` · Trading852` suffix, ticker analyses drop it.
+- **README**: SEO pattern doc expanded with `dateModified` semantics rule, sitemap refresh rule in Step 6, pre-publish checklist updated, folder structure shows `publish/favicon.ico`. Title field rule clarified: static pages keep ` · Trading852` suffix, ticker analyses drop it.
 
 ### May 6, 2026: Auto-generated BreadcrumbList JSON-LD + TO DO folder
 
@@ -109,18 +116,18 @@ This section supersedes all prior instructions on writing style. It is the sourc
 - All `risk-callout__label` divs converted to `<h3>` for passage-extraction by Google + AI summarisers.
 - New `SEO/` folder with `keywords-funnel.md` (TOFU/MOFU/BOFU keyword strategy without Ahrefs).
 - New `POST SUGGESTION/` folder cross-referencing FinRatios CONVICTION ≥ 7.5 with active investor research themes.
-- `instructions/seo/SEO-STRATEGY.md` cleaned: methodology pages (`/method/*`) abandoned. MOFU served by sectoral hubs + comparatifs + screens + thesis articles instead. The methodology stays a moat.
+- `seo/strategy.md` cleaned: methodology pages (`/method/*`) abandoned. MOFU served by sectoral hubs + comparatifs + screens + thesis articles instead. The methodology stays a moat.
 
 ### Apr 29, 2026: Homepage pub date + mobile menu dividers
 
-- Recent Analyses cards (homepage) now show the pub date in 45%-opacity grey after the ticker: `Sector · Ticker · Mon DD, YYYY`. Ticker stays bold; date is regular weight. New `.eyebrow-date` class in `src/styles/index.css`.
+- Recent Analyses cards (homepage) now show the pub date in 45%-opacity grey after the ticker: `Sector · Ticker · Mon DD, YYYY`. Ticker stays bold; date is regular weight. New `.eyebrow-date` class in `publish/styles/index.css`.
 - Mobile hamburger menu: divider lines between Analyses / Scorecard / HSI / About bumped from `rgba(255,255,255,0.08)` to `0.14` (+75%): they were nearly invisible on dark backgrounds.
 
 ### Apr 29, 2026: Link `instructions/` from README
 
-- Top of README now lists the editorial + SEO references in [instructions/](../instructions/) (style guide + 5 SEO docs).
+- Top of README now lists the editorial + SEO references in `instructions/` (style guide + 5 SEO docs). (Moved into [wiki/](index.md) on Jun 24, 2026.)
 - Folder structure block updated to show `instructions/` and its `seo/` subfolder.
-- Step 2 of the editorial workflow now points to the local `instructions/blog-style-guide.md` instead of the v1 path.
+- Step 2 of the editorial workflow now points to the local `style-guide.md` instead of the v1 path.
 
 ### Apr 29, 2026: Scorecard: average methodology, benchmark exclusion, stopped-row restyle
 
@@ -133,7 +140,7 @@ This section supersedes all prior instructions on writing style. It is the sourc
 ### Apr 28, 2026: Remove Galaxy from scorecard, enforce article-first rule
 
 - 0027.HK Galaxy Entertainment removed from `RECOS`. No article was published, so no scorecard entry should exist.
-- Rule added to README: article and scorecard entry are inseparable. Never add a ticker to `RECOS` without a live article in `src/analyses/`. No article = no scorecard entry.
+- Rule added to README: article and scorecard entry are inseparable. Never add a ticker to `RECOS` without a live article in `publish/analyses/`. No article = no scorecard entry.
 
 ### Apr 27, 2026: Scorecard engine, SEO fixes, category pages
 
@@ -148,7 +155,7 @@ This section supersedes all prior instructions on writing style. It is the sourc
 
 **SEO, medium priority**
 - `/legal-notice` added to `sitemap.xml`.
-- 7 sector/category pages created in `src/analyses/`: `luxury`, `special-situations`, `biotech`, `technology`, `consumer-discretionary`, `electric-vehicles`, `market-thesis`. Each has a hero H1, sector intro paragraph, and `.category-article-card` components linking to published analyses.
+- 7 sector/category pages created in `publish/analyses/`: `luxury`, `special-situations`, `biotech`, `technology`, `consumer-discretionary`, `electric-vehicles`, `market-thesis`. Each has a hero H1, sector intro paragraph, and `.category-article-card` components linking to published analyses.
 - Article breadcrumb labels made into links pointing to their category page.
 - RSS `feed.xml` upgraded with `xmlns:content` namespace and `<content:encoded>` full-text blocks for AI aggregator indexing.
 - "Browse by sector" pill grid added to homepage.
@@ -169,7 +176,7 @@ This section supersedes all prior instructions on writing style. It is the sourc
 
 ### Apr 26, 2026: README v2 created
 
-- Documents the new `src/` → `dist/` build pipeline, partials, source page format (`CONFIG` + `JSONLD` comments, no `<head>` / nav / footer in source), images convention (`src/analyses/images/<slug>.jpg`), Vercel cleanUrls gotcha.
+- Documents the new `publish/` → `dist/` build pipeline, partials, source page format (`CONFIG` + `JSONLD` comments, no `<head>` / nav / footer in source), images convention (`publish/analyses/images/<slug>.jpg`), Vercel cleanUrls gotcha.
 - Editorial workflow (style guide, 7-section structure, scorecard, drafts, published articles, "what to never write", SEO checklist) carried over from the v1 README.
 - Triggered by the `hsi-35-year-trendline` broken image (image folder was never migrated from v1 to v2 because the convention was undocumented).
 
