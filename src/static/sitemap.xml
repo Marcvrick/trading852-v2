@@ -3,9 +3,23 @@
 
   <url>
     <loc>https://trading852.com/</loc>
-    <lastmod>2026-06-02</lastmod>
+    <lastmod>2026-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://trading852.com/analyses/hang-seng-gdp-paradox</loc>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://trading852.com/analyses/hong-kong-discount-cheap-two-ways</loc>
+    <lastmod>2026-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <url>
@@ -74,13 +88,6 @@
   <url>
     <loc>https://trading852.com/analyses/hsi-35-year-trendline</loc>
     <lastmod>2026-04-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://trading852.com/analyses/hong-kong-discount-cheap-two-ways</loc>
-    <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -157,7 +164,7 @@
 
   <url>
     <loc>https://trading852.com/analyses/market-thesis</loc>
-    <lastmod>2026-05-20</lastmod>
+    <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
