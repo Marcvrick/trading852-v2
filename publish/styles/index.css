@@ -122,6 +122,12 @@ a.recent-update__link {
 #spy-zone-card.spy-in-zone a.recent-update__link:hover,
 #spy-zone-card.spy-in-zone a.recent-update__link:focus { background: #4f1116; }
 
+/* SPY article in Our Analyses list: orange background for visibility (alert state) */
+a[href="/analyses/spy-747-level"] .field-name--field_snippet {
+  background: #9a4b12;
+  padding: 0.375rem 0.5rem;
+}
+
 a.recent-update__link:hover,
 a.recent-update__link:focus {
   background: var(--dp-c-white);
