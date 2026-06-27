@@ -308,6 +308,28 @@ function generateScorecardData() {
   return picks.concat([SCORECARD_BENCHMARK]);
 }
 
+// ── Validate internal linking ─────────────────────────────────────────────────
+// Warn if any published article has zero internal links to other articles.
+function validateInternalLinks() {
+  const dir = path.join(SRC, 'analyses');
+  const articles = fs.readdirSync(dir).filter(f => f.endsWith('.html') && f !== 'market-thesis.html');
+  const warnings = [];
+  for (const f of articles) {
+    const raw = fs.readFileSync(path.join(dir, f), 'utf8');
+    // Check for href="/analyses/*.html" links (excludes market-thesis, self-links)
+    const links = raw.match(/href="\/analyses\/([^"]+)"/g) || [];
+    const otherLinks = links.filter(link => !link.includes(f.replace(/\.html$/, '')));
+    if (otherLinks.length === 0) {
+      warnings.push(`  ⚠️  ${f} has zero internal links to other articles`);
+    }
+  }
+  if (warnings.length > 0) {
+    console.warn('\nInternal linking check:');
+    warnings.forEach(w => console.warn(w));
+    console.warn('(Every article should link to at least one other article for SEO & navigation)\n');
+  }
+}
+
 // ── Main ───────────────────────────────────────────────────────────────────────
 function build() {
   fs.rmSync(DIST, { recursive: true, force: true });
@@ -351,6 +373,9 @@ function build() {
   }
 
   console.log(`Built ${built} HTML pages, copied ${copied} files → dist/`);
+
+  // Validate internal linking on every build.
+  validateInternalLinks();
 }
 
 build();
