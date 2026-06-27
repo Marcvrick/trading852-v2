@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the live HSI quote + 5-year sparkline in src/analyses/market-thesis.html.
+"""Refresh the live HSI quote + 5-year sparkline in publish/analyses/market-thesis.html.
 
 Run before a build to update the snapshot:
     python3 scripts/update-hsi-quote.py && node build.js
@@ -11,7 +11,7 @@ import json, urllib.request, re, os
 from datetime import datetime, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAGE = os.path.join(ROOT, "src/analyses/market-thesis.html")
+PAGE = os.path.join(ROOT, "publish/analyses/market-thesis.html")
 ANCHOR = "      <h1>Hang Seng Index Research</h1>"
 
 

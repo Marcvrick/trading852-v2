@@ -4,7 +4,7 @@ tags: [trading852, wiki, articles]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-24
+updated: 2026-06-27
 ---
 
 # Trading852 v2, Articles
@@ -15,7 +15,8 @@ Part of the [Trading852 wiki](index.md).
 
 | File | Ticker | Title | Trigger to publish |
 |---|---|---|---|
-| [publish/drafts/6160-beone.html](../publish/drafts/6160-beone.html) | 6160.HK | Beat AbbVie's Imbruvica in a Head-to-Head Trial. First Annual Profit. Net Margin: 5.4%. | HKD ~132 (EV/FCF ~24×, forward P/E ~21×) |
+| [publish/drafts/0086-sun-hung-kai.html](../publish/drafts/0086-sun-hung-kai.html) | 0086.HK | Profit Up 321%. The Lending Arm Was Flat. The Recovery Came From Somewhere Else. | HKD 4.28 anchor (0.38× P/B, 38 cents on the dollar). Trigger: confirm the trading-ops / UAF profit recovery is durable at the next interim |
+| [publish/drafts/6160-beone.html](../publish/drafts/6160-beone.html) | 6160.HK | Beat AbbVie's Imbruvica in a Head-to-Head Trial. First Annual Profit on US$5.3B in Revenue. Net Margin: 5.4%. | HKD ~132 (EV/FCF ~24×, forward P/E ~21×) |
 
 Drafts live at [publish/drafts/](../publish/drafts/). They are built into `dist/drafts/` but **not linked from the homepage, feed, or sitemap**. Do not promote a draft until the trigger fires.
 
@@ -26,7 +27,7 @@ Drafts live at [publish/drafts/](../publish/drafts/). They are built into `dist/
 
 | File | Ticker | Title | Date |
 |---|---|---|---|
-| [publish/analyses/hong-kong-discount-cheap-two-ways.html](../publish/analyses/hong-kong-discount-cheap-two-ways.html) | — | Cheap Is a Question, Not an Answer | 2026-06-21 |
+| [publish/analyses/hong-kong-discount-cheap-two-ways.html](../publish/analyses/hong-kong-discount-cheap-two-ways.html) | - | Cheap Is a Question, Not an Answer | 2026-06-21 |
 | [publish/analyses/0300-midea.html](../publish/analyses/0300-midea.html) | 0300.HK | It Owns One of the World's Four Big Robot Makers. The Market Prices It as a Washing-Machine Company. | 2026-06-02 |
 | [publish/analyses/spy-747-level.html](../publish/analyses/spy-747-level.html) | SPY | The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One. | 2026-05-11 |
 
@@ -42,6 +43,23 @@ Drafts live at [publish/drafts/](../publish/drafts/). They are built into `dist/
 
 ---
 
+## Hub pages
+
+Seven navigational hubs are published under `/analyses/` alongside the analyses above. They group content by theme and carry no `meta-ticker`, so the scorecard excludes them automatically.
+
+| File | Title | Role |
+|---|---|---|
+| [publish/analyses/market-thesis.html](../publish/analyses/market-thesis.html) | Hang Seng Index Research | The `HSI` nav target; carries the live HSI quote + 5y sparkline (client-side widget, refreshes every page load via the yahoo-proxy worker; build-time snapshot is the no-JS fallback, see [Build pipeline](build-pipeline.md)) |
+| [publish/analyses/luxury.html](../publish/analyses/luxury.html) | Luxury | Sector hub |
+| [publish/analyses/special-situations.html](../publish/analyses/special-situations.html) | Special Situations | Sector hub |
+| [publish/analyses/biotech.html](../publish/analyses/biotech.html) | Biotech | Sector hub |
+| [publish/analyses/technology.html](../publish/analyses/technology.html) | Technology | Sector hub |
+| [publish/analyses/consumer-discretionary.html](../publish/analyses/consumer-discretionary.html) | Consumer Discretionary | Sector hub |
+| [publish/analyses/electric-vehicles.html](../publish/analyses/electric-vehicles.html) | Electric Vehicles | Sector hub |
+
+The six sector hubs were created Jun 24 2026. Article breadcrumbs link back to their sector hub; the homepage "Browse by sector" pill grid links to all of them.
+
+---
 
 ---
 [Wiki index](index.md)

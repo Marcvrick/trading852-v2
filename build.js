@@ -152,9 +152,13 @@ function assemblePage(config, jsonld, content) {
   };
   const footer = footerMap[layout] || partials.footerAnalysis;
 
-  const extraScript = isLight
-    ? '\n  <script src="/assets/scorecard.js" defer></script>'
-    : '';
+  // Page-scoped live scripts. scorecard.js powers the homepage strip + /scorecard
+  // (light layouts). hsi-quote.js refreshes the HSI tile wherever a .hsi-quote
+  // block is present (the market-thesis hub), so it is never stale.
+  const extraScripts = [];
+  if (isLight) extraScripts.push('<script src="/assets/scorecard.js" defer></script>');
+  if (content.includes('class="hsi-quote"')) extraScripts.push('<script src="/assets/hsi-quote.js" defer></script>');
+  const extraScript = extraScripts.length ? '\n  ' + extraScripts.join('\n  ') : '';
 
   return [
     '<!DOCTYPE html>',

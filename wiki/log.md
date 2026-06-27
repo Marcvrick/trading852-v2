@@ -13,6 +13,14 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### June 27, 2026 · HSI tile: live client-side widget (was a frozen build-time snapshot)
+
+- **Problem**: the Hang Seng tile on the [market-thesis hub](../publish/analyses/market-thesis.html) was a build-time snapshot, refreshed only when someone manually ran `python3 scripts/update-hsi-quote.py && node build.js`. Nothing was automated (no Action, no launchd, no cron), so it had been frozen at the June 24 close (23,412.18) for three days while the index had actually fallen to 22,671.86. The wiki claimed it "updates every day"; that was never wired up.
+- **Fix**: added [assets/hsi-quote.js](../assets/hsi-quote.js), a live client-side widget. On every page load it fetches Yahoo `^HSI` (5y weekly closes + 1mo daily) through the **yahoo-proxy worker** (the same source [scorecard.js](../assets/scorecard.js) uses) and rewrites the value, the day change, and the 5-year sparkline SVG in place. The tile is now current on every visit with zero infrastructure to maintain. [build.js](../build.js) injects the script on any page whose source carries a `class="hsi-quote"` block.
+- **Fallback kept**: the build-time snapshot in the HTML stays as the no-JS / fetch-failure fallback (progressive enhancement). [scripts/update-hsi-quote.py](../scripts/update-hsi-quote.py) and the sparkline geometry (viewBox 720 x 150) are shared so the live render and the fallback match exactly. The snapshot was refreshed to the June 26 close while making the change.
+- **CSP**: no change needed; `connect-src` in [vercel.json](../vercel.json) already whitelists `https://yahoo-proxy.marccharnal.workers.dev`.
+- **Wiki**: [build-pipeline.md](build-pipeline.md) and [ops.md](ops.md) rewritten from "manual refresh step" to "live widget + fallback"; [articles.md](articles.md) HSI row updated.
+
 ### June 27, 2026 · Scorecard: benchmark exempt from the trailing stop
 
 - **Bug**: the 2800.HK Tracker Fund benchmark row was showing a **Stopped** badge (locked at the breakeven / +10% peak tier). The HSI reference had rallied ≥ +10% since the Apr-10 entry, arming the breakeven stop, then an intraday low touched entry and tripped it.
@@ -25,8 +33,17 @@ Part of the [Trading852 wiki](index.md).
 
 - **`src/` renamed to `publish/`.** The authored-pages folder was called `src`, which read like generic boilerplate. It is where articles are published from, so it is now `publish/`. One real path change in [build.js](../build.js) (`const SRC = path.join(ROOT, 'publish')`); `vercel.json` was untouched (it builds via `node build.js` and serves `dist/`). All wiki and README references repointed. `dist/` output is byte-identical, so the live site is unchanged.
 - **`instructions/` folder removed; its content moved into the wiki.** `blog-style-guide.md` is now [style-guide.md](style-guide.md) at the wiki root, listed in Pages as the single source of truth. The six SEO docs moved into a new [seo/](seo/index.md) sub-hub (`patterns.md`, `strategy.md`, `site-structure.md`, `content-calendar.md`, `competitor-analysis.md`, `implementation-roadmap.md`, `architecture-audit-2026-05-07.md`). The old `wiki/seo.md` became `seo/patterns.md`. The pre-humanity style-guide backup moved to [_backups/](_backups/).
-- **`about` page rewritten** in Marc's published voice: sharper hook, a new "What I am trying to do" section, chart-first method. No em dash, deadpan cadence.
+- **`about` page rewritten** in Marc's published voice at this commit, then reworked further across the day into its final "Be water" positioning. See the dedicated entry below.
 - VOIX-Marc stays the external cross-project voice reference; the style guide is the Trading852 layer on top of it.
+
+### June 24, 2026 · About page: "Be water" rework
+
+The [about](../publish/static/about.html) page was rewritten at the `src/`→`publish/` rename, then reworked across roughly nine more commits into its final positioning. The earlier one-line log ("sharper hook, a 'What I am trying to do' section") no longer matches the page; this entry supersedes it.
+
+- **Framing**: fundamentals plus chart-timing synthesis: "the fundamentals are only half of it. The timing is the other half." Leans toward larger companies and positions held for months, not short swings. Risk management is always key.
+- **"Be water" section** (Bruce Lee): the method is deliberate adaptability, not only deep discounts. Momentum too, where "the trend is my friend." Bear phase right now, so most setups sit on the discount side: that is the season, not the rule. Flow most days, crash when the setup is really there; cut a loser fast, without ego.
+- **Public diary** register ("This is my diary, kept in public"), not presented as a profession or a service. Dedicated **"What this is not"** section: this is not advice.
+- Meta description broadened from discounts-only to "value, momentum, whatever the market is offering." Person JSON-LD retained; Marc's deadpan voice, no em dash.
 
 ### June 24, 2026 · HSI hub: nav repoint, live index quote, card restyle, footer signature
 
@@ -70,7 +87,7 @@ This section supersedes all prior instructions on writing style. It is the sourc
 
 ### June 9, 2026 · Scorecard: trailing stop fix + post-stop display + HSI alpha row
 
-- **Removed the date-based legacy stop gate.** All picks now use the 3-tier trailing ratchet from day one — no flat −10 % exception for picks published before May 5. `TRAILING_STOP_FROM` deleted from `scorecard.js`.
+- **Removed the date-based legacy stop gate.** All picks now use the 3-tier trailing ratchet from day one: no flat −10 % exception for picks published before May 5. `TRAILING_STOP_FROM` deleted from `scorecard.js`.
 - **Post-stop now: price shows % from entry.** Stopped rows display `now: XX.XX / −x.xx %` under the entry price. Color is green when current price is above entry, red when below (was previously compared against stop level, which was misleading).
 - **Benchmark row darker.** Background bumped from `#f5f5f5` to `#dadada` so the HSI row is visually distinct from regular picks.
 - **Portfolio vs HSI alpha row.** A dark footer row (`sc-row-alpha`, `#1a1a2e` background) sits below the benchmark and shows the spread between the portfolio average and the HSI return in percentage points (e.g. `+3.24 pp`). Green if portfolio leads, red if it trails.

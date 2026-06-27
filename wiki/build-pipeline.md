@@ -4,7 +4,7 @@ tags: [trading852, wiki, build, static-site]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-24
+updated: 2026-06-27
 ---
 
 # Trading852 v2, Build Pipeline
@@ -247,13 +247,15 @@ Defined once in [publish/_partials/navbar.html](../publish/_partials/navbar.html
 
 ### Live HSI quote on the market-thesis hub
 
-The top of [publish/analyses/market-thesis.html](../publish/analyses/market-thesis.html) carries a live Hang Seng value, day change, and a 5-year weekly sparkline (`.hsi-quote`, styled in [publish/styles/page.css](../publish/styles/page.css)), sitting above the article cards. It is a **build-time snapshot, not a live widget**: the value and chart are frozen at the date shown ("close DD Mon YYYY"). Refresh before a deploy:
+The top of [publish/analyses/market-thesis.html](../publish/analyses/market-thesis.html) carries a live Hang Seng value, day change, and a 5-year weekly sparkline (`.hsi-quote`, styled in [publish/styles/page.css](../publish/styles/page.css)), sitting above the article cards. It is a **live client-side widget**: [assets/hsi-quote.js](../assets/hsi-quote.js) fetches Yahoo `^HSI` through the yahoo-proxy worker (the same one [scorecard.js](../assets/scorecard.js) uses) on every page load and rewrites the value, the day change, and the 5-year sparkline SVG. It updates on every visit, so it is never stale. `build.js` injects the script on any page whose source contains a `class="hsi-quote"` block.
+
+The HTML also ships a **build-time snapshot as the no-JS fallback** (the value shown before JS runs, or if the live fetch fails). Keep it current before a deploy:
 
 ```bash
 python3 scripts/update-hsi-quote.py && node build.js
 ```
 
-[scripts/update-hsi-quote.py](../scripts/update-hsi-quote.py) fetches Yahoo `^HSI` (weekly closes for the chart, daily for the day change), regenerates the `.hsi-quote` block in place (idempotent), and prints the refreshed value.
+[scripts/update-hsi-quote.py](../scripts/update-hsi-quote.py) fetches Yahoo `^HSI` (weekly closes for the chart, daily for the day change), regenerates the `.hsi-quote` block in place (idempotent), and prints the refreshed value. The sparkline geometry is shared with `hsi-quote.js` (viewBox 720 x 150) so the live render and the fallback match. Path fixed Jun 27 2026: it still pointed at `src/analyses/...` after the `src/`→`publish/` rename, so the manual refresh would have failed.
 
 > **Gotcha:** the block carries no HTML comment markers. The interactive zsh history-expansion of `!` rewrites `<!--` to `<\!--` and breaks the comment, so the script locates the block by its `<div class="hsi-quote">` instead.
 
