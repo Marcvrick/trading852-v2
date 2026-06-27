@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <!-- Bleu-violet large, haut-centre — ellipse 110% x 90% -->
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(318,0) scale(330,270)">
+      <stop offset="0%"   stop-color="#4760ff" stop-opacity="0.28"/>
+      <stop offset="55%"  stop-color="#1806ff" stop-opacity="0.12"/>
+      <stop offset="85%"  stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Cyan haut-droite — ellipse 60% x 60% -->
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(528,48) scale(180,108)">
+      <stop offset="0%"   stop-color="#77f6ff" stop-opacity="0.09"/>
+      <stop offset="70%"  stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Bleu sombre bas-gauche -->
+    <radialGradient id="g3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(90,510) scale(210,90)">
+      <stop offset="0%"   stop-color="#1806ff" stop-opacity="0.06"/>
+      <stop offset="70%"  stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Fond noir -->
+  <rect width="600" height="600" fill="#000000"/>
+  <rect width="600" height="600" fill="url(#g1)"/>
+  <rect width="600" height="600" fill="url(#g2)"/>
+  <rect width="600" height="600" fill="url(#g3)"/>
+
+  <!-- "Trading" weight 400, lettres spread pour aligner avec $852 -->
+  <text
+    x="300" y="248"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    font-family="'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="400"
+    font-size="58"
+    textLength="358"
+    lengthAdjust="spacing"
+    fill="rgba(255,255,255,0.72)">Trading</text>
+
+  <!-- "$852" weight 700, tracking serré -->
+  <text
+    x="300" y="370"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    font-family="'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-weight="700"
+    font-size="128"
+    letter-spacing="-5"
+    fill="#ffffff">$852</text>
+</svg>

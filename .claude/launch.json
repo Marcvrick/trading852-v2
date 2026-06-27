@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Trading852",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "node build.js && python3 -m http.server --directory dist 3000"],
+      "port": 3000
+    }
+  ]
+}

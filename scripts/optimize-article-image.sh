@@ -44,7 +44,7 @@ if [[ "$SRC_W" -gt "$TARGET_W" ]]; then
     sips --resampleWidth "$TARGET_W" -s format jpeg -s formatOptions 100 "$INPUT" \
          --out "$WORK_DIR/resized.jpg" >/dev/null
 else
-    echo "→ Source already ≤ ${TARGET_W}px wide — converting only"
+    echo "→ Source already ≤ ${TARGET_W}px wide - converting only"
     sips -s format jpeg -s formatOptions 100 "$INPUT" \
          --out "$WORK_DIR/resized.jpg" >/dev/null
 fi
