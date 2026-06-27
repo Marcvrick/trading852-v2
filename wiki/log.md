@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-24
+updated: 2026-06-27
 ---
 
 # Trading852 v2, Changelog
@@ -12,6 +12,14 @@ updated: 2026-06-24
 Part of the [Trading852 wiki](index.md).
 
 ## Changelog
+
+### June 27, 2026 · Scorecard: benchmark exempt from the trailing stop
+
+- **Bug**: the 2800.HK Tracker Fund benchmark row was showing a **Stopped** badge (locked at the breakeven / +10% peak tier). The HSI reference had rallied ≥ +10% since the Apr-10 entry, arming the breakeven stop, then an intraday low touched entry and tripped it.
+- **Fix**: the trailing-stop ratchet now applies to **stock picks only**. `fetchOne` in [scorecard.js](../assets/scorecard.js) skips the whole stop scan when `rec.isBenchmark` is set, so the benchmark never arms a tier and can never be marked Stopped. It just shows the raw index return since entry. The ex-dividend adjustment still runs, keeping the benchmark's return comparable to the picks.
+- **Methodology page**: new **Benchmark** paragraph states explicitly that the Hang Seng is tracked through the Tracker Fund (2800.HK), the HSI index ETF, from the April 10 issue, carries no stop, and is excluded from the average and the winners/losers tally.
+- **Wiki**: [scorecard.md](scorecard.md) Benchmark section updated to document the exemption.
+- Benchmark exclusion from the average / alpha row was already in place; only the stop logic was wrongly applied.
 
 ### June 24, 2026 · Rename `src/` to `publish/` + fold `instructions/` into the wiki
 

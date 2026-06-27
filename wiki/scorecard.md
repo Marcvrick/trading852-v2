@@ -4,7 +4,7 @@ tags: [trading852, wiki, scorecard]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-24
+updated: 2026-06-27
 ---
 
 # Trading852 v2, Scorecard
@@ -39,7 +39,7 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 
 **Post-stop live price**: once a position is stopped, the % column stays frozen at the locked tier (no re-entry, no recovery if the stock bounces back above entry). The live last close keeps refreshing and is shown as a small `now: XX.XX` line under the entry price, right-aligned in the Entry column. It is colored **green when the live price is at/above the stop level and red when below it** (`.sc-now-pos` / `.sc-now-neg`), so a glance shows whether the stop was vindicated. It is informational only: it never feeds `pct` or the average. Wired in `fetchOne` (preserves `currentPrice` separately from `last`) and rendered in `renderTable` via `.sc-now`.
 
-**Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick, it is the market reference since the April 10 inaugural issue. Do not reorder it. **The benchmark is excluded from the average return and from the winners/losers tally**, it is a reference line only, not a contributor to the headline number.
+**Benchmark**: 2800.HK (Tracker Fund / HSI) is always pinned to the bottom of the table, grey background (`sc-row-benchmark`). It is not a stock pick, it is the market reference since the April 10 inaugural issue — the HSI is tracked through the Tracker Fund ETF from that date. Do not reorder it. **The trailing-stop ratchet does not apply to the benchmark**: `fetchOne` skips the stop scan entirely when `rec.isBenchmark` is set, so the row never shows a Stopped badge and only displays the raw index return since the Apr-10 entry. **The benchmark is also excluded from the average return and from the winners/losers tally**, it is a reference line only, not a contributor to the headline number.
 
 **Average return**: simple arithmetic mean of every line's `pct`, benchmark excluded. Each pick counts equally. Computed in both `renderStrip` (homepage teaser) and `renderTable` (`/scorecard`) by filtering on `!r.isBenchmark` before summing.
 

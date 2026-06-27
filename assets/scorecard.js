@@ -103,36 +103,41 @@
         }
         var divSinceEntry = divs.reduce(function (a, d) { return a + d.amount; }, 0);
 
-        // Scan subsequent bars: if trailing eligible, arm the tightest tier whose
-        // +pct trigger has been reached by the running intraday HIGH; otherwise
-        // keep the base −10 % tier. Then check if the bar's intraday LOW breaches
-        // the active stop level. Tiers ratchet tighter only.
+        // Trailing stop applies to stock picks only, never to the benchmark.
+        // 2800.HK (Tracker Fund / HSI) is the market reference line, not a trade:
+        // it has no stop, can never be "stopped", and just shows the index return
+        // since the Apr-10 entry. fetchOne skips the whole stop scan for it.
         var activeTier = STOP_TIERS[STOP_TIERS.length - 1];
         var stopLevel = entry * activeTier.stopMul;
         var lockedPct = activeTier.lockedPct;
         var peakVal = entry;
         var stopped = false, stopDate = null;
-        for (var k = entryIdx + 1; k < ts.length; k++) {
-          // Adjust the ex-div drop out: by this bar the price has shed any dividend
-          // gone ex since entry, so add it back to keep the path continuous.
-          var cd = cumDivThrough(ts[k]);
-          var hi = highs[k];
-          if (hi != null && (hi + cd) > peakVal) peakVal = hi + cd;
-          var peakGainPct = (peakVal - entry) / entry * 100;
-          for (var ti = 0; ti < STOP_TIERS.length; ti++) {
-            if (peakGainPct >= STOP_TIERS[ti].triggerPct) {
-              activeTier = STOP_TIERS[ti];
-              stopLevel = entry * activeTier.stopMul;
-              lockedPct = activeTier.lockedPct;
+        if (!rec.isBenchmark) {
+          // Scan subsequent bars: arm the tightest tier whose +pct trigger has been
+          // reached by the running intraday HIGH (tiers ratchet tighter only), then
+          // check if the bar's intraday LOW breaches the active stop level.
+          for (var k = entryIdx + 1; k < ts.length; k++) {
+            // Adjust the ex-div drop out: by this bar the price has shed any dividend
+            // gone ex since entry, so add it back to keep the path continuous.
+            var cd = cumDivThrough(ts[k]);
+            var hi = highs[k];
+            if (hi != null && (hi + cd) > peakVal) peakVal = hi + cd;
+            var peakGainPct = (peakVal - entry) / entry * 100;
+            for (var ti = 0; ti < STOP_TIERS.length; ti++) {
+              if (peakGainPct >= STOP_TIERS[ti].triggerPct) {
+                activeTier = STOP_TIERS[ti];
+                stopLevel = entry * activeTier.stopMul;
+                lockedPct = activeTier.lockedPct;
+                break;
+              }
+            }
+            var lo = lows[k];
+            if (lo == null) continue;
+            if ((lo + cd) <= stopLevel) {
+              stopped = true;
+              stopDate = new Date(ts[k] * 1000);
               break;
             }
-          }
-          var lo = lows[k];
-          if (lo == null) continue;
-          if ((lo + cd) <= stopLevel) {
-            stopped = true;
-            stopDate = new Date(ts[k] * 1000);
-            break;
           }
         }
 
