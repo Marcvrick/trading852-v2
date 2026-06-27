@@ -257,7 +257,6 @@ function generateRecentAnalysesHTML() {
             <article class="node-mode-recent_update node-mode-recent_update--small">
               <a href="${s.href}" class="recent-update__link">
                 <div class="eyebrow">${s.eyebrow} <span class="eyebrow-date">· ${formatDate(s.date)}</span></div>
-                <div class="card-key-number">${s.contextLine}</div>
                 <h3>${s.title}</h3>
                 <div class="recent-update__see-update">Read the analysis &rarr;</div>
               </a>

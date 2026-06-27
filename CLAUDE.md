@@ -36,7 +36,11 @@ Every article must have:
 
 **Rule:** Homepage cards display title (white) + context (grey). The grey text is NEVER the title repeated.
 
-**Pattern:**
+**Featured card (2/3 width):** shows title (white, h3) + contextLine (grey)
+
+**Small cards (1/3 width stack):** show title (white, h3) ONLY. If space is insufficient, contextLine is hidden to avoid truncation. White title is always readable.
+
+**Pattern (featured):**
 ```
 Title (white, h3): "China Tripled Its GDP. The Hang Seng Didn't Move."
 Context (grey, .card-key-number): "Economic growth is not shareholder returns"
