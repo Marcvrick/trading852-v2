@@ -269,14 +269,16 @@ function generateRecentAnalysesHTML() {
 
 // ── "Our Analyses" list auto-generation ─────────────────────────────────────
 // Generate the full numbered list of all articles for the "Our Analyses" section.
-// Each article gets a sequential number, link, eyebrow, and contextLine (never repeat title).
+// Skip the first 3 articles (featured + 2 small cards from Recent Analyses).
+// Each remaining article gets a sequential number, link, eyebrow, and contextLine.
 function generateOurAnalysesHTML() {
   const articles = getAllArticles();
-  if (articles.length === 0) return '';
+  if (articles.length <= 3) return ''; // Only featured + 2 small cards, nothing for list
 
   let html = '';
-  for (let i = 0; i < articles.length; i++) {
-    const a = articles[i];
+  const listArticles = articles.slice(3); // Skip first 3 (featured + small card 1 + small card 2)
+  for (let i = 0; i < listArticles.length; i++) {
+    const a = listArticles[i];
     const num = String(i + 1).padStart(2, '0');
     html += `
             <div class="node-type-experience_article">
