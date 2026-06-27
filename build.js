@@ -270,7 +270,7 @@ function generateRecentAnalysesHTML() {
 // ── "Our Analyses" list auto-generation ─────────────────────────────────────
 // Generate the full numbered list of all articles for the "Our Analyses" section.
 // Skip the first 3 articles (featured + 2 small cards from Recent Analyses).
-// Each remaining article gets a sequential number, link, eyebrow, and contextLine.
+// Each remaining article shows the full title, not the contextLine.
 function generateOurAnalysesHTML() {
   const articles = getAllArticles();
   if (articles.length <= 3) return ''; // Only featured + 2 small cards, nothing for list
@@ -285,7 +285,7 @@ function generateOurAnalysesHTML() {
               <a href="${a.href}" class="our-work__link">
                 <hr class="our-work-hr our-work-hr--before">
                 <span class="work-index">${num}</span>
-                <span class="field-name--field_snippet">${a.eyebrow} · ${a.contextLine}</span>
+                <span class="field-name--field_snippet">${a.eyebrow} · ${a.title}</span>
                 <span class="our-work__read-more">Read the analysis &rarr;</span>
                 <hr class="our-work-hr our-work-hr--after">
               </a>
