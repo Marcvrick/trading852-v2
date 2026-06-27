@@ -217,6 +217,7 @@ function getAllArticles() {
     articles.push({
       href, slug, title: config.ogTitle, eyebrow, date: config.pubDate,
       description: config.description || '',
+      contextLine: config.contextLine || config.description || '', // fallback to description if no contextLine
     });
   }
   articles.sort((a, b) => (b.date < a.date ? -1 : b.date > a.date ? 1 : 0));
@@ -243,7 +244,7 @@ function generateRecentAnalysesHTML() {
           <article class="node-mode-recent_update node-mode-recent_update--featured">
             <a href="${featured.href}" class="recent-update__link">
               <div class="eyebrow">${featured.eyebrow} <span class="eyebrow-date">· ${formatDate(featured.date)}</span></div>
-              <div class="card-key-number">${featured.title}</div>
+              <div class="card-key-number">${featured.contextLine}</div>
               <h3>${featured.title}</h3>
               <div class="recent-update__see-update">Read the analysis &rarr;</div>
             </a>
@@ -256,7 +257,7 @@ function generateRecentAnalysesHTML() {
             <article class="node-mode-recent_update node-mode-recent_update--small">
               <a href="${s.href}" class="recent-update__link">
                 <div class="eyebrow">${s.eyebrow} <span class="eyebrow-date">· ${formatDate(s.date)}</span></div>
-                <div class="card-key-number">${s.title}</div>
+                <div class="card-key-number">${s.contextLine}</div>
                 <h3>${s.title}</h3>
                 <div class="recent-update__see-update">Read the analysis &rarr;</div>
               </a>
@@ -269,7 +270,7 @@ function generateRecentAnalysesHTML() {
 
 // ── "Our Analyses" list auto-generation ─────────────────────────────────────
 // Generate the full numbered list of all articles for the "Our Analyses" section.
-// Each article gets a sequential number, link, eyebrow, and title.
+// Each article gets a sequential number, link, eyebrow, and contextLine (never repeat title).
 function generateOurAnalysesHTML() {
   const articles = getAllArticles();
   if (articles.length === 0) return '';
@@ -283,7 +284,7 @@ function generateOurAnalysesHTML() {
               <a href="${a.href}" class="our-work__link">
                 <hr class="our-work-hr our-work-hr--before">
                 <span class="work-index">${num}</span>
-                <span class="field-name--field_snippet">${a.eyebrow} · ${a.title}</span>
+                <span class="field-name--field_snippet">${a.eyebrow} · ${a.contextLine}</span>
                 <span class="our-work__read-more">Read the analysis &rarr;</span>
                 <hr class="our-work-hr our-work-hr--after">
               </a>
