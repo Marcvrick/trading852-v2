@@ -1,5 +1,5 @@
 ---
-title: "Style Guide — Blog Article Conviction (modèle 0113 Dickson)"
+title: "Style Guide · Blog Article Conviction (modèle 0113 Dickson)"
 tags:
   - style-guide
   - blog
@@ -12,12 +12,12 @@ updated: 2026-06-06
 source: "[[0113-blog-article]]"
 ---
 
-> **Référence :** [[0113-blog-article]] — modèle canonique du format blog conviction HK stocks
-> **Voix de base :** [VOIX-Marc.md](/Users/mc/Library/Mobile Documents/com~apple~CloudDocs/MarcOS/Voix Marc/VOIX-Marc.md) — ce guide fixe le format et les règles analytiques. VOIX-Marc fixe le ton, le rythme et les anti-patterns IA. Les deux s'appliquent simultanément.
+> **Référence :** [[0113-blog-article]], modèle canonique du format blog conviction HK stocks
+> **Voix de base :** [VOIX-Marc.md](/Users/mc/Library/Mobile Documents/com~apple~CloudDocs/MarcOS/Voix Marc/VOIX-Marc.md). Ce guide fixe le format et les règles analytiques. VOIX-Marc fixe le ton, le rythme et les anti-patterns IA. Les deux s'appliquent simultanément.
 
 ---
 
-## Workflow de publication — règle absolue
+## Workflow de publication · règle absolue
 
 **Tout article rédigé par Claude est déposé dans le dossier DRAFT pour relecture avant publication.**
 
@@ -34,9 +34,9 @@ source: "[[0113-blog-article]]"
 
 ---
 
-## Pre-flight — quatre tests à passer avant la première phrase
+## Pre-flight · quatre tests à passer avant la première phrase
 
-Ces quatre tests prennent cinq minutes et évitent les réécritures intégrales en aval. Si l'un échoue à ce stade, l'angle de l'article doit changer — pas la prose.
+Ces quatre tests prennent cinq minutes et évitent les réécritures intégrales en aval. Si l'un échoue à ce stade, l'angle de l'article doit changer, pas la prose.
 
 **1. Test des acronymes propres à l'entreprise.**
 Lister tous les noms de segments, divisions, produits ou programmes qui apparaissent en majuscules dans les sources internes (rapports FinRatios, expert analyses, retail explainers, filings). Pour chaque acronyme, écrire sur une feuille la traduction grand public en 5 mots maximum.
@@ -50,29 +50,29 @@ Si l'acronyme ne peut pas être traduit en 5 mots, le lecteur ne pourra pas le g
 
 **Règle d'écriture qui découle du test :** chaque acronyme propre à l'entreprise est défini *une seule fois* à sa première occurrence dans le corps, puis *remplacé* par sa traduction grand public partout ailleurs. Pas "défini et conservé". Remplacé. La table de passe jargon (section Lite) concerne les termes financiers génériques. Cette règle-ci concerne les segments propriétaires.
 
-> Cas réel (0992 Lenovo, mai 2026) : première version utilisait IDG / ISG / SSG plus de 30 fois dans le corps après les avoir définis à la première occurrence. À la relecture, Dany a posé la question "What does ISG mean?". La définition n'avait pas tenu. Réécriture intégrale du corps nécessaire. La règle aurait dû s'appliquer *avant* le premier jet — d'où ce pre-flight.
+> Cas réel (0992 Lenovo, mai 2026) : première version utilisait IDG / ISG / SSG plus de 30 fois dans le corps après les avoir définis à la première occurrence. À la relecture, Dany a posé la question "What does ISG mean?". La définition n'avait pas tenu. Réécriture intégrale du corps nécessaire. La règle aurait dû s'appliquer *avant* le premier jet, d'où ce pre-flight.
 
 **2. Test du chiffre central.**
-Identifier le ou les deux chiffres qui portent la thèse. Ces chiffres iront dans le titre et le hook. Tout autre chiffre de l'article doit servir ces chiffres-là, soit en les contextualisant, soit en les contredisant. Un chiffre qui se tient seul, parallèle aux chiffres centraux, n'a pas sa place dans le corps — il appartient au Data Snapshot.
+Identifier le ou les deux chiffres qui portent la thèse. Ces chiffres iront dans le titre et le hook. Tout autre chiffre de l'article doit servir ces chiffres-là, soit en les contextualisant, soit en les contredisant. Un chiffre qui se tient seul, parallèle aux chiffres centraux, n'a pas sa place dans le corps, il appartient au Data Snapshot.
 
 **Test :** lire chaque paragraphe en se demandant *"ce chiffre aide-t-il le lecteur à comprendre les deux chiffres du titre, ou il s'aligne à côté ?"*. Si la réponse est "il s'aligne", le couper.
 
 **3. Test de la question-fil.**
 Écrire en une phrase la question que le lecteur ne pourra pas résoudre sans terminer l'article. Si la question peut être devinée après le hook, elle est trop faible. Si la question ne tient pas en une phrase, l'article n'a pas de centre.
 
-La question-fil n'apparaît jamais en clair dans l'article — elle est implicite dans le paradoxe du hook. Mais elle doit exister, écrite quelque part avant de commencer à rédiger.
+La question-fil n'apparaît jamais en clair dans l'article, elle est implicite dans le paradoxe du hook. Mais elle doit exister, écrite quelque part avant de commencer à rédiger.
 
 **4. Test de l'ancrage prix.**
-Avant d'écrire la première phrase, fetch le **prix live actuel** du ticker. **Jamais** réutiliser un prix trouvé dans un earnings report, une press release, un rapport FinRatios antérieur, ou une analyse Claude précédente. Ces sources citent le prix de leur propre date de publication — qui peut dater de plusieurs semaines voire mois.
+Avant d'écrire la première phrase, fetch le **prix live actuel** du ticker. **Jamais** réutiliser un prix trouvé dans un earnings report, une press release, un rapport FinRatios antérieur, ou une analyse Claude précédente. Ces sources citent le prix de leur propre date de publication, qui peut dater de plusieurs semaines voire mois.
 
 **Sources, par ordre de préférence :**
 - HK : FinMC parquet `cache/{TICKER}.HK_daily_local.parquet` (dernière barre EOD) → si > 1 jour ouvré stale, lancer `fetch_price_robust.py {TICKER}.HK`
 - US : `fetch_price_robust.py {TICKER}` (snapshot + insider + ratings en 1 call)
 - Intraday réel : demander à Dany le quote TradingView Pro, ou yfinance live
 
-**Règle d'écriture qui découle du test :** chaque chiffre de prix dans l'article est suivi de sa date adjacente. ✅ "closed at HK$13.19 on May 20, 2026". ❌ "closes at HK$10" (date implicite — invite la réutilisation stale). Cette règle s'applique à TOUS les chiffres dérivés du prix : market cap, P/E, EV, scenario targets, sum-of-parts, dividend yield, asymétries vs métriques fondamentales (order book, NAV, cash, etc.).
+**Règle d'écriture qui découle du test :** chaque chiffre de prix dans l'article est suivi de sa date adjacente. ✅ "closed at HK$13.19 on May 20, 2026". ❌ "closes at HK$10" (date implicite, invite la réutilisation stale). Cette règle s'applique à TOUS les chiffres dérivés du prix : market cap, P/E, EV, scenario targets, sum-of-parts, dividend yield, asymétries vs métriques fondamentales (order book, NAV, cash, etc.).
 
-> Cas réel (0992 Lenovo, mai 2026) : draft Trading852 rédigé avec HK$10.00 comme close du 20 mai. Vrai close = HK$13.19. Le HK$10 venait d'un earnings report ou article ancien que Claude a scanné en recherche, puis utilisé comme "current price" sans vérifier indépendamment. Toute la thèse "$15.5B AI orders ≈ $15.9B market cap, peer discount à 7.7× P/E, bull case +35-50%" était bâtie sur une mcap fictive de US$15.9B. Réelle = US$20.7B, P/E 10.1× = en ligne avec Dell, **pas de discount**. Le bull case "+35-50%" était en réalité +2-14%. Article tué — réécriture from scratch ou pull définitif. La règle aurait dû s'appliquer *avant* le premier jet — d'où ce test.
+> Cas réel (0992 Lenovo, mai 2026) : draft Trading852 rédigé avec HK$10.00 comme close du 20 mai. Vrai close = HK$13.19. Le HK$10 venait d'un earnings report ou article ancien que Claude a scanné en recherche, puis utilisé comme "current price" sans vérifier indépendamment. Toute la thèse "$15.5B AI orders ≈ $15.9B market cap, peer discount à 7.7× P/E, bull case +35-50%" était bâtie sur une mcap fictive de US$15.9B. Réelle = US$20.7B, P/E 10.1× = en ligne avec Dell, **pas de discount**. Le bull case "+35-50%" était en réalité +2-14%. Article tué, réécriture from scratch ou pull définitif. La règle aurait dû s'appliquer *avant* le premier jet, d'où ce test.
 
 **Référence procédure complète :** [Trading/README.md → Live Price Anchoring (MANDATORY)](/Users/mc/MarcOS/Trading/README.md) et [MEMORY.md → MANDATORY live-price fetch](/Users/mc/.claude/projects/-Users-mc/memory/MEMORY.md).
 
@@ -80,11 +80,11 @@ Avant d'écrire la première phrase, fetch le **prix live actuel** du ticker. **
 
 ## Principe directeur
 
-Ce style est **journalistique-analytique** : il parle à un lecteur intelligent qui n'est pas forcément financier. Il ne vend pas — il raisonne à voix haute. Le lecteur doit sentir que l'auteur a fait le travail à sa place et lui présente une conclusion honnête, pas une pitch deck.
+Ce style est **journalistique-analytique** : il parle à un lecteur intelligent qui n'est pas forcément financier. Il ne vend pas, il raisonne à voix haute. Le lecteur doit sentir que l'auteur a fait le travail à sa place et lui présente une conclusion honnête, pas une pitch deck.
 
-**Audience — décision définitive :** lecteur éduqué généraliste. Pas un professionnel de la finance. Les concepts financiers de base (EV/EBIT, NRDL, Phase I) sont expliqués brièvement la première fois qu'ils apparaissent. Pas de jargon non défini. Pas de sur-explication non plus : une phrase suffit, pas un paragraphe.
+**Audience · décision définitive :** lecteur éduqué généraliste. Pas un professionnel de la finance. Les concepts financiers de base (EV/EBIT, NRDL, Phase I) sont expliqués brièvement la première fois qu'ils apparaissent. Pas de jargon non défini. Pas de sur-explication non plus : une phrase suffit, pas un paragraphe.
 
-**Framing des thèses :** chaque article a une orientation — growth, valuation, special situation, cycle. Cette orientation doit rester cohérente du hook à la décision. Ne jamais faire glisser un article de growth vers un langage "bear case / bull case". Un article Jacobio parle de croissance, pas de débat entre camps.
+**Framing des thèses :** chaque article a une orientation (growth, valuation, special situation, cycle). Cette orientation doit rester cohérente du hook à la décision. Ne jamais faire glisser un article de growth vers un langage "bear case / bull case". Un article Jacobio parle de croissance, pas de débat entre camps.
 
 **Ce que ce style n'est jamais :**
 - Newsletter enthousiaste ("opportunité incroyable")
@@ -93,33 +93,33 @@ Ce style est **journalistique-analytique** : il parle à un lecteur intelligent 
 
 ---
 
-## L'arc narratif — règle de l'escalier
+## L'arc narratif · règle de l'escalier
 
-Un article de 1 200 mots sur une entreprise que le lecteur ne connaît pas est un contrat. Le lecteur investit son attention. Chaque section doit lui donner une raison de continuer — pas juste de la matière.
+Un article de 1 200 mots sur une entreprise que le lecteur ne connaît pas est un contrat. Le lecteur investit son attention. Chaque section doit lui donner une raison de continuer, pas juste de la matière.
 
 **L'escalier : chaque section monte d'un cran.**
 
 | Section | Ce que le lecteur ressent en la finissant |
 |---|---|
-| Hook | "Attends — ça ne devrait pas être possible." |
+| Hook | "Attends, ça ne devrait pas être possible." |
 | Ce que fait l'entreprise | "D'accord, je vois le business. Mais alors pourquoi ce prix ?" |
 | Pourquoi la décote existe | "La raison existe, mais elle tient vraiment ?" |
 | Catalyseur | "Ah. C'est là que ça se résout." |
 | Valorisation | "Le math confirme ce que j'avais compris." |
-| Risques | "Je comprends ce qui pourrait me donner tort — et je sais ce que je surveille." |
+| Risques | "Je comprends ce qui pourrait me donner tort, et je sais ce que je surveille." |
 | Décision | "Je sais exactement quand j'aurais raison et quand j'aurais tort." |
 
 Si le lecteur sort d'une section avec le même niveau de curiosité qu'en y entrant, la section n'a pas fait son travail. Réécrire à partir du fait le plus frappant de cette section.
 
-**La question-fil — règle absolue :**
+**La question-fil · règle absolue :**
 Le hook plante une question que le lecteur ne peut pas résoudre sans terminer l'article. Cette question n'est jamais formulée explicitement (jamais "on se demande alors pourquoi..."). Elle est implicite dans le paradoxe du hook. Les sections 2 et 3 l'escaladent sans y répondre. La section 4 y répond. Si le lecteur peut deviner la réponse après la section 2, la question n'est pas assez forte ou la section 4 n'est pas assez précise.
 
 **Le test de la question-fil :** isoler la dernière phrase du hook. Est-ce qu'elle laisse le lecteur avec une question concrète et non résolue ? Si la phrase est conclusive, la réécrire pour qu'elle pointe vers la suite sans l'annoncer.
 
-**Les fins de section — règle de continuité :**
-La dernière phrase de chaque section (1 à 5) ne peut pas être une conclusion. Elle doit laisser une aspérité — un fait qui pointe vers la section suivante sans l'annoncer. Pas un teaser explicite ("nous allons voir que..."). Un fait incomplet qui ne se résout que dans la section suivante.
+**Les fins de section · règle de continuité :**
+La dernière phrase de chaque section (1 à 5) ne peut pas être une conclusion. Elle doit laisser une aspérité, un fait qui pointe vers la section suivante sans l'annoncer. Pas un teaser explicite ("nous allons voir que..."). Un fait incomplet qui ne se résout que dans la section suivante.
 
-> Exemple : section 2 se termine sur "The business generated HKD 1.4B in free cash flow last year. The stock trades at HKD 3.1B total." Ce chiffre ne s'explique pas encore — la section 3 va l'expliquer. Le lecteur continue.
+> Exemple : section 2 se termine sur "The business generated HKD 1.4B in free cash flow last year. The stock trades at HKD 3.1B total." Ce chiffre ne s'explique pas encore, la section 3 va l'expliquer. Le lecteur continue.
 
 ---
 
@@ -134,10 +134,10 @@ La dernière phrase de chaque section (1 à 5) ne peut pas être une conclusion.
 - Structure identique à la version Full : mêmes sections, même Data Snapshot, mêmes tableaux.
 
 **Ce que Lite n'est pas :**
-- Simplifié à outrance — les chiffres restent précis, les sources restent citées.
-- Moins rigoureux — la rigueur analytique est identique, seule la densité de jargon change.
+- Simplifié à outrance, les chiffres restent précis, les sources restent citées.
+- Moins rigoureux, la rigueur analytique est identique, seule la densité de jargon change.
 
-**Passe jargon obligatoire avant soumission — termes qui doivent toujours être traduits :**
+**Passe jargon obligatoire avant soumission · termes qui doivent toujours être traduits :**
 
 | Terme jargon | Traduction Lite |
 |---|---|
@@ -146,7 +146,7 @@ La dernière phrase de chaque section (1 à 5) ne peut pas être une conclusion.
 | Principal investments | direct investments / investment arm |
 | FY2025 / FY2024 | 2025 / 2024 |
 | Run-rate / normalized earnings | sustainable level / average annual earnings |
-| P/B (price-to-book) | price vs. net assets on paper — expliquer à la première occurrence |
+| P/B (price-to-book) | price vs. net assets on paper, expliquer à la première occurrence |
 | ROE | annual return on shareholders' capital |
 | EPS | earnings per share |
 | Net gearing | debt-to-equity ratio |
@@ -160,9 +160,9 @@ La dernière phrase de chaque section (1 à 5) ne peut pas être une conclusion.
 
 **Règle premier usage :** tout acronyme ou nom propre non universel est défini à sa première apparition en 3-5 mots inline. Exemple : "UAF (the consumer lending subsidiary)" ou "Trian Partners, an activist investment fund that buys into undervalued companies."
 
-> Cas réel (0086, mai 2026) : l'article livré en première passe contenait charge-off rate, impairment losses, principal investments, FY2025, normalized net income, subprime borrowers, re-rating catalyst, cycle-peak datapoint — tous non traduits. La passe jargon complète a nécessité une réécriture intégrale du corps.
+> Cas réel (0086, mai 2026) : l'article livré en première passe contenait charge-off rate, impairment losses, principal investments, FY2025, normalized net income, subprime borrowers, re-rating catalyst, cycle-peak datapoint, tous non traduits. La passe jargon complète a nécessité une réécriture intégrale du corps.
 
-**Whitelist d'acronymes universellement lisibles.** Les acronymes suivants peuvent apparaître sans définition : HKEX, HK, USA, US, EBIT, EBITDA, P/E, P/B, GDP, IPO, AGM, ETF, OEM, GPU, CPU, AI, EV, HKD, USD, RMB, CNY, MOP, NYSE, SPY, HSI, IR (investor relations), ATH. Tout autre acronyme demande une définition inline à sa première occurrence — *et* doit être remplacé par sa traduction grand public ensuite si c'est un segment propre à l'entreprise (cf. règle Pre-flight au début de ce guide).
+**Whitelist d'acronymes universellement lisibles.** Les acronymes suivants peuvent apparaître sans définition : HKEX, HK, USA, US, EBIT, EBITDA, P/E, P/B, GDP, IPO, AGM, ETF, OEM, GPU, CPU, AI, EV, HKD, USD, RMB, CNY, MOP, NYSE, SPY, HSI, IR (investor relations), ATH. Tout autre acronyme demande une définition inline à sa première occurrence, *et* doit être remplacé par sa traduction grand public ensuite si c'est un segment propre à l'entreprise (cf. règle Pre-flight au début de ce guide).
 
 **Test exécutable avant publication :**
 ```bash
@@ -172,7 +172,7 @@ Tout acronyme retourné qui n'est pas dans la whitelist ci-dessus doit avoir une
 
 ---
 
-## Voix — la cadence de Marc
+## Voix · la cadence de Marc
 
 Le filtre précision (CLAUDE.md global) couvre la rigueur analytique. Cette section couvre la *cadence* : comment les phrases s'enchaînent pour que l'article sonne comme Marc en train d'expliquer, et non comme un analyste en train de lister. Référence de fond : [VOIX-Marc.md](/Users/mc/Library/Mobile%20Documents/com~apple~CloudDocs/MarcOS/Voix%20Marc/VOIX-Marc.md). Cette section ajoute trois règles de respiration spécifiques aux articles Trading852, où le risque structurel est l'empilement de chiffres.
 
@@ -200,7 +200,7 @@ Quatre chiffres atterrissent. Entre eux, des phrases courtes qui re-cadrent le s
 
 Huit chiffres en quatre phrases sans aucune phrase d'interprétation. Le lecteur retient la liste, pas la thèse.
 
-> Cas réel (0992 Lenovo, mai 2026) : Key Takeaway v1 contenait 9 chiffres en 5 phrases consécutives sans phrase d'interprétation. Retour Dany : *"too many numbers and not enough sentences to actually highlight the number that count"*. V2 ouvre sur les 2 chiffres du titre, puis une phrase d'interprétation, puis le chiffre de loss, puis une autre interprétation. Les mêmes chiffres atterrissent — mais le lecteur les *voit*.
+> Cas réel (0992 Lenovo, mai 2026) : Key Takeaway v1 contenait 9 chiffres en 5 phrases consécutives sans phrase d'interprétation. Retour Dany : *"too many numbers and not enough sentences to actually highlight the number that count"*. V2 ouvre sur les 2 chiffres du titre, puis une phrase d'interprétation, puis le chiffre de loss, puis une autre interprétation. Les mêmes chiffres atterrissent, mais le lecteur les *voit*.
 
 ### 3. Re-formulation grand public de chaque chiffre clé
 
@@ -213,7 +213,7 @@ Le second exemple ne contient aucune information supplémentaire au sens factuel
 
 **Règle :** un chiffre qui apparaît sans re-cadrage immédiat reste opaque pour le lecteur retail. Soit re-cadrer, soit déplacer le chiffre dans le Data Snapshot où il vit à côté de son label.
 
-### 4. La phrase d'observation — règle de placement renforcée
+### 4. La phrase d'observation · règle de placement renforcée
 
 (Cette règle existe déjà plus bas dans le guide ; rappel ici parce qu'elle est centrale à la voix.) Chaque article contient *une et une seule* phrase d'observation : la chose que Marc a remarquée en lisant le filing et qui ne figure dans aucun modèle analyste. Cette phrase ne doit jamais être enterrée au milieu d'un paragraphe. Elle se tient seule, ou clôt une section, ou ouvre le hook.
 
@@ -303,9 +303,9 @@ Ces trois éléments ne portent pas la thèse. Ils donnent au lecteur un plaisir
 
 ---
 
-## Ponctuation — règle absolue
+## Ponctuation · règle absolue
 
-**Jamais de tiret long (em dash —).** Interdit dans tous les articles sans exception. Remplacer par :
+**Jamais de tiret long (em dash U+2014).** Interdit dans tous les articles sans exception. Remplacer par :
 - Aparté ou précision : parenthèses ( )
 - Élaboration ou définition : deux-points :
 - Continuation de liste ou liaison : virgule ,
@@ -313,7 +313,7 @@ Ces trois éléments ne portent pas la thèse. Ils donnent au lecteur un plaisir
 
 ---
 
-## Contenu interdit — règles absolues
+## Contenu interdit · règles absolues
 
 **Jamais de conseil financier, même indirect.**
 Ces articles présentent une thèse et des catalyseurs observables. Ils ne disent jamais au lecteur quoi faire avec son argent. Sont interdits : toute recommandation d'achat ou de vente ("entrer avant les résultats", "pas de raison de sortir"), tout conseil de timing ("4–6 semaines avant"), tout conseil de sizing ("X% du portefeuille", "seuil de renforcement"). Le lecteur lit, réfléchit, décide seul.
@@ -321,12 +321,12 @@ Ces articles présentent une thèse et des catalyseurs observables. Ils ne disen
 **Jamais mentionner les options ou les dérivés.**
 Aucune référence à : call options, put options, strike price, expiry, premium, options sur actions, warrants, ou tout instrument dérivé. Ces articles parlent d'equity uniquement.
 
-**Jamais exposer la cuisine interne — règle absolue.**
+**Jamais exposer la cuisine interne · règle absolue.**
 Aucun nom propre, aucune dénomination, aucun outil ou framework interne ne doit apparaître dans un article publié. Sont strictement interdits, à titre d'exemple non exhaustif : « Sophie », « Sophie kill floor », « Sophie verify », « Howard Marks lens », « Paulson lens », « Soros lens », « FinRatios v6 », « finExpert », « finvestigate », « finratios-batch », « expert-analysis », « kill scenario », « kill floor », « invalidation rules », « finvestigation », « five-doubt verification », « doubt cleared », « thesis intact » comme statut de pipeline, ou toute référence aux skills, agents, scripts ou processus de notre stack analytique.
 
 Les labels publics CONVICTION / MONITOR / AVOID affichés dans le hero font partie du design system du site et restent autorisés ; c'est leur cuisine de génération qui ne doit pas transparaître.
 
-**Spécialisation — jamais référencer une note de recherche interne antérieure dans l'article.** L'article publié est présenté comme la vue de l'analyste, pas comme la révision d'un document préalable. Sont interdites toutes les formulations qui impliquent l'existence d'une note non publique précédente :
+**Spécialisation · jamais référencer une note de recherche interne antérieure dans l'article.** L'article publié est présenté comme la vue de l'analyste, pas comme la révision d'un document préalable. Sont interdites toutes les formulations qui impliquent l'existence d'une note non publique précédente :
 
 - ❌ « the original valuation work »
 - ❌ « our prior note »
@@ -344,7 +344,7 @@ Les ancrages publics sont en revanche bienvenus :
 
 > Cas réel (2050 Sanhua, 24 mai 2026) : la phrase *« The price has already moved +9% since the original valuation work was filed three weeks ago »* a survécu au premier jet. Le +9% est public (HK$33.20 → HK$36.18). La référence à « the original valuation work » trahit l'existence d'une FinRatios interne. Réécriture : *« The stock has moved +9% over the past three weeks alone. »* Mêmes faits, zéro fuite. La règle est aussi enforced dans le README `What to never write` et indexée dans MEMORY.md.
 
-Si un seuil interne (ex. plancher mensuel à MOP 17B) doit apparaître dans l'article, il est reformulé en langage neutre d'analyste : « le seuil à partir duquel la thèse devrait être réévaluée », « le niveau à partir duquel le canal indirect serait considéré comme activé », etc. Le lecteur ne doit jamais soupçonner l'existence d'un appareil de scoring, d'agents IA ou d'un workflow de vérification interne. L'article est présenté comme l'analyse d'un investisseur — pas comme la sortie d'un pipeline.
+Si un seuil interne (ex. plancher mensuel à MOP 17B) doit apparaître dans l'article, il est reformulé en langage neutre d'analyste : « le seuil à partir duquel la thèse devrait être réévaluée », « le niveau à partir duquel le canal indirect serait considéré comme activé », etc. Le lecteur ne doit jamais soupçonner l'existence d'un appareil de scoring, d'agents IA ou d'un workflow de vérification interne. L'article est présenté comme l'analyse d'un investisseur, pas comme la sortie d'un pipeline.
 
 ---
 
@@ -352,11 +352,11 @@ Si un seuil interne (ex. plancher mensuel à MOP 17B) doit apparaître dans l'ar
 
 ### 0. Data Snapshot (obligatoire)
 
-**Placement — règle Lite :** pour le format Lite (audience retail), le Data Snapshot est inséré **après la section 2** ("Ce que fait l'entreprise"), pas avant le hook. Un lecteur retail qui voit deux colonnes de métriques avant de comprendre ce que fait l'entreprise ferme l'article. Le Data Snapshot a plus de sens une fois que le business est ancré. Il reste **obligatoire** — seul son placement change.
+**Placement · règle Lite :** pour le format Lite (audience retail), le Data Snapshot est inséré **après la section 2** ("Ce que fait l'entreprise"), pas avant le hook. Un lecteur retail qui voit deux colonnes de métriques avant de comprendre ce que fait l'entreprise ferme l'article. Le Data Snapshot a plus de sens une fois que le business est ancré. Il reste **obligatoire**, seul son placement change.
 
 Exception : si le lecteur cible est mixte (retail + analytique), conserver le placement original après la Key Takeaway. Dans ce cas, ajouter un chapeau de deux phrases en prose avant le tableau pour contextualiser les chiffres.
 
-**Panneau gauche — Business Snapshot · FY[année]**
+**Panneau gauche · Business Snapshot · FY[année]**
 
 | Ligne | Contenu |
 |---|---|
@@ -372,13 +372,13 @@ Exception : si le lecteur cible est mixte (retail + analytique), conserver le pl
 
 Lignes optionnelles selon le dossier : Interest Coverage, Payout Ratio, D/E Ratio.
 
-**Panneau droit — Valuation vs Peers · EV/EBIT**
+**Panneau droit · Valuation vs Peers · EV/EBIT**
 
 Pairs triés du plus élevé au plus bas. La ligne Haier/société analysée toujours en bas, en gras, avec un badge `-XX%` montrant le discount vs la moyenne des pairs.
 
 Sourcer en dessous en 11px : `Source: [filing] [date] · Peer multiples [date]`
 
-**CSS de référence :** `6690-haier-lite.html` — classes `.data-snapshot`, `.data-snapshot__panel`, `.snapshot-table`, `.snapshot-badge`, `.data-snapshot .snapshot-note`
+**CSS de référence :** `6690-haier-lite.html`, classes `.data-snapshot`, `.data-snapshot__panel`, `.snapshot-table`, `.snapshot-badge`, `.data-snapshot .snapshot-note`
 
 > **Piège CSS :** La note source doit être ciblée par `.data-snapshot .snapshot-note` (spécificité 0,2,0), pas `.snapshot-note` seul (0,1,0). La règle `.article-body p { font-size: var(--fs-18) }` a une spécificité 0,1,1 qui l'emporterait sinon et annulerait le 0.6875rem.
 
@@ -386,12 +386,12 @@ Sourcer en dessous en 11px : `Source: [filing] [date] · Peer multiples [date]`
 - Toujours deux panneaux côte à côte (flex, `gap: 1px`, fond `var(--dp-c-gray-border)`)
 - Mobile : `flex-direction: column`
 - Jamais plus de 9 lignes par panneau
-- Le badge de discount est en noir sur blanc — visible immédiatement
+- Le badge de discount est en noir sur blanc, visible immédiatement
 - La note source est en `0.6875rem` (plus petit que `--fs-12`)
 
 ---
 
-### 0b. Subtitle vs Key Takeaway — règle absolue de séparation
+### 0b. Subtitle vs Key Takeaway · règle absolue de séparation
 
 Le subtitle et la Key Takeaway ne peuvent jamais contenir la même information clé.
 
@@ -401,7 +401,7 @@ Le subtitle et la Key Takeaway ne peuvent jamais contenir la même information c
 > Mauvais : subtitle dit "the market values everything else at US$507M" → Key Takeaway répète US$730M et US$507M.
 > Bon : subtitle dit "one of the world's largest pharmaceutical companies paid nine figures for a single early-stage molecule. The math that follows is worth reading carefully." → Key Takeaway livre les chiffres.
 
-**Key Takeaway ≠ ouverture du hook — règle absolue (ajout 2026-06-13).** La Key Takeaway est placée avant le hook et livre les chiffres en premier. Le hook les re-livre ensuite en mode narratif. Le piège : écrire la Key Takeaway comme une compression mot-pour-mot des premières phrases du hook. Les deux portent les mêmes chiffres-clés (inévitable), mais jamais les mêmes phrases ni le même ordre.
+**Key Takeaway ≠ ouverture du hook · règle absolue (ajout 2026-06-13).** La Key Takeaway est placée avant le hook et livre les chiffres en premier. Le hook les re-livre ensuite en mode narratif. Le piège : écrire la Key Takeaway comme une compression mot-pour-mot des premières phrases du hook. Les deux portent les mêmes chiffres-clés (inévitable), mais jamais les mêmes phrases ni le même ordre.
 
 - **Key Takeaway** : attaque par la conclusion. Angle d'entrée = le « so what », le fait le plus distinctif, ou le catalyseur nommé. Le lecteur pressé doit pouvoir s'arrêter là.
 - **Hook** : attaque par une autre porte (le prix, une scène, le paradoxe), construit la révélation pas à pas, et garde souvent le catalyseur en réserve jusqu'à la section dédiée.
@@ -410,9 +410,9 @@ Le subtitle et la Key Takeaway ne peuvent jamais contenir la même information c
 
 > Cas réel (0700 Tencent, 13 juin 2026) : Key Takeaway et hook ouvraient tous deux sur « At HK$463.60 … about HK$4.2 trillion », puis déroulaient la même arithmétique (708B → +147B cash → un cinquième → strip out → 11x vs NetEase) dans le même ordre. Retour Dany : *« the summary is using almost the same sentences than the first sentences of the first paragraph »*. Réécriture : la Key Takeaway attaque par le portefeuille (« Inside every Tencent share sits a portfolio … ») et nomme d'emblée le précédent JD.com 2021 que le hook, lui, garde pour la section 3. Mêmes chiffres, porte d'entrée différente.
 
-**Key Takeaway — format et longueur :** 2 à 3 phrases maximum. Ton factuel, pas enthousiaste. La box ne compte pas dans les 80-120 mots du hook ouverture : c'est un élément structurel distinct. Elle doit pouvoir être lue seule, sans le reste de l'article, et donner au lecteur pressé les trois chiffres les plus importants.
+**Key Takeaway · format et longueur :** 2 à 3 phrases maximum. Ton factuel, pas enthousiaste. La box ne compte pas dans les 80-120 mots du hook ouverture : c'est un élément structurel distinct. Elle doit pouvoir être lue seule, sans le reste de l'article, et donner au lecteur pressé les trois chiffres les plus importants.
 
-**Key Takeaway — zéro jargon, règle absolue :** La Key Takeaway est lue avant tout le reste. Aucun terme technique non défini n'y est autorisé. Si un terme nécessite une explication, soit le remplacer par du langage courant, soit l'expliquer en ligne en 3-4 mots.
+**Key Takeaway · zéro jargon, règle absolue :** La Key Takeaway est lue avant tout le reste. Aucun terme technique non défini n'y est autorisé. Si un terme nécessite une explication, soit le remplacer par du langage courant, soit l'expliquer en ligne en 3-4 mots.
 
 > Cas réel (0086, mai 2026) : "UAF's H1 2026 charge-off ratio" → illisible sans contexte. Réécriture : "what share of the lending arm's loans go unrecovered in the first half of 2026."
 
@@ -420,11 +420,11 @@ Le subtitle et la Key Takeaway ne peuvent jamais contenir la même information c
 
 ### 1. Hook d'ouverture (sans titre)
 
-- Premier paragraphe sans `##` — va directement au fait surprenant
+- Premier paragraphe sans `##`, va directement au fait surprenant
 - Chiffre concret dans les deux premières phrases
 - Crée l'intrigue avant d'expliquer : "les chiffres sont tellement clairs qu'on se frotte les yeux"
 - **Question-fil obligatoire :** le hook pose un paradoxe que le lecteur ne peut pas résoudre à cette étape. Ne jamais l'énoncer comme une question ("pourquoi X ?"). Le poser par les chiffres, de sorte que le lecteur forme lui-même la question. Ce paradoxe reste ouvert dans les sections 2 et 3. Il se résout en section 4.
-- **Dernière phrase du hook : ne se conclut pas.** Elle laisse une aspérité — un fait sans explication, une tension non résolue — qui force la lecture de la section suivante.
+- **Dernière phrase du hook : ne se conclut pas.** Elle laisse une aspérité, un fait sans explication, une tension non résolue, qui force la lecture de la section suivante.
 
 ---
 
@@ -434,7 +434,7 @@ Le subtitle et la Key Takeaway ne peuvent jamais contenir la même information c
 - Décrit le business model en langage concret (franchises, durées, clients)
 - Une ou deux phrases sur les résultats récents avec % précis
 - Ancre le lecteur dans la réalité opérationnelle avant de parler de valorisation
-- **Dernière phrase obligatoire : un fait qui complique la question du hook sans y répondre.** Le lecteur comprend maintenant ce que l'entreprise fait — et se demande encore plus pourquoi le prix est là où il est. Ce fait pointe vers la section 3 sans l'annoncer.
+- **Dernière phrase obligatoire : un fait qui complique la question du hook sans y répondre.** Le lecteur comprend maintenant ce que l'entreprise fait, et se demande encore plus pourquoi le prix est là où il est. Ce fait pointe vers la section 3 sans l'annoncer.
 
 > Exemple : "The business generated HKD 1.4B in free cash flow last year. The stock trades at HKD 3.1B total." La section 3 expliquera pourquoi.
 
@@ -442,18 +442,18 @@ Le subtitle et la Key Takeaway ne peuvent jamais contenir la même information c
 
 ### 3. Pourquoi la décote existe
 
-- Section cruciale — explique l'inefficience avant d'en tirer parti
-- **Escalade la question-fil :** maintenant le lecteur comprend d'où vient le gap, mais ne sait pas encore si le gap va se fermer. Ce n'est pas encore la réponse — c'est pourquoi la question existe.
+- Section cruciale, explique l'inefficience avant d'en tirer parti
+- **Escalade la question-fil :** maintenant le lecteur comprend d'où vient le gap, mais ne sait pas encore si le gap va se fermer. Ce n'est pas encore la réponse, c'est pourquoi la question existe.
 - "Résultat : la décote existe, elle est documentable, et elle persiste parce que..."
 - Termine par une phrase courte, presque arrogante, qui pose l'autorité de l'auteur
-- **Dernière phrase : ne ferme pas la thèse.** Elle nomme ce qui manquerait pour que le consensus bouge — et c'est précisément l'objet de la section suivante.
+- **Dernière phrase : ne ferme pas la thèse.** Elle nomme ce qui manquerait pour que le consensus bouge, et c'est précisément l'objet de la section suivante.
 
 ---
 
 ### 4. Le catalyseur/signal principal
 
 - Un événement réel passé utilisé comme preuve (offre de privatisation, annonce, filing HKEX)
-- **C'est ici que la question plantée dans le hook reçoit sa réponse.** La décomposition en points numérotés doit suivre l'ordre logique de la résolution — pas l'ordre chronologique des événements.
+- **C'est ici que la question plantée dans le hook reçoit sa réponse.** La décomposition en points numérotés doit suivre l'ordre logique de la résolution, pas l'ordre chronologique des événements.
 - Décomposé en points numérotés : **Un. Deux. Trois.**
 - Chaque point est une implication logique, pas une opinion
 
@@ -463,9 +463,9 @@ Le subtitle et la Key Takeaway ne peuvent jamais contenir la même information c
 
 - Deux colonnes : actif(s) séparé(s) + activité opérationnelle
 - Tableau Markdown obligatoire avec le cours actuel en bas pour le contraste visuel
-- Multiple conservateur justifié par rapport aux pairs ("7x — conservateur par rapport aux pairs qui se traitent entre 8x et 15x")
+- Multiple conservateur justifié par rapport aux pairs ("7x, conservateur par rapport aux pairs qui se traitent entre 8x et 15x")
 - Sourcer chaque chiffre à une date et un document précis ("tiré directement du bilan au 30 septembre 2025")
-- **Dernière phrase : le math a parlé. La phrase de clôture de cette section formule l'asymétrie brute** — upside vs downside dans les termes les plus simples possibles. Ce n'est pas un conseil ; c'est une arithmétique.
+- **Dernière phrase : le math a parlé. La phrase de clôture de cette section formule l'asymétrie brute**, upside vs downside dans les termes les plus simples possibles. Ce n'est pas un conseil ; c'est une arithmétique.
 
 **Cas particulier : entreprise pré-bénéfice (biotech, early-stage)**
 
@@ -477,7 +477,7 @@ Pour les sociétés sans profit opérationnel (EBIT négatif), EV/EBIT ne s'appl
 | Actif de pipeline (molécule, licence) | Coût d'acquisition par un tiers, deal de licence comparable, ou multiple de M&A sectoriel |
 | Activité opérationnelle résiduelle | Multiple conservateur sur le chiffre d'affaires, ou valeur résiduelle |
 
-Le Data Snapshot remplace EV/EBIT par les métriques pertinentes pour l'étape de développement : cash runway (combien de mois l'entreprise peut opérer sans lever des fonds), coût historique par patient, taux de succès phase-par-phase. Expliquer chaque métrique en clair — le lecteur Lite ne connaît pas "cash runway" par défaut.
+Le Data Snapshot remplace EV/EBIT par les métriques pertinentes pour l'étape de développement : cash runway (combien de mois l'entreprise peut opérer sans lever des fonds), coût historique par patient, taux de succès phase-par-phase. Expliquer chaque métrique en clair, le lecteur Lite ne connaît pas "cash runway" par défaut.
 
 ---
 
@@ -486,7 +486,7 @@ Le Data Snapshot remplace EV/EBIT par les métriques pertinentes pour l'étape d
 - Section dédiée, intitulée clairement : "Les risques qu'on ne minore pas"
 - **Trois risques maximum, nommés en gras**
 - Chaque risque a : (1) le mécanisme concret, (2) l'historique qui le nuance, (3) pourquoi c'est le vrai risque et pas un détail
-- **Reframe conviction — règle absolue :** les risques ne sont pas une liste de raisons de ne pas investir. Ce sont les conditions dans lesquelles la thèse serait fausse. Un lecteur qui finit cette section doit comprendre ce qu'il surveille — pas avoir peur d'investir. Formuler : "Si X se produit, la thèse est remise en cause parce que..." plutôt que "X pourrait nuire à l'entreprise."
+- **Reframe conviction · règle absolue :** les risques ne sont pas une liste de raisons de ne pas investir. Ce sont les conditions dans lesquelles la thèse serait fausse. Un lecteur qui finit cette section doit comprendre ce qu'il surveille, pas avoir peur d'investir. Formuler : "Si X se produit, la thèse est remise en cause parce que..." plutôt que "X pourrait nuire à l'entreprise."
 - Risques opérationnels ajoutés en dernier, en un seul paragraphe, sans header propre
 - Les risques présentés dans un bloc `.risk-callout` (CSS de référence : `1167-jacobio.html`)
 
@@ -494,35 +494,35 @@ Le Data Snapshot remplace EV/EBIT par les métriques pertinentes pour l'étape d
 
 ### 7. Décision
 
-- **Première ligne obligatoire :** `<p><em>Written at [PRIX] on [DATE].</em></p>` — date et cours de référence au moment de la publication. Pas de commentaire supplémentaire sur le niveau de prix.
+- **Première ligne obligatoire :** `<p><em>Written at [PRIX] on [DATE].</em></p>`, date et cours de référence au moment de la publication. Pas de commentaire supplémentaire sur le niveau de prix.
 - Rappelle la nature de la thèse et les deux ou trois catalyseurs qui la font tenir
-- **Ordre dans cette section :** (1) date/prix, (2) rappel de la thèse en 2-3 phrases, (3) tableau de scénarios, (4) critères d'invalidation, (5) phrase lapidaire. Jamais fermer sur le tableau ou les triggers d'invalidation — ce sont des outils analytiques, pas une clôture.
-- **Phrase de refus explicite — recommandée pour articles framework.** Une phrase qui nomme ce que l'article *ne fait pas*, placée avant le tableau de scénarios. Elle pose la posture analytique et désamorce l'attente d'une recommandation. Formulée comme un choix structurel, pas comme une excuse.
+- **Ordre dans cette section :** (1) date/prix, (2) rappel de la thèse en 2-3 phrases, (3) tableau de scénarios, (4) critères d'invalidation, (5) phrase lapidaire. Jamais fermer sur le tableau ou les triggers d'invalidation, ce sont des outils analytiques, pas une clôture.
+- **Phrase de refus explicite · recommandée pour articles framework.** Une phrase qui nomme ce que l'article *ne fait pas*, placée avant le tableau de scénarios. Elle pose la posture analytique et désamorce l'attente d'une recommandation. Formulée comme un choix structurel, pas comme une excuse.
   - Forme correcte : "This framework does not produce a buy signal or a sell signal. What it produces is a zone where the same question has been asked at every level."
-  - Forme interdite : "Je ne peux pas dire si..." / "It is difficult to predict..." — sonne comme une limite de l'auteur, pas comme une discipline de la méthode.
+  - Forme interdite : "Je ne peux pas dire si..." / "It is difficult to predict...", sonne comme une limite de l'auteur, pas comme une discipline de la méthode.
   - Le refus de prévoir devient le positionnement. La discipline est le marketing.
 - Asymétrie exprimée en chiffres concrets : upside vs downside dans chaque scénario
 - Tableau de scénarios (3 lignes max) : Scénario | Signal observable | Implication cours
 - Critères d'invalidation de la thèse (2–3 triggers de sortie concrets et vérifiables)
-- **Dernière phrase : la phrase lapidaire est l'apex émotionnel de l'article.** Elle arrive après le tableau, après les triggers. Courte. Factuelle. Irréfutable dans le contexte de l'article. Elle ne résume pas — elle pose le verdict final. C'est la ligne que le lecteur emporte.
+- **Dernière phrase : la phrase lapidaire est l'apex émotionnel de l'article.** Elle arrive après le tableau, après les triggers. Courte. Factuelle. Irréfutable dans le contexte de l'article. Elle ne résume pas, elle pose le verdict final. C'est la ligne que le lecteur emporte.
 
-**INTERDIT dans cette section — conseil financier déguisé :**
-Jamais de recommandation sur quand acheter, quand vendre, combien investir, ou comment structurer une position. Aucune phrase du type "pour un nouvel entrant, entrer X semaines avant les résultats", "pas de raison de sortir avant telle date", "position sizing à X% du portefeuille". L'article présente la thèse et les catalyseurs — le lecteur décide seul ce qu'il en fait.
+**INTERDIT dans cette section · conseil financier déguisé :**
+Jamais de recommandation sur quand acheter, quand vendre, combien investir, ou comment structurer une position. Aucune phrase du type "pour un nouvel entrant, entrer X semaines avant les résultats", "pas de raison de sortir avant telle date", "position sizing à X% du portefeuille". L'article présente la thèse et les catalyseurs, le lecteur décide seul ce qu'il en fait.
 
 ---
 
 ## Règles de style sentence par sentence
 
-### 0. La simplicité d'abord — le lecteur ne doit jamais se demander ce qu'on veut dire (règle qui prime)
+### 0. La simplicité d'abord · le lecteur ne doit jamais se demander ce qu'on veut dire (règle qui prime)
 
 **Avant l'élégance, avant le rythme, avant le deadpan : la clarté.** Si une phrase oblige le lecteur à s'arrêter pour décoder ce qu'elle signifie, elle a échoué, même si elle sonne bien. La phrase la plus simple qui porte le fait gagne toujours contre la phrase plus habile qui le porte aussi. On n'écrit jamais une formule pour son effet si elle coûte une seconde de compréhension.
 
-**Le test (avant chaque phrase user-facing) :** un lecteur qui la lit une seule fois sait-il exactement ce qu'elle dit ? S'il pourrait froncer les sourcils, hésiter, ou relire — réécrire en plus direct. Pas de métaphore qui se retourne. Pas de double sens. Pas de construction qui demande au lecteur de tenir deux idées avant que la phrase se résolve.
+**Le test (avant chaque phrase user-facing) :** un lecteur qui la lit une seule fois sait-il exactement ce qu'elle dit ? S'il pourrait froncer les sourcils, hésiter, ou relire, réécrire en plus direct. Pas de métaphore qui se retourne. Pas de double sens. Pas de construction qui demande au lecteur de tenir deux idées avant que la phrase se résolve.
 
 **Deux pièges récurrents, tous deux nés d'un excès d'habileté :**
 
 **1. La métaphore qui se retourne ou mélange deux cadres.** Une image n'aide que si elle pointe dans le bon sens. Si elle dit le contraire de ce qu'on veut, ou colle deux registres sans rapport, le lecteur trébuche.
-- ❌ *"The business is growing into the discount, not out of trouble."* — "grow into" sous-entend normalement justifier un prix élevé, donc "grow into a discount" dit l'inverse de l'intention ; et "discount" et "trouble" sont deux cadres collés sans pont.
+- ❌ *"The business is growing into the discount, not out of trouble."*: "grow into" sous-entend normalement justifier un prix élevé, donc "grow into a discount" dit l'inverse de l'intention ; et "discount" et "trouble" sont deux cadres collés sans pont.
 - ✅ *"That gap is not a warning. A low multiple is the price the market puts on a business that is shrinking or losing money, and this one is doing neither."*
 
 **2. L'opposition sans rampe ("X, not Y" / "A. The opposite.").** L'antithèse est la colonne vertébrale de ce format ("two kinds of cheap"), mais elle ne fonctionne qu'avec une **rampe** : soit une structure parallèle qui sert de transition ("One is… / The other is…", "The top four… / The bottom two…"), soit une chute à deux temps **en clôture de section** où le claquement est l'effet voulu ("That is not a yield. It is a countdown."). Hors de ces deux cas, deux idées opposées posées côte à côte sans pont sont choppy, et le lecteur cherche le lien manquant.
@@ -532,11 +532,11 @@ Jamais de recommandation sur quand acheter, quand vendre, combien investir, ou c
 
 **Économie de l'antithèse :** même bien construite, elle fatigue si on la sert à chaque paragraphe. Garder les 4-5 meilleurs claquements, lisser ou fusionner les autres. Un article où chaque section finit sur un "X, not Y" se lit comme un tic, pas comme une voix.
 
-> Cas réel (hong-kong-discount-cheap-two-ways, 22 juin 2026) : (1) le paragraphe Green Tea fermait sur *"The business is growing into the discount, not out of trouble. The cheaper the stock gets, the wider that gap with its peers becomes."* — métaphore retournée + seconde phrase circulaire (un prix plus bas = un écart plus large, tautologie). Retour Dany : *"this paragraph conclusion is not very clear. what do you actually want to say?"*. Réécrit en deux phrases directes. (2) La section 4 fermait sur *"The price is the same kind of low. The reason is the opposite."* — opposition à deux temps qui rebouclait un paragraphe déjà clair (le contraste venait d'être livré : top four rendent du cash, bottom two le gardent). Retour Dany : *"i do not understand this sentence. why is it necessary?"*. Coupée. Le test simple : si on supprime l'antithèse et que le paragraphe ne perd aucune information, c'était du remplissage.
+> Cas réel (hong-kong-discount-cheap-two-ways, 22 juin 2026) : (1) le paragraphe Green Tea fermait sur *"The business is growing into the discount, not out of trouble. The cheaper the stock gets, the wider that gap with its peers becomes."*: métaphore retournée + seconde phrase circulaire (un prix plus bas = un écart plus large, tautologie). Retour Dany : *"this paragraph conclusion is not very clear. what do you actually want to say?"*. Réécrit en deux phrases directes. (2) La section 4 fermait sur *"The price is the same kind of low. The reason is the opposite."*: opposition à deux temps qui rebouclait un paragraphe déjà clair (le contraste venait d'être livré : top four rendent du cash, bottom two le gardent). Retour Dany : *"i do not understand this sentence. why is it necessary?"*. Coupée. Le test simple : si on supprime l'antithèse et que le paragraphe ne perd aucune information, c'était du remplissage.
 
-### Construire la phrase claire — la recette (modèle Dickson, 22 juin 2026)
+### Construire la phrase claire · la recette (modèle Dickson, 22 juin 2026)
 
-La règle 0 dit ce qu'il faut ÉVITER. Voici comment CONSTRUIRE une phrase claire quand l'idée met en jeu plusieurs parties (qui contrôle, qui gagne, qui perd) — le piège le plus courant des paragraphes de thèse, parce que le lecteur doit suivre deux acteurs à la fois.
+La règle 0 dit ce qu'il faut ÉVITER. Voici comment CONSTRUIRE une phrase claire quand l'idée met en jeu plusieurs parties (qui contrôle, qui gagne, qui perd), le piège le plus courant des paragraphes de thèse, parce que le lecteur doit suivre deux acteurs à la fois.
 
 **L'ordre qui fait atterrir l'idée en une seule lecture :**
 1. **La situation**, en mots concrets et physiques. *"the cash stays locked in the company"* (pas *"the cash accrues to no one"*).
@@ -546,13 +546,13 @@ La règle 0 dit ce qu'il faut ÉVITER. Voici comment CONSTRUIRE une phrase clair
 Les trois temps tiennent dans **une seule phrase**. Le lecteur lit une fois et tient la situation, le levier et le piège, sans revenir en arrière.
 
 **Trois contraintes qui gardent la phrase nette :**
-- **Fusionner quand deux phrases servent une seule idée.** Si la 2e phrase ne fait que renvoyer à la 1re (*"That is the same family…"*), le lecteur doit re-relier les parties par-dessus la frontière de phrase — c'est exactement là qu'il confond qui est qui. Une seule phrase supprime ce saut.
+- **Fusionner quand deux phrases servent une seule idée.** Si la 2e phrase ne fait que renvoyer à la 1re (*"That is the same family…"*), le lecteur doit re-relier les parties par-dessus la frontière de phrase, c'est exactement là qu'il confond qui est qui. Une seule phrase supprime ce saut.
 - **Deux parties nommées ne doivent jamais pouvoir être confondues.** *"minority shareholder"* et *"family"* restent distinctes ; aucune tournure ne doit laisser croire que l'une est l'autre.
 - **Un pronom = un seul référent dans toute la phrase.** Ici *"it"* = le cash, du début à la fin. Jamais un *"it"* qui glisse d'un sens à l'autre.
 
 **La progression réelle (chaque version corrige la précédente, et c'est la leçon) :**
-- ❌ v1 : *"…whether the cash ever reaches an outside shareholder rests with the same family that tried to acquire them at a discount."* — *them* sans référent net, *at a discount* sans ancre.
-- ❌ v2 : *"…a minority shareholder only ever sees it if the family decides to pay it out. That is the same family that just tried to keep it for itself."* — deux phrases ; le *"That is the same family"* fait confondre le minoritaire et la famille.
+- ❌ v1 : *"…whether the cash ever reaches an outside shareholder rests with the same family that tried to acquire them at a discount."*: *them* sans référent net, *at a discount* sans ancre.
+- ❌ v2 : *"…a minority shareholder only ever sees it if the family decides to pay it out. That is the same family that just tried to keep it for itself."*: deux phrases ; le *"That is the same family"* fait confondre le minoritaire et la famille.
 - ✅ v3 : *"So the cash stays locked in the company, and whether a minority shareholder ever sees it is decided by the same family that just tried to keep it for itself."*
 
 Retour Dany sur la v3 : *"this is SO MUCH better"*. La leçon dure : **même un premier correctif peut réintroduire une ambiguïté ailleurs.** Le test final n'est donc pas *"ai-je retiré le pronom flou ?"* mais *"un lecteur peut-il encore confondre deux parties, ou doit-il relire pour relier l'idée ?"*. Tant que la réponse n'est pas non, la phrase n'est pas finie.
@@ -570,11 +570,11 @@ Retour Dany sur la v3 : *"this is SO MUCH better"*. La leçon dure : **même un 
 - **Jamais** de phrase qui enchaîne deux raisonnements avec "et" ou "mais" sans que chacun mérite sa propre phrase
 - **Jamais** le même mot (ou sa racine) dans la même phrase, ni dans les 2–3 phrases suivantes. Remplacer par un pronom, un synonyme, ou reformuler. Exemple fautif : "The stock has moved as though it has." → "The stock has moved as though it did."
 
-### Un concept, une passe — règle absolue
+### Un concept, une passe · règle absolue
 
 **Exprimer chaque concept une seule fois, directement, à la première tentative.**
 
-Ne jamais tourner autour d'une idée en plusieurs phrases avant d'arriver au point. Si le point est "A seulement s'applique quand B est vrai", écrire exactement ça — pas trois paraphrases successives qui y mènent.
+Ne jamais tourner autour d'une idée en plusieurs phrases avant d'arriver au point. Si le point est "A seulement s'applique quand B est vrai", écrire exactement ça, pas trois paraphrases successives qui y mènent.
 
 **Les formes interdites :**
 - Reformuler deux fois ce qui vient d'être dit avant d'arriver à la vraie conclusion
@@ -588,7 +588,7 @@ Ne jamais tourner autour d'une idée en plusieurs phrases avant d'arriver au poi
 
 ---
 
-### Forward-deferral — 2 occurrences par article maximum
+### Forward-deferral · 2 occurrences par article maximum
 
 **Anti-pattern :** chaque paragraphe analytique se termine par une variation de *"the next print will tell us"* / *"future quarters will answer"* / *"on saura au prochain trimestre"* / *"the next four quarters tell us"*. Ce tic verbal deflecte l'analyse vers un futur calendaire au lieu de la substantifier. Il signale que l'auteur n'a plus rien à dire sur le fond, alors il pointe le calendrier.
 
@@ -614,7 +614,7 @@ Ne jamais tourner autour d'une idée en plusieurs phrases avant d'arriver au poi
 
 ---
 
-### Introduire avant de référencer — règle absolue
+### Introduire avant de référencer · règle absolue
 
 **Ne jamais référencer quelque chose que le lecteur n'a pas encore vu.**
 
@@ -625,26 +625,26 @@ Ne jamais tourner autour d'une idée en plusieurs phrases avant d'arriver au poi
 
 La règle : le nom vient avant le chiffre. Le chiffre vient avant le qualifier. Si la phrase commence par un qualifier ("les quatre qui..."), les quatre n'ont pas encore été posés.
 
-> Cas réel (spy-ipo-fork-747, mai 2026) : ouverture de la section 1 réécrite après correction — "The framework generates levels across SPY's full price history. The ones documented here are the four that acted as major structural ceilings" → réécriture : "A fixed mathematical formula applied to SPY's earliest price data generates a series of structural price levels. Four of those levels have acted as major ceilings over the last 25 years."
+> Cas réel (spy-ipo-fork-747, mai 2026) : ouverture de la section 1 réécrite après correction. "The framework generates levels across SPY's full price history. The ones documented here are the four that acted as major structural ceilings" → réécriture : "A fixed mathematical formula applied to SPY's earliest price data generates a series of structural price levels. Four of those levels have acted as major ceilings over the last 25 years."
 
 ---
 
-### Interdiction des phrases-remplissage — règle absolue
+### Interdiction des phrases-remplissage · règle absolue
 
 **Chaque phrase doit contenir une assertion précise. Les phrases qui pointent vers quelque chose sans le dire sont interdites.**
 
 Formes interdites :
-- "That is the context." — que dit-on au lecteur ? Rien. Remplacer par ce que le contexte implique concrètement.
-- "This is worth noting." — noter quoi, exactement ?
-- "The implications are significant." — quelles implications, pour qui, en quoi ?
+- "That is the context.": que dit-on au lecteur ? Rien. Remplacer par ce que le contexte implique concrètement.
+- "This is worth noting.": noter quoi, exactement ?
+- "The implications are significant.": quelles implications, pour qui, en quoi ?
 
-**Le test :** supprimer la phrase. Si le paragraphe perd une information précise, la garder. Si le paragraphe reste entier dans son sens, la phrase est du remplissage — la supprimer.
+**Le test :** supprimer la phrase. Si le paragraphe perd une information précise, la garder. Si le paragraphe reste entier dans son sens, la phrase est du remplissage, la supprimer.
 
 > Cas réel (spy-ipo-fork-747, mai 2026) : "If $747 holds as resistance and SPY turns lower from here, that is the context." → corrigé → "If $747 holds as resistance and SPY turns lower from here, fast-approach history puts this in the category where corrections have averaged −37.9%."
 
 ---
 
-### Récurrence de la thèse et longueur — règle anti-broderie (ajout 2026-06-13)
+### Récurrence de la thèse et longueur · règle anti-broderie (ajout 2026-06-13)
 
 Un article a une thèse. Elle revient nécessairement de section en section : c'est l'escalier. Mais **chaque rappel doit porter un payload neuf et un wording neuf.** Répéter la même phrase trois fois sous trois sections différentes n'est pas de la structure, c'est du remplissage déguisé en structure.
 
@@ -662,7 +662,7 @@ Un article a une thèse. Elle revient nécessairement de section en section : c'
 
 ---
 
-### Scénarios conditionnels — toujours énoncer les deux branches
+### Scénarios conditionnels · toujours énoncer les deux branches
 
 Quand un signal s'applique dans une condition mais pas dans une autre, énoncer les deux branches explicitement avec leur implication concrète.
 
@@ -674,7 +674,7 @@ Quand un signal s'applique dans une condition mais pas dans une autre, énoncer 
 ---
 
 ### Chiffres
-- Toujours précis — jamais "environ 2 milliards" sans donner le chiffre exact d'abord
+- Toujours précis, jamais "environ 2 milliards" sans donner le chiffre exact d'abord
 - Format : HKD 2 354 millions (espace comme séparateur des milliers, pas de virgule)
 - Les % incluent le signe : +14 %, -43,5 %, pas "14%" ou "moins 43%"
 - Toujours contextualisés : "soit HKD 7,08 par action"
@@ -682,11 +682,11 @@ Quand un signal s'applique dans une condition mais pas dans une autre, énoncer 
 ### Ton
 - **Jamais de superlatif** : pas "excellent", "remarquable", "exceptional"
 - **Jamais de conditionnel mou** : pas "pourrait potentiellement", "il est possible que"
-- **Assertions directes avec réserve explicite** : "La thèse ne repose pas sur X — elle repose sur Y"
+- **Assertions directes avec réserve explicite** : "La thèse ne repose pas sur X, elle repose sur Y"
 - First person pluriel **rare** et **percutant** : "Nous l'avons fait." (une seule occurrence dans tout l'article)
-- **L'auteur disparaît du corps — règle absolue.** "I/me/my" sont interdits dans le corps de l'article. La première personne du singulier n'apparaît qu'en signature finale, sous forme d'engagement de suivi : "_I will publish a follow-up once $747 is first touched._" Le corps parle au nom des données ("the signal", "the dataset", "history shows", "the framework"), jamais au nom de l'auteur. Cette absence construit l'autorité sans jamais l'affirmer — le lecteur fait confiance à la donnée, pas à la personne.
+- **L'auteur disparaît du corps · règle absolue.** "I/me/my" sont interdits dans le corps de l'article. La première personne du singulier n'apparaît qu'en signature finale, sous forme d'engagement de suivi : "_I will publish a follow-up once $747 is first touched._" Le corps parle au nom des données ("the signal", "the dataset", "history shows", "the framework"), jamais au nom de l'auteur. Cette absence construit l'autorité sans jamais l'affirmer, le lecteur fait confiance à la donnée, pas à la personne.
 
-### Italiques — réservées aux distinctions conceptuelles
+### Italiques · réservées aux distinctions conceptuelles
 
 Les italiques ne servent jamais à appuyer un mot fort ou une émotion. Elles ne servent qu'à contraster deux axes logiques que la phrase pose en parallèle.
 
@@ -695,17 +695,17 @@ Les italiques ne servent jamais à appuyer un mot fort ou une émotion. Elles ne
 - "Speed describes *how* the approach got here. Volume confirms *after* the high."
 
 **Formes interdites :**
-- "This is *really* important" — emphase émotionnelle
-- "The market *finally* moved" — adverbe appuyé
+- "This is *really* important": emphase émotionnelle
+- "The market *finally* moved": adverbe appuyé
 - Une italique isolée sur un mot sans deuxième italique en parallèle dans la même phrase ou la suivante
 
 **Test :** si l'italique disparaît, la phrase perd-elle une distinction logique entre deux choses ? Si non, retirer.
 
-### Fins de section — règle de continuité
+### Fins de section · règle de continuité
 
 Les `---` remplacent les transitions lourdes entre sections. Mais la dernière phrase de chaque section (1 à 5) porte tout le poids de la continuité. Elle ne conclut pas. Elle laisse le lecteur avec un fait ou une tension que la section suivante va résoudre.
 
-**Test :** retirer la dernière phrase. Si la section semble complète sans elle, elle ne faisait pas son travail de continuité — réécrire.
+**Test :** retirer la dernière phrase. Si la section semble complète sans elle, elle ne faisait pas son travail de continuité, réécrire.
 
 **Jamais :**
 - "comme nous l'avons vu dans la section précédente"
@@ -715,23 +715,23 @@ Les `---` remplacent les transitions lourdes entre sections. Mais la dernière p
 **Ce qui fonctionne :**
 - Un chiffre sans explication encore ("HKD 1.4B de free cash flow. Le titre se traite à HKD 3.1B.")
 - Un fait qui ne fait pleinement sens que si le lecteur continue
-- Une assertion qui appelle une preuve — fournie dans la section suivante
+- Une assertion qui appelle une preuve, fournie dans la section suivante
 
-### La phrase d'observation — règle de placement
+### La phrase d'observation · règle de placement
 
-Chaque article doit contenir **une seule phrase d'observation** : la chose que Marc a remarquée en lisant le filing et qui ne figure dans aucun modèle analyste. Pas une donnée supplémentaire — une lecture.
+Chaque article doit contenir **une seule phrase d'observation** : la chose que Marc a remarquée en lisant le filing et qui ne figure dans aucun modèle analyste. Pas une donnée supplémentaire, une lecture.
 
 **Règle de placement : pas de position fixe.** La phrase va là où la tension naturelle de l'article l'exige :
-- En ouverture si l'observation EST le paradoxe central (ex : Dickson — "The shareholders already voted.")
+- En ouverture si l'observation EST le paradoxe central (ex : Dickson : "The shareholders already voted.")
 - En interruption mid-section après deux ou trois paragraphes factuels, sans annonce
-- Comme pivot entre deux sections — dernière phrase avant un `<h2>`
+- Comme pivot entre deux sections, dernière phrase avant un `<h2>`
 - En clôture de la Décision, à la place d'un ratio
 
 **Contrainte anti-template :** si deux articles consécutifs placent leur observation en ouverture, le suivant doit la placer ailleurs. La variété de placement est le style.
 
 **Le test :** cette phrase pourrait-elle apparaître dans un article sur une autre entreprise ? Si oui, réécrire à partir du fait le plus spécifique au dossier.
 
-### Pas d'insertions mid-sentence — règle absolue
+### Pas d'insertions mid-sentence · règle absolue
 
 Un qualificatif, un contexte ou une explication qui s'intercale entre virgules ou entre parenthèses au milieu d'une phrase doit devenir une phrase à part. Trois formes interdites :
 
@@ -752,13 +752,13 @@ Un qualificatif, un contexte ou une explication qui s'intercale entre virgules o
 **Règle des parenthèses : 4 mots maximum.**
 Les parenthèses ne fonctionnent que pour des apartés très courts. Au-delà de 4 mots, le lecteur doit tenir le début de la phrase en mémoire pendant qu'il traverse l'insertion. Il perd le fil avant d'arriver à la fin. C'est le problème du tunnel : on entre d'un côté, on ne sait plus de quoi on parlait en sortant de l'autre.
 
-❌ "The company makes scooters and motorcycles (not pedal-assist bicycles, not shared-mobility pods) across China..." — trop long, rompt le tunnel
-✅ "(36% of market cap)" — 3 mots, acceptable
+❌ "The company makes scooters and motorcycles (not pedal-assist bicycles, not shared-mobility pods) across China...": trop long, rompt le tunnel
+✅ "(36% of market cap)": 3 mots, acceptable
 ✅ Sinon : phrase séparée, avant ou après.
 
 **Origine de la règle :** identifiée sur 1585-yadea (avril 2026), six occurrences corrigées après publication.
 
-### Pas de clauses parallèles enchaînées — règle absolue
+### Pas de clauses parallèles enchaînées · règle absolue
 
 Ne jamais enchaîner trois actions parallèles dans une seule phrase via "before X, Y, and Z" ou "after X before A, B, and C" quand les sujets changent entre les clauses. Le lecteur doit tenir trois sous-idées en mémoire avant que la phrase se résolve. Il perd le fil.
 
@@ -770,7 +770,7 @@ Ne jamais enchaîner trois actions parallèles dans une seule phrase via "before
 
 **Origine de la règle :** identifiée sur 1167-jacobio (avril 2026), corrigée après publication.
 
-### Termes analytiques — règle d'usage, pas d'interdiction
+### Termes analytiques · règle d'usage, pas d'interdiction
 
 Les termes financiers ou analytiques ("macro headwinds", "re-rating", "ASPs", "quality of earnings") sont acceptables quand ils apportent une précision que le langage courant ne peut pas rendre aussi bien. Ils sont à remplacer quand ils ajoutent du poids sans ajouter de sens.
 
@@ -785,7 +785,7 @@ Les termes financiers ou analytiques ("macro headwinds", "re-rating", "ASPs", "q
 
 ---
 
-## Tables Markdown — Usage
+## Tables Markdown · Usage
 
 **Deux types de tables dans ce format :**
 
@@ -798,15 +798,15 @@ Les termes financiers ou analytiques ("macro headwinds", "re-rating", "ASPs", "q
 - 3 colonnes : Scénario | Signal observable | Implication cours
 - 3 lignes maximum : bull / neutre / bear
 - Scénario en **gras**, signal doit être actionnable (visible, vérifiable publiquement)
-- Colonne "Implication cours" = fourchette de prix + état de la thèse ("thesis intact", "thesis invalidated") — jamais une action ("hold", "exit", "add", "reduce", "X% du portefeuille")
+- Colonne "Implication cours" = fourchette de prix + état de la thèse ("thesis intact", "thesis invalidated"), jamais une action ("hold", "exit", "add", "reduce", "X% du portefeuille")
 
 ---
 
-## Voix Howard Marks — 4 techniques à imiter
+## Voix Howard Marks · 4 techniques à imiter
 
 Ces techniques ont été validées sur [[1913-prada]] (avril 2026). Les appliquer systématiquement aux sections "Pourquoi la décote existe" et "Décision".
 
-### 1. Nommer ce que le marché a pricé — pas juste ce qu'il a vu
+### 1. Nommer ce que le marché a pricé · pas juste ce qu'il a vu
 Ne pas dire : "Most participants have processed one of these."
 Dire : "The market has priced one. The other two are not in the current price."
 → Identifier explicitement le gap entre consensus et réalité. C'est la phrase qui fait que le lecteur réalise qu'il y a une opportunité.
@@ -820,7 +820,7 @@ Une formule utilisée dans un article ne peut jamais réapparaître dans un autr
 
 **Pourquoi tenir cette liste :** chaque phrase-pendule perd sa force au moment où elle devient reconnaissable. Un lecteur qui a lu plusieurs articles Trading852 et retrouve la même structure arrête d'être surpris. C'est exactement le moment où la prose cesse d'être de la prose et devient du template. La liste est le mécanisme d'application.
 
-**Phrases-pendule déjà utilisées — bannies de tous les articles futurs :**
+**Phrases-pendule déjà utilisées · bannies de tous les articles futurs :**
 - "Pessimism this acute against fundamentals this durable is not a stable state." → 1913-prada
 - "Pessimism this acute against a recovery this documented is not a stable state." → 1585-yadea
 - "Three forces compressed the price. None of them changed the cash flow." → 6690-haier
@@ -842,7 +842,7 @@ Finir sur l'asymétrie nue :
 "The market has priced the worst. The business has not delivered it."
 → Deux phrases courtes. La première nomme le consensus. La deuxième nomme la réalité. L'écart est l'investissement.
 
-### 4. Pronoms financiers — toujours redonner le nom
+### 4. Pronoms financiers · toujours redonner le nom
 Jamais utiliser "one" ou "it" pour un concept financier clé apparu 5 mots plus tôt.
 Ne pas dire : "a balance sheet that can absorb a two-year one without stress"
 Dire : "a balance sheet with capacity for two"
@@ -862,7 +862,7 @@ Dire : "a balance sheet with capacity for two"
 
 ---
 
-## Technical — CONFIG block (obligatoire dans chaque article)
+## Technical · CONFIG block (obligatoire dans chaque article)
 
 Chaque article source commence par un bloc `<!-- CONFIG {...} -->`. Voici le template complet avec tous les champs obligatoires et optionnels :
 
@@ -870,9 +870,9 @@ Chaque article source commence par un bloc `<!-- CONFIG {...} -->`. Voici le tem
 <!-- CONFIG
 {
   "layout": "article",
-  "title": "[Titre SEO — 60 chars max affichés]",
-  "ogTitle": "[Titre OG / H1 — tension arithmétique, peut aller jusqu'à ~90 chars]",
-  "description": "[Meta description — 150-160 chars]",
+  "title": "[Titre SEO · 60 chars max affichés]",
+  "ogTitle": "[Titre OG / H1 · tension arithmétique, peut aller jusqu'à ~90 chars]",
+  "description": "[Meta description · 150-160 chars]",
   "canonical": "https://trading852.com/analyses/[slug]",
   "ogType": "article",
   "ogImage": "https://trading852.com/assets/og-image.png",
@@ -887,30 +887,30 @@ Chaque article source commence par un bloc `<!-- CONFIG {...} -->`. Voici le tem
 | Champ | Obligatoire | Notes |
 |-------|-------------|-------|
 | `layout` | Oui | Toujours `"article"` pour les analyses |
-| `title` | Oui | Title tag HTML — 60 chars affichés max (voir note ci-dessous) |
-| `ogTitle` | Oui | Peut diverger du `title` — suit la formule titre Trading852 |
-| `description` | Oui | Meta description — 150-160 chars |
+| `title` | Oui | Title tag HTML · 60 chars affichés max (voir note ci-dessous) |
+| `ogTitle` | Oui | Peut diverger du `title`, suit la formule titre Trading852 |
+| `description` | Oui | Meta description · 150-160 chars |
 | `canonical` | Oui | URL absolue, jamais de trailing slash |
 | `ogType` | Oui | Toujours `"article"` |
 | `ogImage` | Oui | Utiliser l'image OG par défaut `og-image.png` sauf chart spécifique |
 | `ogImageAlt` | Si `ogImage` ≠ default | Décrire l'image en 60-125 chars ; inutile si on utilise l'image par défaut |
-| `pubDate` | Oui | Date de publication initiale — YYYY-MM-DD — ne change jamais |
-| `modDate` | Oui | Date de dernière modification significative du contenu — mettre à jour à chaque revision |
+| `pubDate` | Oui | Date de publication initiale · YYYY-MM-DD · ne change jamais |
+| `modDate` | Oui | Date de dernière modification significative du contenu · mettre à jour à chaque revision |
 
-**Note `title` — `wc -c` vs longueur réelle :**
-`echo -n "ton titre" | wc -c` retourne des octets, pas des caractères affichés. Un `×`, un `—`, un `·` ou un caractère accentué compte 2-3 octets. Pour un audit fiable :
+**Note `title` · `wc -c` vs longueur réelle :**
+`echo -n "ton titre" | wc -c` retourne des octets, pas des caractères affichés. Un `×`, un `±`, un `·` ou un caractère accentué compte 2-3 octets. Pour un audit fiable :
 ```bash
 awk '{print length}' <<< "ton titre"
 ```
 Cette commande retourne le nombre de caractères (points de code Unicode), pas d'octets.
 
-**`ogImageAlt` — quand l'ajouter :**
+**`ogImageAlt` · quand l'ajouter :**
 Uniquement quand `ogImage` pointe vers un chart ou une image spécifique à l'article (pas l'image OG générique `og-image.png`). La valeur doit décrire le contenu visuel en 60-125 chars.
 ```
 "ogImageAlt": "SPY monthly chart 2020–2026 showing structural price levels at $477.58 and $747"
 ```
 
-**`modDate` — règle de mise à jour :**
+**`modDate` · règle de mise à jour :**
 Mettre à jour `modDate` à chaque révision qui change le contenu analytique (chiffres, thèse, risques, décision). Ne pas mettre à jour pour des corrections typo ou de style. Le `modDate` alimente automatiquement la meta `article:modified_time` et le champ `dateModified` du JSON-LD.
 
 ---
@@ -919,7 +919,7 @@ Mettre à jour `modDate` à chaque révision qui change le contenu analytique (c
 
 ```yaml
 ---
-title: "{TICKER} ({TICKER}.HK) — {Titre accrocheur avec le fait surprenant}"
+title: "{TICKER} ({TICKER}.HK) · {Titre accrocheur avec le fait surprenant}"
 tags:
   - blog
   - hk-stocks
@@ -939,13 +939,13 @@ finratios: "[[{finratios-file}]]"
 
 ---
 
-## Titre — Formule
+## Titre · Formule
 
-Le titre suit une formule : **[Sujet] — [Fait arithmétique ou paradoxe en langage courant]**
+Le titre suit une formule : **[Sujet] · [Fait arithmétique ou paradoxe en langage courant]**
 
 Exemples de la formule :
-- "Dickson Concepts (0113.HK) — Le marché vous offre HKD 375 millions pour acheter cette entreprise"
-- "[TICKER] — [Chiffre concret qui choque] pour [ce qu'on obtient en échange]"
+- "Dickson Concepts (0113.HK) · Le marché vous offre HKD 375 millions pour acheter cette entreprise"
+- "[TICKER] · [Chiffre concret qui choque] pour [ce qu'on obtient en échange]"
 
 **Jamais :**
 - "Analyse de [société]"
@@ -954,9 +954,9 @@ Exemples de la formule :
 
 ---
 
-## Title Writer — Règles opérationnelles (Trading852)
+## Title Writer · Règles opérationnelles (Trading852)
 
-> Référence : conversation avril 2026 — révision des titres Dickson, Prada, Why HK
+> Référence : conversation avril 2026, révision des titres Dickson, Prada, Why HK
 
 ### Le principe fondamental
 
@@ -998,11 +998,11 @@ Un tiers a payé X pour un actif. Le marché valorise l'ensemble à Y < X.
 
 ---
 
-### Règle d'accessibilité — le test du lecteur zéro-contexte
+### Règle d'accessibilité · le test du lecteur zéro-contexte
 
 **Le titre doit faire sens pour un lecteur qui ne connaît ni la société, ni les acteurs cités.**
 
-La tension arithmétique doit reposer sur des chiffres et des faits universellement lisibles — pas sur des noms qui nécessitent une introduction.
+La tension arithmétique doit reposer sur des chiffres et des faits universellement lisibles, pas sur des noms qui nécessitent une introduction.
 
 **Interdit dans les titres :**
 - Noms de fonds ou d'activistes non universellement connus ("Trian Partners", "Third Point", "Elliott") → le lecteur ne sait pas ce que c'est
@@ -1019,7 +1019,7 @@ La tension arithmétique doit reposer sur des chiffres et des faits universellem
 
 ### Homepage card vs article title
 
-La card homepage et le H1 article peuvent diverger — la card est plus courte.
+La card homepage et le H1 article peuvent diverger, la card est plus courte.
 
 - **Card** : 5–10 mots max, tension ou chiffre-clé
 - **H1** : peut aller jusqu'à 20 mots, plus de contexte
@@ -1045,7 +1045,7 @@ La card doit teaser l'article, pas le résumer. Si la card et le H1 sont identiq
 
 | Section | Mots |
 |---|---|
-| Data Snapshot (tableau) | — (aucun mot de prose) |
+| Data Snapshot (tableau) | n/a (aucun mot de prose) |
 | Hook ouverture | 80-120 |
 | Ce que fait l'entreprise | 120-180 |
 | Pourquoi la décote existe | 100-150 |
@@ -1059,7 +1059,7 @@ L'article modèle fait ~1 200 mots. En dessous de 900, la thèse n'est pas déve
 
 ---
 
-## Écrire sur des indicateurs propriétaires — philosophie générale
+## Écrire sur des indicateurs propriétaires · philosophie générale
 
 > Règle fondamentale de tout article Trading852 utilisant un indicateur interne
 
@@ -1067,15 +1067,15 @@ L'article modèle fait ~1 200 mots. En dessous de 900, la thèse n'est pas déve
 
 **Montrer le résultat. Ne jamais montrer la recette.**
 
-Les indicateurs de Marc sont propriétaires. Les articles documentent ce qu'ils produisent et ce que l'historique du chart confirme — pas comment ils sont construits. Le lecteur voit la preuve. Il ne voit pas le mécanisme.
+Les indicateurs de Marc sont propriétaires. Les articles documentent ce qu'ils produisent et ce que l'historique du chart confirme, pas comment ils sont construits. Le lecteur voit la preuve. Il ne voit pas le mécanisme.
 
-Cette contrainte n'est pas une limitation éditoriale. C'est une discipline analytique : si le seul argument est "faites-moi confiance sur la formule", l'article est faible. Si l'argument est "voici ce que ce signal a produit à chaque occurrence depuis 25 ans, avec les dates et les prix", l'article est fort — et la formule reste protégée.
+Cette contrainte n'est pas une limitation éditoriale. C'est une discipline analytique : si le seul argument est "faites-moi confiance sur la formule", l'article est faible. Si l'argument est "voici ce que ce signal a produit à chaque occurrence depuis 25 ans, avec les dates et les prix", l'article est fort, et la formule reste protégée.
 
 ---
 
 ### Ce qui peut toujours être publié
 
-- **L'output de l'indicateur** : niveau de prix, zone, direction, signal — le résultat visible sur le chart
+- **L'output de l'indicateur** : niveau de prix, zone, direction, signal, le résultat visible sur le chart
 - **L'historique des occurrences** : dates précises, prix au moment du signal, ce qui s'est passé ensuite
 - **La statistique** : taux de confirmation, amplitude moyenne des mouvements, taille d'échantillon
 - **La lecture actuelle** : ce que l'indicateur montre au moment de l'article
@@ -1108,7 +1108,7 @@ Ce qui s'est passé après chaque occurrence historique. Amplitude, durée, taux
 Ce que la taille d'échantillon permet ou ne permet pas de conclure. Le contexte changeant entre les occurrences. Ce qui rendrait cette occurrence différente des précédentes.
 
 **5. Ce qu'on surveille**
-Le signal de confirmation qui viendra de l'extérieur de l'indicateur — volume, prix, durée. Ce que le lecteur peut observer lui-même pour savoir si le signal se confirme.
+Le signal de confirmation qui viendra de l'extérieur de l'indicateur: volume, prix, durée. Ce que le lecteur peut observer lui-même pour savoir si le signal se confirme.
 
 ---
 
@@ -1134,7 +1134,7 @@ Règle : appliquer les règles du composant le plus sensible. Ne jamais nommer l
 
 ---
 
-### L'historique du chart comme preuve — règle d'ancrage
+### L'historique du chart comme preuve · règle d'ancrage
 
 Chaque claim sur le comportement passé d'un indicateur doit être ancré dans :
 - Une **date précise** (mois et année minimum)
@@ -1158,9 +1158,9 @@ Cette section s'enrichit à chaque nouvel article utilisant un indicateur propri
 
 ---
 
-## Analyse de niveaux structurels sur l'historique d'un chart — application niveaux
+## Analyse de niveaux structurels sur l'historique d'un chart · application niveaux
 
-> Référence : spy-ipo-fork-747 (mai 2026) — premier article utilisant ce cadre
+> Référence : spy-ipo-fork-747 (mai 2026), premier article utilisant ce cadre
 > Ce qui suit est l'application de la philosophie générale ci-dessus au cas spécifique des indicateurs de niveaux de prix.
 
 Quand un article analyse le comportement d'un chart autour de niveaux de prix structurels sur un long historique, appliquer les règles suivantes. Ce cadre est réutilisable pour tout instrument (indice, action, ETF) et toute méthode de construction de niveaux (supports/résistances, niveaux Fibonacci, niveaux propriétaires, pivots annuels, etc.).
@@ -1173,16 +1173,16 @@ Un framework génère souvent des niveaux sur l'ensemble de l'historique du char
 
 - Identifier la fenêtre où les niveaux ont produit un comportement structurel observable (résistance majeure, correction significative, breakout).
 - Les niveaux franchis rapidement pendant un bull run soutenu ne sont pas la même chose que les niveaux qui ont contenu le prix pendant des mois ou des années.
-- Dire : "sur les X dernières années, N niveaux ont agi comme plafonds structurels majeurs" — pas "le framework a N niveaux."
+- Dire : "sur les X dernières années, N niveaux ont agi comme plafonds structurels majeurs", pas "le framework a N niveaux."
 - L'espacement géométrique change la densité dans le temps : plus le prix monte, plus le gap absolu entre niveaux s'élargit, donc les rencontres deviennent plus rares. Mentionner ce point si pertinent.
 
-> Cas réel : le framework IPO Fork génère des niveaux sur tout l'historique SPY depuis 1993. Mais les 4 niveaux documentés dans l'article sont ceux des 25 dernières années — avant 1999, SPY franchissait les niveaux pendant le bull run des années 90 sans résistance structurelle majeure.
+> Cas réel : le framework IPO Fork génère des niveaux sur tout l'historique SPY depuis 1993. Mais les 4 niveaux documentés dans l'article sont ceux des 25 dernières années. Avant 1999, SPY franchissait les niveaux pendant le bull run des années 90 sans résistance structurelle majeure.
 
 ---
 
 ### 2. Taille d'échantillon : exhaustif ≠ insuffisant
 
-Un petit échantillon n'est pas une faiblesse quand il est **exhaustif** — c'est-à-dire quand il couvre toutes les occurrences du phénomène dans la période documentée.
+Un petit échantillon n'est pas une faiblesse quand il est **exhaustif**, c'est-à-dire quand il couvre toutes les occurrences du phénomène dans la période documentée.
 
 - Petite taille + données complètes = la limitation est statistique (précision des probabilités), pas empirique (données manquantes).
 - Distinguer : "nous n'avons pas assez de données" (faiblesse réelle) vs "le phénomène est rare par nature" (propriété du framework).
@@ -1197,19 +1197,19 @@ Un petit échantillon n'est pas une faiblesse quand il est **exhaustif** — c'e
 
 Ces deux signaux ont été validés sur SPY. Ils sont hypothèses testables sur tout autre instrument :
 
-**Signal 1 — Vitesse d'approche**
+**Signal 1 · Vitesse d'approche**
 Le temps entre l'entrée dans la zone de friction (définie autour du niveau) et le pic est un prédicteur de la sévérité du déclin qui suit. Approche rapide = momentum étendu, pas de base de support construite. Approche lente = base construite, downside limité.
-- Seuil théorique : 252 jours de trading (1 an calendaire) — naturellement ancré, pas data-miné.
+- Seuil théorique : 252 jours de trading (1 an calendaire), naturellement ancré, pas data-miné.
 - Test statistique approprié : Welch t-test (groupes de taille inégale, variances différentes).
 
-**Signal 2 — Volume post-pic**
+**Signal 2 · Volume post-pic**
 Dans les 20 sessions après le sommet, le volume relatif à la moyenne 12 mois distingue distribution (volume élevé) d'accumulation (volume normal).
-- Ne devient lisible qu'après que le sommet est établi — ne pas anticiper.
+- Ne devient lisible qu'après que le sommet est établi, ne pas anticiper.
 - Présenter comme signal de confirmation, pas de prédiction.
 
 ---
 
-### 4. Absence de biais rétrospectif — preuve obligatoire
+### 4. Absence de biais rétrospectif · preuve obligatoire
 
 Pour tout niveau structurel présenté dans un article, la question "ce niveau existait-il avant les événements documentés ?" doit avoir une réponse claire.
 
@@ -1219,7 +1219,7 @@ Si cette preuve n'est pas disponible ou ne peut pas être établie, ne pas prét
 
 ---
 
-### 5. Baseline aléatoire — test de validité du framework
+### 5. Baseline aléatoire · test de validité du framework
 
 Comparer toujours les niveaux du framework à des niveaux horizontaux aléatoires testés avec le même protocole. Si les niveaux aléatoires produisent le même comportement, le framework n'a pas d'edge structurel.
 
@@ -1228,14 +1228,14 @@ Comparer toujours les niveaux du framework à des niveaux horizontaux aléatoire
 
 ---
 
-### 6. Disclosure des niveaux — règle de sécurité propriétaire
+### 6. Disclosure des niveaux · règle de sécurité propriétaire
 
 Quand les niveaux sont issus d'un framework propriétaire :
 - Ne publier que les niveaux directement utiles à l'article (pas la séquence complète).
 - Une séquence de niveaux consécutifs publiée permet la reconstruction du ratio entre eux (ex : ratio φ déductible de 3 niveaux consécutifs).
 - **Règle pratique :** publier au maximum 2 niveaux consécutifs. Au-delà, le ratio entre les gaps devient calculable et la structure du framework devient reverse-engineerable.
 - Référencer les autres niveaux par leur fonction ("le niveau précédent", "le niveau suivant") sans donner leur prix exact.
-- **Ne jamais mentionner la fenêtre temporelle du backtest en années précises** ("32 ans", "30 ans") ni le nombre total d'approches analysées ("24 approches indépendantes") — ces chiffres permettent de déduire la périodicité des niveaux et la densité du framework. Remplacer par "l'historique complet de SPY" ou "toutes les approches documentées".
+- **Ne jamais mentionner la fenêtre temporelle du backtest en années précises** ("32 ans", "30 ans") ni le nombre total d'approches analysées ("24 approches indépendantes"): ces chiffres permettent de déduire la périodicité des niveaux et la densité du framework. Remplacer par "l'historique complet de SPY" ou "toutes les approches documentées".
 
 > Cas réel (spy-ipo-fork-747, mai 2026) : "A backtest across all 24 independent approaches to these structural levels in SPY's 32-year history" → corrigé → "A backtest across every approach to these structural levels in SPY's full history". Et "These levels were fixed more than thirty years ago" → supprimé.
 
@@ -1244,15 +1244,15 @@ Quand les niveaux sont issus d'un framework propriétaire :
 ### 7. Vocabulaire interdit pour les niveaux structurels
 
 **Ne jamais écrire :**
-- "résistance finale" / "final resistance" — le framework génère des niveaux au-delà du niveau en cours. Aucun niveau n'est final.
-- "dernier niveau" / "last level" — même raison.
-- "plafond ultime" — même raison.
+- "résistance finale" / "final resistance": le framework génère des niveaux au-delà du niveau en cours. Aucun niveau n'est final.
+- "dernier niveau" / "last level": même raison.
+- "plafond ultime": même raison.
 
-**La règle de fond :** chaque niveau est soit un plafond temporaire, soit celui qui marque la fin du cycle en cours. La question est toujours laquelle des deux — jamais s'il existe des niveaux au-dessus.
+**La règle de fond :** chaque niveau est soit un plafond temporaire, soit celui qui marque la fin du cycle en cours. La question est toujours laquelle des deux, jamais s'il existe des niveaux au-dessus.
 
-**La question de clôture d'un article de niveaux structurels doit tenir les deux issues ouvertes :** "ce niveau finit-il par céder, ou est-ce le plafond du cycle en cours ?" — pas "est-ce la résistance finale avant un breakout ou le sommet du cycle ?". Le framework ne prédit pas la direction ; il identifie la zone où la question reçoit une réponse.
+**La question de clôture d'un article de niveaux structurels doit tenir les deux issues ouvertes :** "ce niveau finit-il par céder, ou est-ce le plafond du cycle en cours ?", pas "est-ce la résistance finale avant un breakout ou le sommet du cycle ?". Le framework ne prédit pas la direction ; il identifie la zone où la question reçoit une réponse.
 
-> Cas réel (spy-ipo-fork-747) : première version — "is this the final resistance before another breakout?" → corrigé → "is this a level that eventually gives way, or the ceiling of the current cycle?"
+> Cas réel (spy-ipo-fork-747) : première version: "is this the final resistance before another breakout?" → corrigé → "is this a level that eventually gives way, or the ceiling of the current cycle?"
 
 ---
 
@@ -1261,14 +1261,14 @@ Quand les niveaux sont issus d'un framework propriétaire :
 Ces formulations ont été validées dans spy-ipo-fork-747. Les adapter, ne pas copier mot pour mot.
 
 - Pour introduire un niveau : *"[Prix] est le niveau. [Prix marché] en est à [%] aujourd'hui."*
-- Pour la rareté : *"Les rencontres avec ce type de niveau deviennent plus rares à mesure que le prix monte — l'espacement absolu entre niveaux s'élargit."*
+- Pour la rareté : *"Les rencontres avec ce type de niveau deviennent plus rares à mesure que le prix monte, l'espacement absolu entre niveaux s'élargit."*
 - Pour le biais rétrospectif : *"Un trader utilisant ce framework en [année] aurait produit le même output."*
 - Pour la limitation statistique : *"La limitation est statistique, pas empirique : [N] observations par groupe ne permettent pas de dériver des probabilités précises. Le pattern est cohérent. Il ne supporte pas une probabilité directionnelle précise."*
 - Pour la zone de friction : *"Le niveau ne produit pas un signal achat ou vente. Il produit une zone où le marché cesse d'être passif sur sa direction."*
 
 ---
 
-### Honnêteté directionnelle — règle absolue
+### Honnêteté directionnelle · règle absolue
 
 **Si l'analyse produit une orientation claire, la nommer. Ne pas se réfugier derrière la neutralité quand les données penchent.**
 
@@ -1284,7 +1284,7 @@ La nuance vient après, pas à la place : citer la taille de l'échantillon, les
 
 ---
 
-### Paragraphes courts pour les sections contextuelles — règle
+### Paragraphes courts pour les sections contextuelles · règle
 
 Les sections analytiques qui traitent plusieurs points distincts (parallèles de marché, corrélations, comparaisons géographiques) doivent être découpées en paragraphes courts : **1 idée = 1 paragraphe**.
 
@@ -1297,11 +1297,11 @@ Un bloc de 15 lignes continu oblige le lecteur à tenir plusieurs fils en même 
 4. Paragraphe implication : ce que ça change concrètement pour le lecteur (2-3 phrases)
 5. Note de suivi (italique) : quand la prochaine mise à jour paraîtra
 
-> Cas réel (spy-ipo-fork-747, mai 2026) : section "One parallel worth noting" — un seul bloc de 15 lignes découpé en 7 paragraphes courts après correction.
+> Cas réel (spy-ipo-fork-747, mai 2026) : section "One parallel worth noting", un seul bloc de 15 lignes découpé en 7 paragraphes courts après correction.
 
 ---
 
-### Note de suivi — règle pour les analyses d'événements en cours
+### Note de suivi · règle pour les analyses d'événements en cours
 
 Quand l'article analyse une situation non résolue (un niveau non encore touché, une décision non encore rendue, une donnée non encore publiée), fermer la section concernée par une note de suivi en italique.
 
@@ -1313,7 +1313,7 @@ Pas de vague "nous reviendrons sur ce sujet." Nommer l'événement exact qui dé
 
 ---
 
-## Visualisations de données inline (SVG) — palette et règles
+## Visualisations de données inline (SVG) · palette et règles
 
 Les graphiques inline des articles Trading852 utilisent le thème sombre de la homepage, pas le fond blanc de l'article body. Cela crée un contraste visuel fort qui ancre les données dans l'identité du site.
 
@@ -1352,14 +1352,14 @@ Ces couleurs viennent de `base.css` (`--pos: #56d49f`, `--neg: #ff6d70`) et du g
 
 ### Règles
 
-- `viewBox` + `width:100%` — jamais de largeur fixe en pixels
+- `viewBox` + `width:100%`, jamais de largeur fixe en pixels
 - Padding intérieur 16px via `<g transform="translate(16,16)">`, viewBox +32 en largeur et hauteur
-- Titre du chart : uppercase, `letter-spacing:0.07em`, `rgba(255,255,255,0.4)` — jamais blanc plein
+- Titre du chart : uppercase, `letter-spacing:0.07em`, `rgba(255,255,255,0.4)`, jamais blanc plein
 - `clip-path` avec `<defs>` pour les barres de progression avec coins arrondis
 - `aria-label` obligatoire sur chaque SVG pour l'accessibilité
 - `font-family:'Space Grotesk',Helvetica,Arial,sans-serif` inline sur chaque SVG
 
-> Référence : spy-ipo-fork-747 (mai 2026) — 3 charts inline : bar chart vitesse d'approche, zone chart volume, progress bar approche courante.
+> Référence : spy-ipo-fork-747 (mai 2026), 3 charts inline : bar chart vitesse d'approche, zone chart volume, progress bar approche courante.
 
 ---
 
@@ -1378,7 +1378,7 @@ Chaque article se termine par une section Sources, après la Décision. Ce n'est
   </ul>
 </div>
 ```
-Le CSS `.sources-section` est défini dans chaque article — copier depuis `9988-alibaba.html`. Il rend le titre en petit label gris uppercase (`--fs-12`) et chaque `<li>` avec un tiret `–` dans la même graisse. Ne jamais utiliser `<h2>Sources</h2><p>…</p>` : c'est trop grand et ne respecte pas la hiérarchie visuelle.
+Le CSS `.sources-section` est défini dans chaque article, copier depuis `9988-alibaba.html`. Il rend le titre en petit label gris uppercase (`--fs-12`) et chaque `<li>` avec un tiret `–` dans la même graisse. Ne jamais utiliser `<h2>Sources</h2><p>…</p>` : c'est trop grand et ne respecte pas la hiérarchie visuelle.
 
 **Format source :** `[Société] [type de document] : [canal], [mois année]`
 
@@ -1419,19 +1419,19 @@ Chaque article doit inclure un bloc de navigation entre la fin de l'article body
 ```
 - Si l'article est le plus ancien : supprimer le bloc `--prev`.
 - Si l'article est le plus récent : supprimer le bloc `--next`.
-- Le CSS `.article-nav-section` est défini dans chaque article — copier depuis `9988-alibaba.html`. Titre en `--fs-16` serif noir, label en `--fs-12` sans-serif gris uppercase.
+- Le CSS `.article-nav-section` est défini dans chaque article, copier depuis `9988-alibaba.html`. Titre en `--fs-16` serif noir, label en `--fs-12` sans-serif gris uppercase.
 - **À chaque publication** : mettre à jour le `--next` de l'article précédent pour pointer vers le nouvel article.
 
 ---
 
-## Checklist avant publication — contrôle inter-articles
+## Checklist avant publication · contrôle inter-articles
 
 Avant de soumettre un article, vérifier ces points contre les articles déjà publiés :
 
 **Arc narratif**
-- [ ] Le hook pose un paradoxe non résolu — la question-fil est identifiable, implicite, non formulée
-- [ ] La dernière phrase des sections 1 à 5 ne conclut pas — elle laisse une aspérité qui force la section suivante
-- [ ] La section 4 est celle qui répond à la question-fil du hook — pas avant, pas après
+- [ ] Le hook pose un paradoxe non résolu, la question-fil est identifiable, implicite, non formulée
+- [ ] La dernière phrase des sections 1 à 5 ne conclut pas, elle laisse une aspérité qui force la section suivante
+- [ ] La section 4 est celle qui répond à la question-fil du hook, pas avant, pas après
 - [ ] La section 6 (risques) se termine en mode "voici ce que je surveille" et non "voici pourquoi ça pourrait mal tourner"
 - [ ] La phrase lapidaire est bien la dernière phrase de l'article, après les triggers d'invalidation
 
@@ -1442,7 +1442,7 @@ Avant de soumettre un article, vérifier ces points contre les articles déjà p
 - [ ] Aucun superlatif, aucun adjectif d'enthousiasme
 - [ ] La card homepage est distincte du H1 (si longueur > 10 mots)
 
-**Unicité inter-articles — vérification obligatoire par grep**
+**Unicité inter-articles · vérification obligatoire par grep**
 
 Avant de finaliser, lancer cette commande sur le dossier `analyses/` :
 ```bash
@@ -1454,59 +1454,59 @@ Si la phrase ou sa structure apparaît dans un autre article, réécrire. Pas de
 - [ ] **Ouverture** : la structure de l'ouverture n'a pas été utilisée dans un article précédent ("This is not...", "The filing is public...", "The math is worth reading...")
 - [ ] **Subtitle** : la structure du subtitle est unique à cet article (pas la même formule qu'un subtitle existant)
 - [ ] **Clôture Décision** : la dernière phrase est spécifique à cette entreprise, pas une variante d'une clôture déjà publiée
-- [ ] **Lead paragraph** (`<p class="lead">`) : grep sur les 5 premiers mots — aucune occurrence dans un autre article
+- [ ] **Lead paragraph** (`<p class="lead">`) : grep sur les 5 premiers mots, aucune occurrence dans un autre article
 - [ ] **Toutes les phrases de section 2 et 3** : aucune formule rhétorique commune avec un article existant
 
-**Dispositifs rhétoriques — quota maximum sur tout le blog :**
+**Dispositifs rhétoriques · quota maximum sur tout le blog :**
 
 Ces constructions sont fortes mais épuisent leur effet rapidement. Dépasser le quota = signal AI immédiat.
 
 | Dispositif | Quota blog | Quota par article | Utilisé dans |
 |---|---|---|---|
 | "The market has priced X. It has not priced Y." | 2 fois max | 1 fois max | Alibaba (key takeaway) + Haier ✓ |
-| "Three Facts Operating Simultaneously" | 1 fois puis retraite | 1 fois | Prada ✓ — interdit partout ailleurs |
-| "Until one of these appears" | 1 fois puis retraite | 1 fois | Prada ✓ — remplacer par une phrase spécifique à l'entreprise |
-| "The arithmetic deserves a second look" | retraite (3 usages) | — | Yadea subtitle, Jacobio, Prada meta |
+| "Three Facts Operating Simultaneously" | 1 fois puis retraite | 1 fois | Prada ✓, interdit partout ailleurs |
+| "Until one of these appears" | 1 fois puis retraite | 1 fois | Prada ✓, remplacer par une phrase spécifique à l'entreprise |
+| "The arithmetic deserves a second look" | retraite (3 usages) | n/a | Yadea subtitle, Jacobio, Prada meta |
 
-**Phrases bannies — déjà utilisées, ne jamais réutiliser :**
-- "the discount exists, it is documentable" — Dickson + Prada (corrigé avr. 2026)
-- "The discount exists for a documented reason" — Jacobio (corrigé avr. 2026)
-- "The market has priced one. The other two are not in the current price." — Yadea + Prada (corrigé avr. 2026)
-- "Most market participants have processed one of these." — Jacobio (corrigé avr. 2026)
-- "Three Facts Operating Simultaneously" — retraité après Prada. Ne jamais réutiliser avant 10 articles.
-- "The math is worth reading" — Jacobio subtitle
-- "Pessimism this acute against fundamentals this durable is not a stable state." — Prada
+**Phrases bannies · déjà utilisées, ne jamais réutiliser :**
+- "the discount exists, it is documentable": Dickson + Prada (corrigé avr. 2026)
+- "The discount exists for a documented reason": Jacobio (corrigé avr. 2026)
+- "The market has priced one. The other two are not in the current price.": Yadea + Prada (corrigé avr. 2026)
+- "Most market participants have processed one of these.": Jacobio (corrigé avr. 2026)
+- "Three Facts Operating Simultaneously": retraité après Prada. Ne jamais réutiliser avant 10 articles.
+- "The math is worth reading": Jacobio subtitle
+- "Pessimism this acute against fundamentals this durable is not a stable state.": Prada
 
 **CONFIG / SEO**
 - [ ] `pubDate` renseigné (date de publication, ne changera plus jamais)
 - [ ] `modDate` renseigné (date du jour à la publication, mettre à jour à chaque révision analytique)
-- [ ] `title` ≤ 60 caractères affichés — vérifier avec `awk '{print length}' <<< "titre"`, pas `wc -c`
+- [ ] `title` ≤ 60 caractères affichés, vérifier avec `awk '{print length}' <<< "titre"`, pas `wc -c`
 - [ ] `ogTitle` suit la formule tension arithmétique Trading852
 - [ ] `description` 150-160 chars
 - [ ] `ogImageAlt` présent si `ogImage` ≠ image OG par défaut
 
-**Jargon — passe obligatoire**
-- [ ] Key Takeaway : zéro terme technique non défini (lire la box seule — si un mot nécessite un dictionnaire financier, le réécrire)
+**Jargon · passe obligatoire**
+- [ ] Key Takeaway : zéro terme technique non défini (lire la box seule, si un mot nécessite un dictionnaire financier, le réécrire)
 - [ ] Passe jargon complète sur le corps : vérifier chaque terme de la table "Passe jargon obligatoire" ci-dessus
 - [ ] Tout acronyme ou nom propre non universel est défini à sa première occurrence (UAF, P/B, Trian Partners, HKMA, etc.)
-- [ ] **Acronymes propres à l'entreprise (segments, divisions, programmes) : `grep -oE '\b[A-Z]{2,4}\b' DRAFT/<file>.html | sort -u`. Chaque acronyme retourné qui n'est pas dans la whitelist (cf. section Lite) est défini *une seule fois* puis remplacé par sa traduction grand public dans tout le reste du corps. Si l'acronyme apparaît 3+ fois après sa définition, la règle a failli — réécrire la section concernée.**
-- [ ] Titre : passer le test du lecteur zéro-contexte — retirer tous les noms propres et métriques techniques, la tension tient-elle ?
+- [ ] **Acronymes propres à l'entreprise (segments, divisions, programmes) : `grep -oE '\b[A-Z]{2,4}\b' DRAFT/<file>.html | sort -u`. Chaque acronyme retourné qui n'est pas dans la whitelist (cf. section Lite) est défini *une seule fois* puis remplacé par sa traduction grand public dans tout le reste du corps. Si l'acronyme apparaît 3+ fois après sa définition, la règle a failli, réécrire la section concernée.**
+- [ ] Titre : passer le test du lecteur zéro-contexte, retirer tous les noms propres et métriques techniques, la tension tient-elle ?
 
-**Voix — la cadence**
+**Voix · la cadence**
 - [ ] **Longueur de phrases : zéro phrase de plus de 30 mots** (commande `awk` citée section Voix). Moyenne 15–25 mots.
 - [ ] **Densité de chiffres : aucune grappe de 4+ phrases-chiffres consécutives sans phrase d'interprétation** entre les chiffres. Lire le Key Takeaway et le hook à voix haute : si on récite une liste de nombres, réécrire.
 - [ ] Chaque chiffre clé est re-cadré en plain English dans la phrase qui suit son apparition (pas seulement défini techniquement)
-- [ ] La phrase d'observation est isolée (paragraphe d'une seule phrase, ouverture ou clôture de section) — pas noyée entre deux paragraphes de chiffres
+- [ ] La phrase d'observation est isolée (paragraphe d'une seule phrase, ouverture ou clôture de section), pas noyée entre deux paragraphes de chiffres
 
 **Style**
 - [ ] Aucun em dash dans l'article
 - [ ] Aucune insertion mid-sentence (test : lire la phrase sans l'insertion, si elle tient, l'insertion devient une phrase séparée)
 - [ ] Aucune parenthèse de plus de 4 mots
-- [ ] Aucune phrase-remplissage ("That is the context", "This is worth noting", "The implications are significant") — chaque phrase contient une assertion précise
-- [ ] Tout concept est introduit avant d'être référencé — "les quatre niveaux" ne peut apparaître qu'après "quatre niveaux" ou "four of those levels" ont été posés
+- [ ] Aucune phrase-remplissage ("That is the context", "This is worth noting", "The implications are significant"), chaque phrase contient une assertion précise
+- [ ] Tout concept est introduit avant d'être référencé, "les quatre niveaux" ne peut apparaître qu'après "quatre niveaux" ou "four of those levels" ont été posés
 
 **Honnêteté analytique**
-- [ ] Si l'analyse produit une orientation claire, elle est nommée — pas de "the data cannot tell you" quand les données penchent dans une direction
+- [ ] Si l'analyse produit une orientation claire, elle est nommée, pas de "the data cannot tell you" quand les données penchent dans une direction
 - [ ] Chaque scénario conditionnel ("si X, alors Y") énonce les deux branches avec leur implication concrète
 - [ ] Pour les analyses d'événements en cours : une note de suivi italique précise l'événement déclencheur de la prochaine mise à jour
 

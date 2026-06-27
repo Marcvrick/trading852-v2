@@ -70,7 +70,7 @@ Required body elements:
 
 ### Step 5: Update the homepage
 
-> **NON-NEGOTIABLE — every new article gets a homepage card, in the same commit that publishes it.** A new article is ALWAYS featured in the Recent-Analyses card list (it becomes the featured card) AND always creates a card on the homepage. Publishing the article file + feed + sitemap without touching `publish/index.html` ships a page that is live at its URL but unreachable by browsing — it exists only if you already know the link. This happened with `hong-kong-discount-cheap-two-ways` (Jun 2026, commit b50887c): published, in the sitemap, returning 200, but linked from nowhere. Do not let an article reach `main` without its card.
+> **NON-NEGOTIABLE: every new article gets a homepage card, in the same commit that publishes it.** A new article is ALWAYS featured in the Recent-Analyses card list (it becomes the featured card) AND always creates a card on the homepage. Publishing the article file + feed + sitemap without touching `publish/index.html` ships a page that is live at its URL but unreachable by browsing. It exists only if you already know the link. This happened with `hong-kong-discount-cheap-two-ways` (Jun 2026, commit b50887c): published, in the sitemap, returning 200, but linked from nowhere. Do not let an article reach `main` without its card.
 
 Two sections in [publish/index.html](../publish/index.html):
 
@@ -164,7 +164,7 @@ Vercel rebuilds and deploys on push.
 
 ## ⚠️ EDITORIAL WORKFLOW (MANDATORY PROCEDURE)
 
-**Important — this section replaced the old Step 2 description. Read it entirely before drafting.**
+**Important: this section replaced the old Step 2 description. Read it entirely before drafting.**
 
 ### Rule: Articles must pass DRAFT + review before publication
 

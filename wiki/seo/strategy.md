@@ -1,8 +1,8 @@
-# SEO Strategy — Trading852
+# SEO Strategy · Trading852
 
 *April 2026 · revised May 2026*
 
-> **Strategic constraint (May 2026 revision)** : la méthodologie Trading852 (SOTP, NAV, lecture de filings) **n'est jamais publiée comme contenu autonome**. Elle reste un moat éditorial. Le MOFU est servi par des sectoral hubs, comparatifs ticker vs peer, screens éditorialisés et thesis articles macro — jamais par des pages méthode. Voir [`SEO/keywords-funnel.md`](../../SEO/keywords-funnel.md) pour le détail des formats.
+> **Strategic constraint (May 2026 revision)** : la méthodologie Trading852 (SOTP, NAV, lecture de filings) **n'est jamais publiée comme contenu autonome**. Elle reste un moat éditorial. Le MOFU est servi par des sectoral hubs, comparatifs ticker vs peer, screens éditorialisés et thesis articles macro, jamais par des pages méthode. Voir [`SEO/keywords-funnel.md`](../../SEO/keywords-funnel.md) pour le détail des formats.
 
 ---
 
@@ -11,11 +11,11 @@
 Trading852 is a personal research site publishing conviction analysis on HKEX-listed companies. The SEO opportunity is significant: the niche (English-language, independent, HKEX-specific value research) has almost no serious competition from an SEO standpoint, and the existing content is already high-quality, original, and citation-worthy.
 
 The strategy has three phases:
-1. **Fix the floor** — clean URLs, schema, sitemap, author page (3 hours of work)
-2. **Build the pillar** — sectoral hubs, comparatifs, thesis articles, screens. The methodology itself is never published. (months 1–3)
-3. **Compound** — let the content library grow, attract links, rank for long-tail tickers (months 4–12)
+1. **Fix the floor**: clean URLs, schema, sitemap, author page (3 hours of work)
+2. **Build the pillar**: sectoral hubs, comparatifs, thesis articles, screens. The methodology itself is never published. (months 1–3)
+3. **Compound**: let the content library grow, attract links, rank for long-tail tickers (months 4–12)
 
-The biggest risk is not competition — it is inconsistency. Two analyses per month is enough to build authority in this niche within 12 months.
+The biggest risk is not competition; it is inconsistency. Two analyses per month is enough to build authority in this niche within 12 months.
 
 ---
 
@@ -28,7 +28,7 @@ The biggest risk is not competition — it is inconsistency. Two analyses per mo
 
 **Secondary:** Finance students, analysts, journalists covering HK markets
 - Intent: Background research, data verification, methodology reference
-- High E-E-A-T value — these readers link and cite
+- High E-E-A-T value; these readers link and cite
 
 ---
 
@@ -47,7 +47,7 @@ One-line SEO positioning: **"The independent English-language research site for 
 
 ## Keyword Strategy
 
-### Tier 1 — Own These (low competition, high intent)
+### Tier 1 · Own These (low competition, high intent)
 
 > Volumes mensuels = estimations directionnelles, à valider via Google Search Console + Google Keyword Planner. Voir le pipeline dans [`SEO/keywords-funnel.md`](../../SEO/keywords-funnel.md).
 
@@ -62,7 +62,7 @@ One-line SEO positioning: **"The independent English-language research site for 
 | `HKEX conglomerate discount` | 100–300 | Very Low | Thesis article (à créer) |
 | `southbound stock connect explained` | 100–300 | Low-Medium | Thesis article (à créer) |
 
-### Tier 2 — Build Toward (medium competition, broader)
+### Tier 2 · Build Toward (medium competition, broader)
 
 | Keyword | Monthly searches (est.) | Competition | Target page |
 |---|---|---|---|
@@ -72,23 +72,23 @@ One-line SEO positioning: **"The independent English-language research site for 
 | `Jardine Matheson analysis` | 500–1 000 | Medium | `/analyses/jardine-matheson` |
 | `stock connect southbound flows` | 500–1 000 | Medium | Thesis article |
 
-### Tier 3 — Monitor (competitive, build authority toward)
+### Tier 3 · Monitor (competitive, build authority toward)
 
 | Keyword | Monthly searches (est.) | Competition | Notes |
 |---|---|---|---|
 | `hong kong stocks` | 10 000+ | High | Too broad; earn it via topic authority |
-| `HKEX analysis` | 5 000+ | High | Same — earn gradually |
+| `HKEX analysis` | 5 000+ | High | Same, earn gradually |
 | `hang seng undervalued` | 2 000+ | Medium-High | Possible with 20+ indexed analyses |
 
 ---
 
 ## E-E-A-T Strategy
 
-Finance content falls under Google's YMYL (Your Money Your Life) category — E-E-A-T is scrutinised heavily.
+Finance content falls under Google's YMYL (Your Money Your Life) category; E-E-A-T is scrutinised heavily.
 
-**Experience:** Demonstrated by original SOTP calculations, specific filings cited with dates, real numbers from real documents. Every article already does this — maintain it.
+**Experience:** Demonstrated by original SOTP calculations, specific filings cited with dates, real numbers from real documents. Every article already does this; maintain it.
 
-**Expertise:** Shown by the depth of each individual analysis — original SOTP models, filing-grounded NAV calculations, catalyst frameworks applied case by case. The methodology is signalled by results, not published as standalone tutorials.
+**Expertise:** Shown by the depth of each individual analysis, original SOTP models, filing-grounded NAV calculations, catalyst frameworks applied case by case. The methodology is signalled by results, not published as standalone tutorials.
 
 **Authoritativeness:** Built over time as other sites link to and cite Trading852 data. Sectoral hubs and screen pages (e.g. "HK privatization watch", "HK deep value 2026") are designed to be cited.
 
@@ -144,7 +144,7 @@ Breadcrumb schema   → on all inner pages
 ### Nice-to-Have (Month 3+)
 
 ```
-Core Web Vitals     → LCP < 2.5s, CLS < 0.1 (fonts may cause CLS — preload)
+Core Web Vitals     → LCP < 2.5s, CLS < 0.1 (fonts may cause CLS, preload)
 hreflang            → not needed (English only)
 Pagination          → not needed yet
 Google News sitemap → add if publishing cadence reaches 1+/week
@@ -161,7 +161,7 @@ Trading852 content is well-positioned to be cited by AI systems because:
 - Clear, quotable assertions ("Great Eagle trades at 88% below its own NAV estimate")
 
 **To maximise AI citation:**
-- Keep tables in every article — AI systems extract and cite tabular data readily
+- Keep tables in every article; AI systems extract and cite tabular data readily
 - First paragraph of every article should contain 1–2 quotable facts
 - Sectoral hubs should have a one-paragraph thesis at the top (AI pulls these for "best HK X stocks" queries)
 - Ensure author entity is defined via Person schema with `sameAs` links when possible
@@ -172,7 +172,7 @@ Trading852 content is well-positioned to be cited by AI systems because:
 
 | Risk | Mitigation |
 |---|---|
-| Low publishing frequency | Set 2 analyses/month as minimum — even short analyses count |
+| Low publishing frequency | Set 2 analyses/month as minimum; even short analyses count |
 | E-E-A-T penalties for YMYL | Named author + source discipline already in place; add schema |
 | Competitor copies content | Original SOTP models and filing citations are hard to replicate |
 | Algorithm update | Diverse content types (individual analyses + sectoral hubs + thesis + screens) reduce single-type dependency |

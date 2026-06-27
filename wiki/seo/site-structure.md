@@ -1,4 +1,4 @@
-# Site Structure — Trading852
+# Site Structure · Trading852
 
 *April 2026*
 
@@ -17,11 +17,11 @@ trading852.com/
 ```
 
 **Problems:**
-- No URL hierarchy — all articles at the same depth
-- No topic/category pages — no internal linking surface
-- No method/glossary content — no educational SEO entry points
-- No author page — E-E-A-T signal missing
-- `.html` extensions in URLs — not ideal for long-term (fixable at hosting level)
+- No URL hierarchy: all articles at the same depth
+- No topic/category pages: no internal linking surface
+- No method/glossary content: no educational SEO entry points
+- No author page: E-E-A-T signal missing
+- `.html` extensions in URLs: not ideal for long-term (fixable at hosting level)
 
 ---
 
@@ -60,7 +60,7 @@ trading852.com/
 ### Current
 `trading852.com/analyses/0113-dickson-concepts.html`
 
-### Target (clean URLs — configure at hosting/Vercel level)
+### Target (clean URLs · configure at hosting/Vercel level)
 `trading852.com/analyses/0113-dickson-concepts`
 
 **How to implement on Vercel:** Add `vercel.json` with clean URL rewrites (see Implementation Roadmap).
@@ -104,11 +104,11 @@ Homepage should link to:
 
 | Priority | Page | Type | SEO Rationale |
 |---|---|---|---|
-| 1 | `/about/` | Author page | E-E-A-T foundation — required before scaling |
-| 2 | `/method/nav-discount` | Educational | "NAV discount hong kong" — very low competition |
-| 3 | `/method/sotp-valuation` | Educational | "sum of parts valuation hong kong" — low competition |
-| 4 | `/method/how-to-read-hkex` | Educational | "how to read HKEX annual report" — unowned keyword |
-| 5 | `/analyses/why-hong-kong-why-now` | Market thesis | "why invest hong kong 2026" — medium competition |
+| 1 | `/about/` | Author page | E-E-A-T foundation, required before scaling |
+| 2 | `/method/nav-discount` | Educational | "NAV discount hong kong", very low competition |
+| 3 | `/method/sotp-valuation` | Educational | "sum of parts valuation hong kong", low competition |
+| 4 | `/method/how-to-read-hkex` | Educational | "how to read HKEX annual report", unowned keyword |
+| 5 | `/analyses/why-hong-kong-why-now` | Market thesis | "why invest hong kong 2026", medium competition |
 | 6 | Next stock analysis | Stock-specific | Long-tail, high intent, very low competition |
 
 ---

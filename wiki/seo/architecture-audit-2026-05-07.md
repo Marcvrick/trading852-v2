@@ -68,7 +68,7 @@ Every ticker analysis declares:
 "isPartOf": {
   "@type": "CollectionPage",
   "@id": "https://trading852.com/analyses/luxury",
-  "name": "Luxury — HKEX Research"
+  "name": "Luxury · HKEX Research"
 }
 ```
 
@@ -83,7 +83,7 @@ Template (apply to each hub, swapping the article list):
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "@id": "https://trading852.com/analyses/luxury",
-  "name": "Luxury — HKEX Research",
+  "name": "Luxury · HKEX Research",
   "description": "Independent research on luxury sector companies listed on HKEX. Documented valuation discounts, brand analysis, identifiable catalysts.",
   "url": "https://trading852.com/analyses/luxury",
   "inLanguage": "en",
@@ -113,7 +113,7 @@ Template (apply to each hub, swapping the article list):
 }
 ```
 
-Note the em dash in `"Luxury — HKEX Research"` is already in the article-side `isPartOf` references and would need to match. If you prefer to ban em dashes there too, change both sides to `"Luxury · HKEX Research"` or `"Luxury Sector HKEX Research"` in one sweep.
+Note the em dash in `"Luxury · HKEX Research"` is already in the article-side `isPartOf` references and would need to match. If you prefer to ban em dashes there too, change both sides to `"Luxury · HKEX Research"` or `"Luxury Sector HKEX Research"` in one sweep.
 
 ### Issue 3. No standalone Organization entity sitewide. (MEDIUM)
 

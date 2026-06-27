@@ -1,6 +1,6 @@
-# Content Calendar — Trading852
+# Content Calendar · Trading852
 
-*April 2026 — March 2027*
+*April 2026 · March 2027*
 
 ---
 
@@ -8,9 +8,9 @@
 
 | Pillar | Purpose | SEO Role |
 |---|---|---|
-| **Stock Analyses** | Core product — conviction research on specific HKEX names | Long-tail, high-intent traffic per ticker |
-| **Market Thesis** | "Why HK" narrative pieces — context and macro framing | Broader informational keywords, shareable |
-| **Method** | Educational — how to read filings, SOTP, NAV, catalysts | Evergreen, builds authority, low competition |
+| **Stock Analyses** | Core product: conviction research on specific HKEX names | Long-tail, high-intent traffic per ticker |
+| **Market Thesis** | "Why HK" narrative pieces: context and macro framing | Broader informational keywords, shareable |
+| **Method** | Educational: how to read filings, SOTP, NAV, catalysts | Evergreen, builds authority, low competition |
 | **Glossary** | Definition pages for key terms | Snippet/featured result targets |
 
 ---
@@ -28,9 +28,9 @@
 
 ---
 
-## Phase 1 — Foundation Content (Months 1–3)
+## Phase 1 · Foundation Content (Months 1–3)
 
-### Method Pages (build first — they support E-E-A-T and internal linking)
+### Method Pages (build first; they support E-E-A-T and internal linking)
 
 | Title | URL | Target Keyword | Priority |
 |---|---|---|---|
@@ -60,7 +60,7 @@
 
 ---
 
-## Phase 2 — Scale (Months 4–6)
+## Phase 2 · Scale (Months 4–6)
 
 ### Stock Analyses
 
@@ -70,7 +70,7 @@
 | Wharf Holdings | 0004.HK | Harbour City + Times Square, tourist recovery |
 | Sino Land | 0083.HK | Net cash + land bank, family-controlled |
 | Kerry Properties | 0683.HK | China + HK mixed, discount to SOTP |
-| Wheelock | 0020.HK | Privatised from exchange — post-event analysis |
+| Wheelock | 0020.HK | Privatised from exchange, post-event analysis |
 | NWS Holdings | 0659.HK | Infrastructure + logistics, dividend play |
 
 ### Market Thesis / Educational
@@ -83,11 +83,11 @@
 
 ---
 
-## Phase 3 — Authority (Months 7–12)
+## Phase 3 · Authority (Months 7–12)
 
 ### Content Types to Add
 
-- **Annual review**: "Hong Kong Value Investing — Year in Review 2026" (December)
+- **Annual review**: "Hong Kong Value Investing · Year in Review 2026" (December)
 - **Tracking pages**: Live discount-to-NAV trackers for covered companies (simple HTML tables, updated quarterly)
 - **Event coverage**: Privatisation announcements, PBOC stimulus updates, as they happen
 - **HKEX filing calendar**: Monthly roundup of notable filings from covered companies
@@ -102,7 +102,7 @@
 
 ---
 
-## Glossary Entries (ongoing — 300–500 words each)
+## Glossary Entries (ongoing, 300–500 words each)
 
 | Term | Target Snippet |
 |---|---|
@@ -122,7 +122,7 @@
 - [ ] Target keyword in `<title>`, `<h1>`, first 100 words
 - [ ] Meta description written (150–160 chars, includes keyword)
 - [ ] Article schema added (`<script type="application/ld+json">`)
-- [ ] Author byline: "Marc — Trading852"
+- [ ] Author byline: "Marc · Trading852"
 - [ ] Date visible (published + last updated)
 - [ ] Internal links to 2+ related pages
 - [ ] At least 1 data table (schema-friendly, crawlable)
