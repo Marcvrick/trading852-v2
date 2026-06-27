@@ -199,28 +199,42 @@ function walkSrc(dir, files = []) {
   return files;
 }
 
-// ── Recent analyses auto-generation ──────────────────────────────────────────
-// Homepage features the latest article in the featured card slot, with older
-// articles pushed to the small-card stack. Each article's ogTitle, pubDate, and
-// link are read from its CONFIG. Sort by pubDate descending; featured = first,
-// small-cards = next two (or all if < 3 articles).
-function generateRecentAnalysesHTML() {
+// ── All articles auto-generation (Recent + Our Analyses) ───────────────────────
+// Scan publish/analyses/ for all articles (excluding hubs like market-thesis.html).
+// Return sorted by pubDate descending: featured card (1st), small-card stack (2-3),
+// and full "Our Analyses" list (all articles with numbering).
+function getAllArticles() {
   const dir = path.join(SRC, 'analyses');
   const articles = [];
   for (const f of fs.readdirSync(dir)) {
-    if (!f.endsWith('.html') || f === 'market-thesis.html') continue; // skip hub pages
+    if (!f.endsWith('.html') || f === 'market-thesis.html') continue;
     const raw = fs.readFileSync(path.join(dir, f), 'utf8');
     const { config } = parseSource(raw);
     if (!config.pubDate || !config.ogTitle || !config.canonical) continue;
     const slug = f.replace(/\.html$/, '');
     const href = `/analyses/${slug}`;
-    const eyebrow = ((config.articleSection || 'Analysis') +
-                     (config.meta_category ? ' · ' + config.meta_category : '')).trim();
+    const eyebrow = (config.articleSection || 'Analysis').trim();
     articles.push({
       href, slug, title: config.ogTitle, eyebrow, date: config.pubDate,
+      description: config.description || '',
     });
   }
   articles.sort((a, b) => (b.date < a.date ? -1 : b.date > a.date ? 1 : 0));
+  return articles;
+}
+
+function formatDate(dateStr) {
+  return dateStr.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, d) => {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+  });
+}
+
+// ── Recent analyses auto-generation ──────────────────────────────────────────
+// Homepage features the latest article in the featured card slot, with older
+// articles pushed to the small-card stack.
+function generateRecentAnalysesHTML() {
+  const articles = getAllArticles();
   if (articles.length === 0) return '';
 
   const featured = articles[0];
@@ -228,10 +242,7 @@ function generateRecentAnalysesHTML() {
   let html = `
           <article class="node-mode-recent_update node-mode-recent_update--featured">
             <a href="${featured.href}" class="recent-update__link">
-              <div class="eyebrow">${featured.eyebrow} <span class="eyebrow-date">· ${featured.date.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, d) => {
-                const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-                return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
-              })}</span></div>
+              <div class="eyebrow">${featured.eyebrow} <span class="eyebrow-date">· ${formatDate(featured.date)}</span></div>
               <div class="card-key-number">${featured.title}</div>
               <h3>${featured.title}</h3>
               <div class="recent-update__see-update">Read the analysis &rarr;</div>
@@ -241,14 +252,10 @@ function generateRecentAnalysesHTML() {
   if (small.length > 0) {
     html += '\n          <div class="card-stack">';
     for (const s of small) {
-      const dateFormatted = s.date.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, d) => {
-        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
-      });
       html += `
             <article class="node-mode-recent_update node-mode-recent_update--small">
               <a href="${s.href}" class="recent-update__link">
-                <div class="eyebrow">${s.eyebrow} <span class="eyebrow-date">· ${dateFormatted}</span></div>
+                <div class="eyebrow">${s.eyebrow} <span class="eyebrow-date">· ${formatDate(s.date)}</span></div>
                 <div class="card-key-number">${s.title}</div>
                 <h3>${s.title}</h3>
                 <div class="recent-update__see-update">Read the analysis &rarr;</div>
@@ -256,6 +263,31 @@ function generateRecentAnalysesHTML() {
             </article>`;
     }
     html += '\n          </div>';
+  }
+  return html;
+}
+
+// ── "Our Analyses" list auto-generation ─────────────────────────────────────
+// Generate the full numbered list of all articles for the "Our Analyses" section.
+// Each article gets a sequential number, link, eyebrow, and title.
+function generateOurAnalysesHTML() {
+  const articles = getAllArticles();
+  if (articles.length === 0) return '';
+
+  let html = '';
+  for (let i = 0; i < articles.length; i++) {
+    const a = articles[i];
+    const num = String(i + 1).padStart(2, '0');
+    html += `
+            <div class="node-type-experience_article">
+              <a href="${a.href}" class="our-work__link">
+                <hr class="our-work-hr our-work-hr--before">
+                <span class="work-index">${num}</span>
+                <span class="field-name--field_snippet">${a.eyebrow} · ${a.title}</span>
+                <span class="our-work__read-more">Read the analysis &rarr;</span>
+                <hr class="our-work-hr our-work-hr--after">
+              </a>
+            </div>`;
   }
   return html;
 }
@@ -350,9 +382,10 @@ function build() {
       let source = fs.readFileSync(file, 'utf8');
       const { config, jsonld, content } = parseSource(source);
       let page = assemblePage(config, jsonld, content);
-      // Substitute {{RECENT_ANALYSES}} token on the homepage.
+      // Substitute {{RECENT_ANALYSES}} and {{OUR_ANALYSES}} tokens on the homepage.
       if (rel === 'index.html') {
         page = page.replace('{{RECENT_ANALYSES}}', generateRecentAnalysesHTML());
+        page = page.replace('{{OUR_ANALYSES}}', generateOurAnalysesHTML());
       }
       fs.writeFileSync(outPath, page);
       built++;
