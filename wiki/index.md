@@ -23,6 +23,7 @@ Authored pages in [publish/](../publish/) are assembled into `dist/` by [build.j
 - [Build pipeline](build-pipeline.md): build.js, source format, CONFIG, layouts, folder structure, Vercel, site plumbing
 - [SEO](seo/index.md): sub-hub, the mandatory ticker-analysis pattern + strategy, structure, calendar, competitors, roadmap, audit
 - [Scorecard](scorecard.md): the auto-generated live performance tracker
+- [Convexity tracker](convexity-tracker.md): the live rate-convexity regime gauge for HK financials (baked + client-side, free Yahoo data)
 - [Ops](ops.md): runbooks for build, preview, deploy, and refreshing the live HSI quote
 - [Articles](articles.md): published list + drafts pending a price trigger
 - [Log](log.md): changelog
@@ -36,4 +37,4 @@ Authored pages in [publish/](../publish/) are assembled into `dist/` by [build.j
 Touch a thing, update its page. When work changes how the site is built, written, or deployed, the matching wiki page is updated in the same commit. The question to ask before reporting done: which page is now stale because of what I just did?
 
 ---
-Pages: [style-guide](style-guide.md) . [editorial](editorial.md) . [build-pipeline](build-pipeline.md) . [seo](seo/index.md) . [scorecard](scorecard.md) . [ops](ops.md) . [articles](articles.md) . [log](log.md)
+Pages: [style-guide](style-guide.md) . [editorial](editorial.md) . [build-pipeline](build-pipeline.md) . [seo](seo/index.md) . [scorecard](scorecard.md) . [convexity-tracker](convexity-tracker.md) . [ops](ops.md) . [articles](articles.md) . [log](log.md)

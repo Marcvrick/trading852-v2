@@ -34,6 +34,16 @@ python3 scripts/update-hsi-quote.py && node build.js
 
 [scripts/update-hsi-quote.py](../scripts/update-hsi-quote.py) re-fetches Yahoo `^HSI`, regenerates the `.hsi-quote` block in place (idempotent), and prints the new value. See [Build pipeline, Live HSI quote](build-pipeline.md) for how the widget is wired and the zsh history-expansion gotcha.
 
+## Refresh the rate convexity tracker
+
+The convexity gauge on [rate-convexity.html](../publish/analyses/rate-convexity.html) is a **live widget** ([convexity.js](../assets/convexity.js)) backed by a build-time snapshot. Refresh the fallback before a deploy:
+
+```bash
+python3 scripts/update-convexity.py && node build.js
+```
+
+[scripts/update-convexity.py](../scripts/update-convexity.py) re-fetches `^IRX`, `^TNX`, `^HSNF`, `^HSI`, recomputes the composite regime, and regenerates the block between the `<!-- CONVEXITY:START/END -->` markers (idempotent). Full spec, score formula, and regime mapping: [Convexity tracker](convexity-tracker.md).
+
 ## Publish an article
 
 Full procedure on [Editorial](editorial.md). In short: move `DRAFT/<slug>.html` to `publish/analyses/`, add the homepage card plus feed and sitemap entries, run `node build.js`, commit, push.

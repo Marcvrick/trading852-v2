@@ -158,6 +158,7 @@ function assemblePage(config, jsonld, content) {
   const extraScripts = [];
   if (isLight) extraScripts.push('<script src="/assets/scorecard.js" defer></script>');
   if (content.includes('class="hsi-quote"')) extraScripts.push('<script src="/assets/hsi-quote.js" defer></script>');
+  if (content.includes('class="convexity-gauge')) extraScripts.push('<script src="/assets/convexity.js" defer></script>');
   const extraScript = extraScripts.length ? '\n  ' + extraScripts.join('\n  ') : '';
 
   return [

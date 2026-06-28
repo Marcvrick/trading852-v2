@@ -13,6 +13,14 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### June 28, 2026 · Rate convexity tracker + Macro article
+
+- **New article** [rate-convexity.html](../publish/analyses/rate-convexity.html) (`Macro` section, featured card): why US rate convexity is the dominant factor for HK financials, the market is ~40% financials and the HKD is pegged to the USD, so the Fed sets the rate regime for half the Hang Seng.
+- **New live tracker**: composite regime gauge in `[-1, +1]` from three free, no-key Yahoo series, `^IRX` (short rate), `^TNX - ^IRX` (curve slope), `^HSNF / ^HSI` (HK financials relative strength, weighted 0.50). Regime: `>= +0.25` positive / `<= -0.25` negative / else transition. Same two-layer pattern as the HSI tile: build-time bake ([scripts/update-convexity.py](../scripts/update-convexity.py)) + client-side refresh ([assets/convexity.js](../assets/convexity.js)) via the yahoo-proxy worker, identical math and viewBox 720x160 geometry so the two never disagree.
+- **Wiring**: [build.js](../build.js) auto-attaches `convexity.js` on any page carrying `class="convexity-gauge"`. Widget CSS appended to [article.css](../publish/styles/article.css). CSP unchanged: `connect-src` in [vercel.json](../vercel.json) already whitelists the yahoo-proxy worker.
+- **First bake**: POSITIVE +0.47, financials outperforming +12.5% over 3mo overruled a flat short-rate signal (the empirical relative-strength term is weighted highest for exactly this reason). Snapshot also written to [scripts/convexity-snapshot.json](../scripts/convexity-snapshot.json).
+- **Wiki**: new page [convexity-tracker.md](convexity-tracker.md); pointers added to [index.md](index.md) and [ops.md](ops.md). Build: 27 pages, 0 internal-link / orphan warnings; article cross-links to `hsi-35-year-trendline` and `market-thesis`.
+
 ### June 27, 2026 · HSI tile: live client-side widget (was a frozen build-time snapshot)
 
 - **Problem**: the Hang Seng tile on the [market-thesis hub](../publish/analyses/market-thesis.html) was a build-time snapshot, refreshed only when someone manually ran `python3 scripts/update-hsi-quote.py && node build.js`. Nothing was automated (no Action, no launchd, no cron), so it had been frozen at the June 24 close (23,412.18) for three days while the index had actually fallen to 22,671.86. The wiki claimed it "updates every day"; that was never wired up.

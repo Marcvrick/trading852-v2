@@ -581,3 +581,121 @@
   .price-targets__item { flex: 1 1 100%; }
   .data-snapshot { flex-direction: column; }
 }
+
+/* ── Rate Convexity Regime gauge ─────────────────────────────────────────────
+   Live tracker baked by scripts/update-convexity.py, refreshed by
+   assets/convexity.js. Three regime states drive the accent colour. */
+.convexity-gauge {
+  --cvx: #d97706;                 /* default: transition / amber */
+  --cvx-soft: rgba(217, 119, 6, 0.08);
+  border: 1px solid var(--dp-c-gray-border);
+  border-left: 4px solid var(--cvx);
+  border-radius: 6px;
+  background: var(--dp-c-white);
+  padding: 1.25rem 1.5rem 1rem;
+  margin: 0 0 2.25rem;
+  font-family: var(--ff-sans);
+}
+.convexity-gauge--positive   { --cvx: #16a34a; --cvx-soft: rgba(22, 163, 74, 0.08); }
+.convexity-gauge--negative   { --cvx: #dc2626; --cvx-soft: rgba(220, 38, 38, 0.08); }
+.convexity-gauge--transition { --cvx: #d97706; --cvx-soft: rgba(217, 119, 6, 0.08); }
+
+.cvx-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+.cvx-title {
+  font-size: var(--fs-12);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dp-c-gray-2);
+}
+.cvx-asof { font-size: var(--fs-12); color: var(--dp-c-gray-2); white-space: nowrap; }
+
+.cvx-regime {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+}
+.cvx-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--cvx);
+  box-shadow: 0 0 0 4px var(--cvx-soft);
+  flex: 0 0 auto;
+}
+.cvx-label {
+  font-size: var(--fs-24);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--cvx);
+  line-height: 1.1;
+}
+.cvx-score {
+  font-size: var(--fs-14);
+  color: var(--dp-c-gray-2);
+  font-variant-numeric: tabular-nums;
+  margin-left: 0.15rem;
+}
+.cvx-tagline {
+  font-size: var(--fs-14);
+  color: var(--dp-c-black);
+  margin-bottom: 1rem;
+}
+.cvx-tagline code {
+  font-size: 0.8em;
+  background: var(--dp-c-gray-pale);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
+
+.cvx-signals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+.cvx-sig {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.65rem 0.75rem;
+  background: var(--dp-c-gray-pale);
+  border-radius: 5px;
+}
+.cvx-sig__name { font-size: var(--fs-12); font-weight: 600; color: var(--dp-c-black); }
+.cvx-sig__sym  { font-weight: 400; color: var(--dp-c-gray-2); }
+.cvx-sig__val  { font-size: var(--fs-20); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--dp-c-black); }
+.cvx-sig__sub  { font-size: var(--fs-12); color: var(--dp-c-gray-2); }
+
+.cvx-spark {
+  display: block;
+  width: 100%;
+  height: 110px;
+  margin: 0.25rem 0 0.4rem;
+}
+.cvx-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-12);
+  color: var(--dp-c-gray-2);
+  margin-bottom: 0.6rem;
+}
+.cvx-axis span:nth-child(2) { text-align: center; }
+.cvx-note {
+  font-size: var(--fs-12);
+  color: var(--dp-c-gray-2);
+  border-top: 1px solid var(--dp-c-gray-border);
+  padding-top: 0.6rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .convexity-gauge { padding: 1rem 1.1rem 0.85rem; }
+  .cvx-signals { grid-template-columns: 1fr; gap: 0.5rem; }
+  .cvx-label { font-size: var(--fs-20); }
+}
