@@ -582,10 +582,12 @@
   .data-snapshot { flex-direction: column; }
 }
 
-/* ── Rate Convexity Regime gauge ─────────────────────────────────────────────
-   Live tracker baked by scripts/update-convexity.py, refreshed by
-   assets/convexity.js. Three regime states drive the accent colour. */
-.convexity-gauge {
+/* ── Regime gauges (rate convexity + gold) ───────────────────────────────────
+   Live trackers baked by scripts/update-convexity.py / update-gold-regime.py,
+   refreshed by assets/convexity.js / gold-regime.js. Both share this layout and
+   the .cvx-* element classes; three regime states drive the accent colour. */
+.convexity-gauge,
+.gold-gauge {
   --cvx: #d97706;                 /* default: transition / amber */
   --cvx-soft: rgba(217, 119, 6, 0.08);
   border: 1px solid var(--dp-c-gray-border);
@@ -596,9 +598,12 @@
   margin: 0 0 2.25rem;
   font-family: var(--ff-sans);
 }
-.convexity-gauge--positive   { --cvx: #16a34a; --cvx-soft: rgba(22, 163, 74, 0.08); }
-.convexity-gauge--negative   { --cvx: #dc2626; --cvx-soft: rgba(220, 38, 38, 0.08); }
-.convexity-gauge--transition { --cvx: #d97706; --cvx-soft: rgba(217, 119, 6, 0.08); }
+.convexity-gauge--positive,
+.gold-gauge--positive   { --cvx: #16a34a; --cvx-soft: rgba(22, 163, 74, 0.08); }
+.convexity-gauge--negative,
+.gold-gauge--negative   { --cvx: #dc2626; --cvx-soft: rgba(220, 38, 38, 0.08); }
+.convexity-gauge--transition,
+.gold-gauge--transition { --cvx: #d97706; --cvx-soft: rgba(217, 119, 6, 0.08); }
 
 .cvx-head {
   display: flex;
@@ -695,7 +700,8 @@
 }
 
 @media (max-width: 640px) {
-  .convexity-gauge { padding: 1rem 1.1rem 0.85rem; }
+  .convexity-gauge,
+  .gold-gauge { padding: 1rem 1.1rem 0.85rem; }
   .cvx-signals { grid-template-columns: 1fr; gap: 0.5rem; }
   .cvx-label { font-size: var(--fs-20); }
 }

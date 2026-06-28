@@ -13,6 +13,14 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### June 28, 2026 · Gold regime tracker + Macro article
+
+- **New article** [gold-regime.html](../publish/analyses/gold-regime.html) (`Macro` section): why gold's direction is set by real rates and the dollar (both inverse), and when a 23%-off-the-high correction becomes a buy.
+- **New live tracker**, companion to the convexity gauge, same two-layer architecture: composite `[-1,+1]` from `^TNX` (real-rate proxy, inverted, 0.30), `DX-Y.NYB` (DXY, inverted, 0.30), `GC=F` (gold trend, the tape, 0.40). Bake [scripts/update-gold-regime.py](../scripts/update-gold-regime.py) + client refresh [assets/gold-regime.js](../assets/gold-regime.js); markers `<!-- GOLD:START/END -->`; [build.js](../build.js) attaches the script on `class="gold-gauge"`.
+- **CSS reuse**: [article.css](../publish/styles/article.css) regime-gauge base + colour modifiers generalised to `.convexity-gauge, .gold-gauge`; both share the `.cvx-*` element classes (no duplication).
+- **First bake**: NEGATIVE -0.32 (gold -6.4%/3mo, dollar firming, yields flat). Sparkline crosses green-to-red around early May. Spec: [Gold regime tracker](gold-regime.md).
+- **Wiki**: new [gold-regime.md](gold-regime.md); pointers in [index.md](index.md), [ops.md](ops.md). Build: 28 pages, 0 warnings.
+
 ### June 28, 2026 · Rate convexity tracker + Macro article
 
 - **New article** [rate-convexity.html](../publish/analyses/rate-convexity.html) (`Macro` section, featured card): why US rate convexity is the dominant factor for HK financials, the market is ~40% financials and the HKD is pegged to the USD, so the Fed sets the rate regime for half the Hang Seng.

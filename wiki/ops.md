@@ -44,6 +44,16 @@ python3 scripts/update-convexity.py && node build.js
 
 [scripts/update-convexity.py](../scripts/update-convexity.py) re-fetches `^IRX`, `^TNX`, `^HSNF`, `^HSI`, recomputes the composite regime, and regenerates the block between the `<!-- CONVEXITY:START/END -->` markers (idempotent). Full spec, score formula, and regime mapping: [Convexity tracker](convexity-tracker.md).
 
+## Refresh the gold regime tracker
+
+The gold gauge on [gold-regime.html](../publish/analyses/gold-regime.html) is a **live widget** ([gold-regime.js](../assets/gold-regime.js)) backed by a build-time snapshot. Refresh before a deploy:
+
+```bash
+python3 scripts/update-gold-regime.py && node build.js
+```
+
+[scripts/update-gold-regime.py](../scripts/update-gold-regime.py) re-fetches `^TNX`, `DX-Y.NYB`, `GC=F`, recomputes the regime, and regenerates the block between the `<!-- GOLD:START/END -->` markers. Full spec: [Gold regime tracker](gold-regime.md).
+
 ## Publish an article
 
 Full procedure on [Editorial](editorial.md). In short: move `DRAFT/<slug>.html` to `publish/analyses/`, add the homepage card plus feed and sitemap entries, run `node build.js`, commit, push.
