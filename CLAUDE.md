@@ -32,6 +32,18 @@ Every article must have:
 - Article body with at least one internal cross-reference
 - No orphaned articles: if it stands alone with zero inbound/outbound links, it fails the review
 
+### contextLine · Length Rule
+
+**One line, ~50 chars max.** Two sentences overflow the featured card and get truncated with "…". Write one crisp insight with no period-space-sentence chaining.
+
+✅ `"42% of market cap in net cash. Yield at 7.7%."` — fits
+✅ `"Economic growth is not shareholder returns"` — fits
+❌ `"Net cash covers 42% of market cap. The yield is 7.7% while you wait."` — truncated
+
+**Test:** paste the value into a 50-char ruler. If it wraps, shorten.
+
+---
+
 ### Card Layout: Title + Context (Never Title Twice)
 
 **Rule:** Homepage cards display title (white) + context (grey). The grey text is NEVER the title repeated.

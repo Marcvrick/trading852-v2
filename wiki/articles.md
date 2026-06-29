@@ -27,6 +27,7 @@ Drafts live at [publish/drafts/](../publish/drafts/). They are built into `dist/
 
 | File | Ticker | Title | Date |
 |---|---|---|---|
+| [publish/analyses/1361-361degrees.html](../publish/analyses/1361-361degrees.html) | 1361.HK | Five Years of +17% Growth. EV/EBIT at 2.26×. ANTA Is at 20×. | 2026-06-29 |
 | [publish/analyses/gold-regime.html](../publish/analyses/gold-regime.html) | - | Gold: When a 23% Correction Becomes a Buy, live tracker (see [gold-regime](gold-regime.md)) | 2026-06-28 |
 | [publish/analyses/rate-convexity.html](../publish/analyses/rate-convexity.html) | - | Rate Convexity: The Hidden Factor Behind Every HK Financial, live tracker (see [convexity-tracker](convexity-tracker.md)) | 2026-06-28 |
 | [publish/analyses/hong-kong-discount-cheap-two-ways.html](../publish/analyses/hong-kong-discount-cheap-two-ways.html) | - | Cheap Is a Question, Not an Answer | 2026-06-21 |

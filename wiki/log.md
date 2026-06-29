@@ -13,6 +13,18 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### June 29, 2026 · 361 Degrees (1361.HK) + publishing rules hardened
+
+**New article** [1361-361degrees.html](../publish/analyses/1361-361degrees.html) (`Consumer Discretionary`): CONVICTION. Five years of +17% revenue CAGR, 41.5% gross margins unchanged three years running, RMB 3.78B net cash (42% of market cap). EV/EBIT at 2.26× vs ANTA at 20×. Share placement compressed the multiple; earnings line did not move. Nav chain: ← Midea (0300, Jun 2) · no Next yet.
+
+**Rules confirmed and hardened this session:**
+
+- **v1 repo (`Marcvrick/trading852.com`) is archived and retired.** Never commit to it. Always use `Trading852-v2` / `Marcvrick/trading852-v2`. The v1 push attempt (403 error) confirmed this — v1 is read-only.
+- **contextLine: one line, ~50 chars max.** Two sentences overflow the featured card and get truncated with "…". The rule: one crisp insight, no period-space-sentence chaining. Test: paste into a ~50-char ruler; if it wraps, shorten. Examples that work: `"Economic growth is not shareholder returns"`, `"42% of market cap in net cash. Yield at 7.7%."` Examples that don't: `"Net cash covers 42% of market cap. The yield is 7.7% while you wait."` (two full sentences → truncated in card).
+- **contextLine must not repeat the ogTitle concept.** If ogTitle leads with EV/EBIT, contextLine must not mention EV/EBIT. Use a different frame: balance sheet, yield, market perception, macro angle.
+- **Article nav chain follows pubDate order.** When publishing a new article, the `← Previous` link must point to the article with the most recent pubDate before this one — not the thematically closest article. Check `wiki/articles.md` published list (sorted newest-first) to identify the correct predecessor. Update the predecessor's nav to add `Next →` pointing to the new article.
+- **`title` field (HTML `<title>` tag):** keep to ~50-60 chars, pattern `"Company (TICKER.HK) Stock Analysis: [short tension]"`. The `ogTitle` carries the full Trading852 tension formula; `title` is for SEO.
+
 ### June 28, 2026 · Gold regime tracker + Macro article
 
 - **New article** [gold-regime.html](../publish/analyses/gold-regime.html) (`Macro` section): why gold's direction is set by real rates and the dollar (both inverse), and when a 23%-off-the-high correction becomes a buy.
