@@ -131,7 +131,7 @@
 
         <div id="spy-live-note" style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:0.75rem;">Live &middot; refreshes from Yahoo Finance each time this page loads.</div>
       </div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+      <script src="/static/chart.umd.js"></script>
       <script>
       (function () {
         "use strict";
@@ -261,14 +261,15 @@
             tEl.textContent = (rem <= 1 ? 'DECISION TOMORROW' : 'SIGNAL UPDATE') + ' · ' + ds + (sn ? ' (' + sn + ')' : ''); tEl.style.color = bc;
             var html = 'The post-peak volume signal becomes final in <strong style="color:rgba(255,255,255,0.95)">' + rem + '</strong> trading session' + (rem !== 1 ? 's' : '') + '. ';
             html += a.sessions + ' of ' + POST_PEAK_N + ' sessions counted since the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + '). ';
-            if (v && a.ratio != null) html += 'Provisional ratio: <strong style="color:' + v[1] + '">' + a.ratio.toFixed(2) + '×</strong> — ' + v[0] + '.';
+            if (v && a.ratio != null) html += 'Provisional ratio: <strong style="color:' + v[1] + '">' + a.ratio.toFixed(2) + '×</strong> — volume rules out distribution.';
             bEl.innerHTML = html;
           } else {
             var v = a.ratio != null ? verdict(a.ratio) : ['insufficient data', 'rgba(255,255,255,0.5)'];
             el.style.borderLeftColor = v[1];
             var sn = v[0].indexOf('distribution') >= 0 ? 'Distribution' : v[0].indexOf('breakout') >= 0 ? (price >= LEVEL ? 'Breakout' : 'Consolidation') : 'Watch zone';
             tEl.textContent = 'SIGNAL FINALIZED · ' + ds + ' · ' + sn; tEl.style.color = v[1];
-            bEl.innerHTML = 'Post-peak volume signal is final. Ratio: <strong style="color:' + v[1] + '">' + (a.ratio != null ? a.ratio.toFixed(2) : '?') + '×</strong> over ' + POST_PEAK_N + ' sessions following the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + ') — <strong style="color:' + v[1] + '">' + v[0] + '</strong>. Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.';
+            var verdictLabel = v[0].indexOf('distribution') >= 0 ? v[0] : (price >= LEVEL ? 'breakout confirmed' : 'consolidation (no distribution)');
+            bEl.innerHTML = 'Post-peak volume signal is final. Ratio: <strong style="color:' + v[1] + '">' + (a.ratio != null ? a.ratio.toFixed(2) : '?') + '×</strong> over ' + POST_PEAK_N + ' sessions following the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + ') — <strong style="color:' + v[1] + '">' + verdictLabel + '</strong>. Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.';
           }
         }
         function renderPriceChart(timestamps, allCloses, hh) {
