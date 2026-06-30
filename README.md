@@ -23,16 +23,18 @@ node build.js
 
 Or double-click `preview-trading852.command` to build and preview on http://localhost:8799.
 
-## Documentation: the wiki
+## Quick Links — Wiki Navigation
 
-Full docs moved to [wiki/](wiki/) on Jun 24 2026. Start at [wiki/index.md](wiki/index.md).
+Full documentation lives in [wiki/](wiki/). Pick your entry point:
 
-- [Build pipeline](wiki/build-pipeline.md): build.js, source format, CONFIG, layouts, Vercel, site plumbing
-- [Editorial](wiki/editorial.md): DRAFT-first workflow, hard voice rules, what to never write, pre-publish checklist
-- [SEO](wiki/seo/index.md): the mandatory ticker-analysis pattern + per-page checklist
-- [Scorecard](wiki/scorecard.md): the auto-generated live performance tracker
-- [Ops](wiki/ops.md): runbooks for build, preview, deploy, and the live HSI quote
-- [Articles](wiki/articles.md): published list + drafts pending a trigger
-- [Log](wiki/log.md): changelog
+**I want to...**
+- **Publish an article** → [Editorial](wiki/editorial.md) (DRAFT-first workflow, voice rules, pre-publish checklist)
+- **Optimize for SEO** → [SEO](wiki/seo/index.md) (ticker-analysis pattern, per-page checklist)
+- **Understand how the site builds** → [Build Pipeline](wiki/build-pipeline.md) (build.js, source format, CONFIG, layouts)
+- **Deploy, preview, or troubleshoot** → [Ops](wiki/ops.md) (runbooks: build, preview, deploy, live HSI quote)
+- **Check article status** → [Articles](wiki/articles.md) (published list + drafts waiting for trigger)
+- **Track site changes** → [Log](wiki/log.md) (changelog, past updates)
+- **Learn the style** → [Style Guide](wiki/style-guide.md) (canonical voice, tone, formatting rules)
+- **Watch performance live** → [Scorecard](wiki/scorecard.md) (auto-generated performance tracker)
 
-The canonical article style guide is [wiki/style-guide.md](wiki/style-guide.md); it is not duplicated in the wiki.
+**Getting started?** Begin at [wiki/index.md](wiki/index.md).
