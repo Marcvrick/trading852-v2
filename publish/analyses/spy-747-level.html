@@ -266,10 +266,11 @@
           } else {
             var v = a.ratio != null ? verdict(a.ratio) : ['insufficient data', 'rgba(255,255,255,0.5)'];
             el.style.borderLeftColor = v[1];
-            var sn = v[0].indexOf('distribution') >= 0 ? 'Distribution' : v[0].indexOf('breakout') >= 0 ? (price >= LEVEL ? 'Breakout' : 'Consolidation') : 'Watch zone';
+            var sn = v[0].indexOf('distribution') >= 0 ? 'Distribution' : v[0].indexOf('breakout') >= 0 ? 'No distribution' : 'Watch zone';
             tEl.textContent = 'SIGNAL FINALIZED · ' + ds + ' · ' + sn; tEl.style.color = v[1];
-            var verdictLabel = v[0].indexOf('distribution') >= 0 ? v[0] : (price >= LEVEL ? 'breakout confirmed' : 'consolidation (no distribution)');
-            bEl.innerHTML = 'Post-peak volume signal is final. Ratio: <strong style="color:' + v[1] + '">' + (a.ratio != null ? a.ratio.toFixed(2) : '?') + '×</strong> over ' + POST_PEAK_N + ' sessions following the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + ') — <strong style="color:' + v[1] + '">' + verdictLabel + '</strong>. Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.';
+            var verdictLabel = v[0].indexOf('distribution') >= 0 ? v[0] : 'volume rules out distribution';
+            var pctAbove = ((price - LEVEL) / LEVEL * 100).toFixed(1);
+            bEl.innerHTML = 'Post-peak volume signal is final. Ratio: <strong style="color:' + v[1] + '">' + (a.ratio != null ? a.ratio.toFixed(2) : '?') + '×</strong> over ' + POST_PEAK_N + ' sessions following the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + ') — <strong style="color:' + v[1] + '">' + verdictLabel + '</strong>. The reading falls below the ≤1.24× threshold: no distribution on the exit from the cycle high. This rules out a confirmed top but does not confirm a breakout. Price sits ' + pctAbove + '% above $' + LEVEL + ' and remains within the buffer zone. Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.';
           }
         }
         function renderPriceChart(timestamps, allCloses, hh) {
