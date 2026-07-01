@@ -437,7 +437,114 @@
             })
             .catch(function () { /* keep the static May-29 snapshot already in the DOM */ });
         }
-        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+        function renderWeeklyChart(ts, opens, highs, lows, closes) {
+          var canvas = document.getElementById('spy-candles');
+          if (!canvas || !canvas.getContext) return;
+          var W = canvas.offsetWidth, H = canvas.offsetHeight;
+          if (!W || !H) return;
+          var dpr = window.devicePixelRatio || 1;
+          canvas.width = W * dpr; canvas.height = H * dpr;
+          var ctx = canvas.getContext('2d');
+          ctx.scale(dpr, dpr);
+
+          // Build bars starting from Jan 2020
+          var bars = [], cutoff = Date.UTC(2020, 0, 1) / 1000;
+          for (var i = 0; i < ts.length; i++) {
+            if (ts[i] < cutoff) continue;
+            var o = opens[i], h = highs[i], l = lows[i], c = closes[i];
+            if (o == null || h == null || l == null || c == null) continue;
+            bars.push({ t: ts[i], o: o, h: h, l: l, c: c });
+          }
+          if (bars.length < 2) return;
+
+          var mT = 14, mR = 60, mB = 26, mL = 6;
+          var cW = W - mL - mR, cH = H - mT - mB;
+
+          // Price range
+          var minP = Infinity, maxP = -Infinity;
+          for (var i = 0; i < bars.length; i++) {
+            if (bars[i].l < minP) minP = bars[i].l;
+            if (bars[i].h > maxP) maxP = bars[i].h;
+          }
+          var pad = (maxP - minP) * 0.04;
+          minP -= pad; maxP += pad;
+          function py(p) { return mT + (1 - (p - minP) / (maxP - minP)) * cH; }
+
+          // Background
+          ctx.fillStyle = '#131722';
+          ctx.fillRect(0, 0, W, H);
+
+          // Grid lines every $50
+          var gStep = 50, gStart = Math.ceil(minP / gStep) * gStep;
+          ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; ctx.setLineDash([]);
+          for (var p = gStart; p <= maxP; p += gStep) {
+            var gy = py(p);
+            ctx.beginPath(); ctx.moveTo(mL, gy); ctx.lineTo(W - mR, gy); ctx.stroke();
+          }
+
+          // Structural levels
+          var lvls = [{ price: 477.58, label: '477.58' }, { price: LEVEL, label: String(LEVEL) }];
+          lvls.forEach(function(lv) {
+            if (lv.price < minP || lv.price > maxP) return;
+            var ly = py(lv.price);
+            ctx.setLineDash([4, 5]); ctx.strokeStyle = 'rgba(249,168,37,0.75)'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(mL, ly); ctx.lineTo(W - mR, ly); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = 'rgba(249,168,37,0.9)';
+            ctx.font = "600 11px 'Space Grotesk',sans-serif"; ctx.textAlign = 'left';
+            ctx.fillText(lv.label, W - mR + 5, ly + 4);
+          });
+
+          // Candlesticks
+          var n = bars.length, cand = cW / n;
+          var bw = Math.max(cand * 0.65, 1), gp = (cand - bw) / 2;
+          ctx.setLineDash([]);
+          for (var i = 0; i < n; i++) {
+            var b = bars[i], x = mL + i * cand, cx = x + cand / 2;
+            var yO = py(b.o), yH = py(b.h), yL = py(b.l), yC = py(b.c);
+            var col = b.c >= b.o ? '#26a69a' : '#ef5350';
+            ctx.strokeStyle = col; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(cx, yH); ctx.lineTo(cx, yL); ctx.stroke();
+            ctx.fillStyle = col;
+            ctx.fillRect(x + gp, Math.min(yO, yC), bw, Math.max(Math.abs(yC - yO), 1.5));
+          }
+
+          // X-axis labels (Jan → year, Jul → "Jul")
+          ctx.setLineDash([]);
+          ctx.fillStyle = 'rgba(255,255,255,0.38)';
+          ctx.font = "11px 'Space Grotesk',sans-serif"; ctx.textAlign = 'center';
+          var lastYr = -1, lastJul = -1;
+          for (var i = 0; i < bars.length; i++) {
+            var d = new Date(bars[i].t * 1000), yr = d.getUTCFullYear(), mo = d.getUTCMonth();
+            var lx = mL + (i + 0.5) * cand;
+            if (mo === 0 && yr !== lastYr) { ctx.fillText(String(yr), lx, H - 8); lastYr = yr; }
+            else if (mo === 6 && yr !== lastJul) { ctx.fillText('Jul', lx, H - 8); lastJul = yr; }
+          }
+
+          // Y-axis labels (skip if within 14px of a named level)
+          ctx.textAlign = 'left'; ctx.fillStyle = 'rgba(255,255,255,0.35)';
+          ctx.font = "11px 'Space Grotesk',sans-serif";
+          for (var p = gStart; p <= maxP; p += gStep) {
+            var ly2 = py(p);
+            if (ly2 < mT + 8 || ly2 > H - mB - 8) continue;
+            var tooClose = lvls.some(function(lv) { return lv.price >= minP && lv.price <= maxP && Math.abs(py(lv.price) - ly2) < 14; });
+            if (!tooClose) ctx.fillText(p.toFixed(2), W - mR + 5, ly2 + 4);
+          }
+        }
+
+        function bootCandles() {
+          var u = PROXY + encodeURIComponent(CHART + "SPY?range=7y&interval=1wk");
+          fetch(u, { cache: "no-store" })
+            .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+            .then(function(j) {
+              var res = j && j.chart && j.chart.result && j.chart.result[0]; if (!res) throw 0;
+              var q = res.indicators && res.indicators.quote && res.indicators.quote[0] || {};
+              renderWeeklyChart(res.timestamp||[], q.open||[], q.high||[], q.low||[], q.close||[]);
+            })
+            .catch(function() {});
+        }
+
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function() { boot(); bootCandles(); }); else { boot(); bootCandles(); }
       })();
       </script>
 
@@ -481,10 +588,10 @@
       <p>SPY closed Friday at $737.62. The next level is $747.00.</p>
 
       <figure class="article-chart" style="margin-bottom: 2.5rem;">
-        <a href="images/spy-747-chart-202605.jpg" target="_blank" rel="noopener" title="Open full size">
-          <img src="images/spy-747-chart-202605.jpg" alt="SPY monthly chart 2020–2026 showing structural levels at $477.58 and $747. Five-month consolidation below $747 followed by breakout candle." width="1280" height="416" loading="lazy" decoding="async" />
-        </a>
-        <figcaption>SPY monthly, 2020–2026. Dotted lines mark the two structural levels: $477.58 (confirmed support, April 2025) and $747 (current approach). Source: TradingView. <a href="images/spy-747-chart-202605.jpg" target="_blank" rel="noopener" style="color:var(--dp-c-gray-2);font-size:var(--fs-12);">View full size ↗</a></figcaption>
+        <div style="background:#131722;border-radius:8px;overflow:hidden;">
+          <canvas id="spy-candles" style="width:100%;height:240px;display:block;" role="img" aria-label="SPY weekly candlestick chart 2020–present. Structural levels at $477.58 and $747 marked.">SPY weekly chart, 2020–present. Structural levels at $477.58 and $747 marked.</canvas>
+        </div>
+        <figcaption>SPY weekly, 2020–present. Dotted lines: $477.58 (confirmed support, April 2025) and $747 (current level). Source: Yahoo Finance, live.</figcaption>
       </figure>
 
       <!-- Section 1+2 merged: How the levels are built and what they have done -->
