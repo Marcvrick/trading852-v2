@@ -5,8 +5,16 @@
     <link>https://trading852.com</link>
     <description>Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.</description>
     <language>en</language>
-    <lastBuildDate>Sun, 21 Jun 2026 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 02 Jul 2026 00:00:00 +0800</lastBuildDate>
     <atom:link href="https://trading852.com/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>Gold: When a 23% Correction Becomes a Buy</title>
+      <link>https://trading852.com/analyses/gold-regime</link>
+      <guid>https://trading852.com/analyses/gold-regime</guid>
+      <pubDate>Sat, 28 Jun 2026 00:00:00 +0800</pubDate>
+      <description>Gold fell about 26% from its January high; the median Hong Kong gold miner fell roughly twice as far. A live regime tracker scores the two forces that move gold, real rates and the dollar, plus the tape, to separate the dip from the falling knife. The piece then maps every liquid HK-listed gold miner by drawdown and by a fundamentals score, and lays out why the Hong Kong producers offer more torque to a gold recovery than the Western majors, without leaning on any single name.</description>
+    </item>
 
     <item>
       <title>Cheap Is a Question, Not an Answer</title>

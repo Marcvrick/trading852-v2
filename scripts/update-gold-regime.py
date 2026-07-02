@@ -85,7 +85,7 @@ def regime_of(comp):
     if comp >= POS_TH:
         return "positive", "POSITIVE", "Accumulation regime"
     if comp <= NEG_TH:
-        return "negative", "NEGATIVE", "Headwind &mdash; correction in force"
+        return "negative", "NEGATIVE", "Headwind: correction in force"
     return "transition", "TRANSITION", "Drivers and price disagree"
 
 
