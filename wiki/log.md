@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-27
+updated: 2026-07-10
 ---
 
 # Trading852 v2, Changelog
@@ -233,6 +233,13 @@ This section supersedes all prior instructions on writing style. It is the sourc
 - Editorial workflow (style guide, 7-section structure, scorecard, drafts, published articles, "what to never write", SEO checklist) carried over from the v1 README.
 - Triggered by the `hsi-35-year-trendline` broken image (image folder was never migrated from v1 to v2 because the convention was undocumented).
 
+
+### Jul 10, 2026: PENDING — usd-strength-hk-transmission DRAFT needs Aggregate Balance refresh on Jul 14
+
+- `DRAFT/usd-strength-hk-transmission.html` cites the Aggregate Balance at roughly HK$54 billion (HK$53,997M), the latest confirmed HKMA figure as of end-May 2026. HKMA's next Currency Board Account release, covering June 2026, is due **July 14, 2026** and was not yet published as of this entry.
+- **Action when it lands:** re-check the figure at the HKMA press release under `news-and-media/press-releases/2026/07/` (Currency Board Account / Aggregate Balance), update the "Why Hong Kong's banks tighten when the Fed does" section of the draft with the confirmed June number, and reconfirm HIBOR direction still matches the article's thesis before this article is moved to `publish/analyses/`.
+- A session-only cron reminder was also set for Jul 14; this log entry is the durable fallback in case that session has since ended.
+- **Update, same day:** Dany reviewed the draft (title changed to "The 1983 Peg Still Sets Hong Kong Stock Prices", DXY chart swapped for the real weekly chart, DXY paragraph rewritten to match it) and gave explicit go to publish despite the pending May-vs-June Aggregate Balance gap. Published to `publish/analyses/usd-strength-hk-transmission.html`. **Action still open:** when the June Currency Board Account lands Jul 14, re-check the HK$54B figure and HIBOR direction against the live article and patch if materially different.
 
 ---
 [Wiki index](index.md)
