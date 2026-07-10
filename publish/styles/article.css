@@ -582,12 +582,14 @@
   .data-snapshot { flex-direction: column; }
 }
 
-/* ── Regime gauges (rate convexity + gold) ───────────────────────────────────
-   Live trackers baked by scripts/update-convexity.py / update-gold-regime.py,
-   refreshed by assets/convexity.js / gold-regime.js. Both share this layout and
-   the .cvx-* element classes; three regime states drive the accent colour. */
+/* ── Regime gauges (rate convexity + gold + HKD/USD swap) ───────────────────
+   Live trackers baked by scripts/update-convexity.py / update-gold-regime.py /
+   update-hkdusd-swap.py, refreshed by assets/convexity.js / gold-regime.js /
+   hkdusd-swap.js. All three share this layout and the .cvx-* element classes;
+   three regime states drive the accent colour. */
 .convexity-gauge,
-.gold-gauge {
+.gold-gauge,
+.hkdusd-gauge {
   --cvx: #d97706;                 /* default: transition / amber */
   --cvx-soft: rgba(217, 119, 6, 0.08);
   border: 1px solid var(--dp-c-gray-border);
@@ -599,11 +601,14 @@
   font-family: var(--ff-sans);
 }
 .convexity-gauge--positive,
-.gold-gauge--positive   { --cvx: #16a34a; --cvx-soft: rgba(22, 163, 74, 0.08); }
+.gold-gauge--positive,
+.hkdusd-gauge--positive   { --cvx: #16a34a; --cvx-soft: rgba(22, 163, 74, 0.08); }
 .convexity-gauge--negative,
-.gold-gauge--negative   { --cvx: #dc2626; --cvx-soft: rgba(220, 38, 38, 0.08); }
+.gold-gauge--negative,
+.hkdusd-gauge--negative   { --cvx: #dc2626; --cvx-soft: rgba(220, 38, 38, 0.08); }
 .convexity-gauge--transition,
-.gold-gauge--transition { --cvx: #d97706; --cvx-soft: rgba(217, 119, 6, 0.08); }
+.gold-gauge--transition,
+.hkdusd-gauge--transition { --cvx: #d97706; --cvx-soft: rgba(217, 119, 6, 0.08); }
 
 .cvx-head {
   display: flex;
@@ -701,7 +706,8 @@
 
 @media (max-width: 640px) {
   .convexity-gauge,
-  .gold-gauge { padding: 1rem 1.1rem 0.85rem; }
+  .gold-gauge,
+  .hkdusd-gauge { padding: 1rem 1.1rem 0.85rem; }
   .cvx-signals { grid-template-columns: 1fr; gap: 0.5rem; }
   .cvx-label { font-size: var(--fs-20); }
 }

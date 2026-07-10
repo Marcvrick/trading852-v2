@@ -1,0 +1,15 @@
+{
+  "asof": "2026-07-08",
+  "regime": "USD FAVORABLE",
+  "composite": 0.487,
+  "s_band": 0.776,
+  "s_rate": 0.222,
+  "s_dxy": 0.3668,
+  "spot": 7.838799953460693,
+  "irx": 3.7230000495910645,
+  "dxy": 101.05000305175781,
+  "dirx_3mo": 0.111,
+  "dxy_pct_3mo": 1.8341,
+  "streak_sessions": 42,
+  "since": "2026-04-23"
+}

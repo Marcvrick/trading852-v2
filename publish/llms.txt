@@ -1,0 +1,44 @@
+# Trading852: HK Stock Analysis & Market Conviction
+
+## Overview
+Trading852 is a conviction-led publication covering Hong Kong equities and broader market theses. Static site with research-grade fundamental analysis, technical frameworks, and thesis-driven commentary on HKEX listings.
+
+## Content Structure
+
+### Analysis Archives
+- **Published Articles**: Full conviction analyses indexed by sector, ticker, and publication date
+- **Market Theses**: Broader HK market regime analyses (economic drivers, policy impacts, flow dynamics)
+- **Stock Research**: Fundamental scoring (FinRatios v7 framework), valuation, growth, capital efficiency
+- **Drafts**: In-progress analyses waiting for trigger conditions
+
+### Available Resources
+- **Style Guide**: Editorial voice, tone, formatting conventions for all content
+- **SEO Methodologies**: Ticker-analysis patterns, per-page optimization checklist
+- **Performance Scorecard**: Live tracker of published conviction outcomes
+
+## Access Points
+
+- **Homepage**: trading852.com — recent analyses + featured convictions
+- **Articles List**: `/publish/articles.md` — searchable index of all published + draft pieces
+- **Editorial Standards**: `/wiki/editorial.md` — submission checklist, voice rules
+- **Full Wiki**: `/wiki/index.md` — complete documentation
+
+## Notable Patterns
+
+- **Conviction = Thesis + Frame + Data**: Every analysis leads with economic/market frame, not price action
+- **HK Market Regime**: Mean-reverting, policy-driven; swing not hold; exhaustion ladder for sizing
+- **Multi-horizon**: Intraday tactical → quarterly swing → seasonal themes
+- **Cross-reference**: Articles link internally by related thesis, sector, or ticker
+
+## Typical Reader
+
+- HK equity traders and investors (retail → institutional)
+- Market analysts seeking conviction-driven thesis research
+- Quantitative researchers validating backtest edge against published POV
+
+## Note for LLM Access
+
+This is a static site (no API). Content is published as HTML + Markdown in the git repository. Crawlers may access:
+- Published analyses at `/analyses/*`
+- Wiki documentation at `/wiki/*`
+- Feed at `/feed.xml`

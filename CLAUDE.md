@@ -1,5 +1,19 @@
 # CLAUDE.md – Trading852-v2
 
+## ⚠️ READ BEFORE WRITING OR PUBLISHING ANY ARTICLE
+
+Before drafting, editing, or publishing any Trading852 article, Claude reads, in this order:
+
+1. [wiki/editorial.md](wiki/editorial.md) — workflow (DRAFT-first, never publish directly), hard rules digest
+2. [wiki/style-guide.md](wiki/style-guide.md) — canonical structure, jargon pass, sentence-length/number-density rules
+3. `/Users/mc/Library/Mobile Documents/com~apple~CloudDocs/MarcOS/Voix Marc/VOIX-Marc.md` — voice cadence, anti-AI-slop rules (em dash ban, etc.), applies alongside style-guide.md
+
+**Non-negotiable:** articles are drafted into `DRAFT/`, never written or committed straight to `publish/analyses/`. Dany reviews the DRAFT file; only on his explicit go does Claude move it to `publish/analyses/`, update the homepage/feed/sitemap, and commit. Skipping this sequence is the single most common failure mode in this repo and has shipped jargon-heavy, bullet-listed, unreviewed articles before (2026-07-10 incident, USD-HK transmission draft).
+
+This section is checked first, every session, regardless of what task in this repo is requested.
+
+---
+
 ## Publishing Rules
 
 ### ⚠️ MANDATORY: Internal Linking on Every Article

@@ -160,6 +160,7 @@ function assemblePage(config, jsonld, content) {
   if (content.includes('class="hsi-quote"')) extraScripts.push('<script src="/assets/hsi-quote.js" defer></script>');
   if (content.includes('class="convexity-gauge')) extraScripts.push('<script src="/assets/convexity.js" defer></script>');
   if (content.includes('class="gold-gauge')) extraScripts.push('<script src="/assets/gold-regime.js" defer></script>');
+  if (content.includes('class="hkdusd-gauge')) extraScripts.push('<script src="/assets/hkdusd-swap.js" defer></script>');
   const extraScript = extraScripts.length ? '\n  ' + extraScripts.join('\n  ') : '';
 
   return [
