@@ -13,6 +13,54 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### July 2, 2026 · IG carousel standard locked — teaser template pinned
+
+Validated on the 361 Degrees (1361.HK) carousel. First generation (8 slides: Cover, Anomaly,
+Snapshot, Why It Fell, Peer Valuation, Scenarios, Risks, Closer) **dumped the whole thesis** (peer
+multiples, scenarios, a "BUY") and used HK-flag red `#DE2910` as the workhorse accent — rejected.
+Chosen version = v1 design direction + v2 narrative/format.
+
+**Canonical template pinned:** `Trading852-v2/Instagram/Trading852 Carousel (standalone)-2.html`.
+
+**Standard codified in [instagram.md](instagram.md) → "Carousel IG — format standard":**
+- **Teaser, not summary. 6 slides, mono-idea each, never more; keep it as tight as the story allows.**
+  Arc: Cover → The Business (positive) → The Turn (the price) → The Twist → The Question → Closer.
+  Nothing resolves on the slides; the answer lives on the site.
+- **Never on a slide:** verdict/reco, the *why* (catalyst explained), full thesis, valuation
+  multiples as argument, price targets, peer/scenario/risk tables. Test: if you can read the
+  carousel and know the conclusion without opening the article, it failed.
+- **Exact specs (from the template):** portrait 1080×1350, canvas `#0D1117`, Newsreader serif +
+  IBM Plex Mono, text `#EDE8DB` / secondary `#8B9BAE`, **accent = orange `#F5A623`**, HK red
+  `#DE2910` demoted to a rare non-data touch (never near a price/%/ticker). Footer ticker + wordmark
+  + index `01/06`; dot-grid + ghost-numeral mood.
+- CTA standardized everywhere: **"Analyse complète : lien dans la bio."** (colon, no em-dash).
+
+Note: earlier target was "4 slides max"; the approved narrative arc landed at 6 mono-idea slides —
+recorded as the standard. Tighten toward fewer if a title's story allows it.
+
+**Generation system (auto JPEG, like the Pharmacie Charnal pipeline):**
+- `Instagram/generate-carousel.command <html> [slug] [--2x]` — renders each `<section>` via
+  `html2ig.js` (Puppeteer/Chrome for Testing) then `sips` → JPEG. **One folder per project** at
+  `Instagram/IG slides/{slug}/` (HTML + JPEGs + source PNGs in `_png/`). Default output **1080×1350**;
+  `--2x` = 2160×2700 retina. Verified end-to-end on `1361-361-degrees` (6 slides, faithful render).
+- New skill **`/ig-852`** (`~/.claude/skills/ig-852/`) automates the whole flow: source the article →
+  write the 6 teaser slides → fill the template → generate JPEGs → verify. Rules source of truth =
+  this file (instagram.md → §"Génération des JPEG").
+
+---
+
+### July 1, 2026 · SPY 747 signal text — no overstatement on finalized read
+
+Signal finalized at 0.84× (below the ≤1.24× clean-breakout threshold). Tightened the JS verdict copy to avoid overstating the read:
+
+- Header tag: `Breakout` → `No distribution`
+- Bold label: `breakout confirmed` → `volume rules out distribution`
+- Prose rewritten: "This rules out a confirmed top but does not confirm a breakout. Price sits X% above $747 and remains within the buffer zone." (`X%` is dynamic from live price.)
+
+Rationale: volume rules out distribution — it does not distinguish between a clean break and continuation after consolidation. Price still close to $747 warrants caution; calling it "breakout confirmed" overstates the signal's scope.
+
+---
+
 ### June 29, 2026 · 361 Degrees (1361.HK) + publishing rules hardened
 
 **New article** [1361-361degrees.html](../publish/analyses/1361-361degrees.html) (`Consumer Discretionary`): CONVICTION. Five years of +17% revenue CAGR, 41.5% gross margins unchanged three years running, RMB 3.78B net cash (42% of market cap). EV/EBIT at 2.26× vs ANTA at 20×. Share placement compressed the multiple; earnings line did not move. Nav chain: ← Midea (0300, Jun 2) · no Next yet.

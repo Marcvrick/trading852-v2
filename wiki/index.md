@@ -19,6 +19,7 @@ Authored pages in [publish/](../publish/) are assembled into `dist/` by [build.j
 ## Pages
 
 - [Style guide](style-guide.md): the single source of truth for article voice, structure, and the 7-section template
+- [Design convention](design-convention.md): visual style, typography, full color palette (brand gradient, semantic pos/neg, gauge accents), the HK-flag-red small-touch rule
 - [Editorial](editorial.md): DRAFT-first workflow, hard voice rules, what to never write, pre-publish checklist
 - [Build pipeline](build-pipeline.md): build.js, source format, CONFIG, layouts, folder structure, Vercel, site plumbing
 - [SEO](seo/index.md): sub-hub, the mandatory ticker-analysis pattern + strategy, structure, calendar, competitors, roadmap, audit
@@ -27,6 +28,7 @@ Authored pages in [publish/](../publish/) are assembled into `dist/` by [build.j
 - [Gold regime tracker](gold-regime.md): the live gold regime gauge (real rates + dollar + trend), same architecture as the convexity tracker
 - [Ops](ops.md): runbooks for build, preview, deploy, and refreshing the live HSI quote
 - [Articles](articles.md): published list + drafts pending a price trigger
+- [Instagram](instagram.md): procédure complète post IG, palette, nomenclature, drop dans `IG post/`
 - [Log](log.md): changelog
 
 ## External reference
@@ -38,4 +40,4 @@ Authored pages in [publish/](../publish/) are assembled into `dist/` by [build.j
 Touch a thing, update its page. When work changes how the site is built, written, or deployed, the matching wiki page is updated in the same commit. The question to ask before reporting done: which page is now stale because of what I just did?
 
 ---
-Pages: [style-guide](style-guide.md) . [editorial](editorial.md) . [build-pipeline](build-pipeline.md) . [seo](seo/index.md) . [scorecard](scorecard.md) . [convexity-tracker](convexity-tracker.md) . [gold-regime](gold-regime.md) . [ops](ops.md) . [articles](articles.md) . [log](log.md)
+Pages: [style-guide](style-guide.md) . [design-convention](design-convention.md) . [editorial](editorial.md) . [build-pipeline](build-pipeline.md) . [seo](seo/index.md) . [scorecard](scorecard.md) . [convexity-tracker](convexity-tracker.md) . [gold-regime](gold-regime.md) . [ops](ops.md) . [articles](articles.md) . [instagram](instagram.md) . [log](log.md)
