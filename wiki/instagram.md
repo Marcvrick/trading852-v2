@@ -10,7 +10,7 @@ created: 2026-07-01
 
 **Compte :** @trading852
 **Dossier de drop :** `Trading852-v2/IG post/`
-**Last updated:** 2026-07-01
+**Last updated:** 2026-07-11
 
 ---
 
@@ -152,6 +152,27 @@ Référence : [[Curiosity & Intrigue in Storytelling]] (`Knowledge-base/Narrativ
 **Le rester court.** Le template retenu = **6 slides**, chacune mono-idée ; ne jamais dépasser 6,
 viser aussi serré que l'histoire le permet. Rien ne se résout sur les slides, la réponse est sur le site.
 
+### Plan d'abord — validation avant tout rendu (RÈGLE DURE, ajoutée 2026-07-11)
+
+**Aucun JPEG n'est généré à partir d'un plan non validé.** Avant de remplir le template ou de rendre
+quoi que ce soit, écrire un plan `.md` dans le dossier du projet : `IG slides/{slug}/PLAN-{slug}.md`.
+Dany le lit, corrige le texte et les données, valide. Le rendu ne démarre qu'après.
+
+Pourquoi : un carousel rendu se juge trop tard (JPEG déjà là, coûteux à refaire) et le vrai défaut
+n'est pas visuel, c'est le narratif. Le plan force à prouver le fil AVANT les pixels.
+
+Le plan contient :
+1. **Le fil conducteur** — une ligne par slide disant l'unique idée qu'elle ajoute et comment elle
+   passe le relais à la suivante. Si deux slides peuvent être interverties sans perte, l'arc n'est
+   pas construit.
+2. **Par slide (1-6)** : `Eyebrow` · `Titre (héro)` · `Sous-titre` · `Data` (chaque chiffre tagué de
+   sa source + statut : vérifié / de l'article / UNVERIFIED) · `Rôle` dans l'arc.
+3. **Test de révélation** — une ligne confirmant que le deck ne livre PAS la conclusion.
+4. Sur une réécriture : un tableau **ce-qui-change** (ancien titre → nouveau → raison).
+
+Plan de référence (forme validée) :
+`Instagram/IG slides/#16-usd-strength-hk-transmission/PLAN-usd-strength-hk-transmission.md`.
+
 **Arc du template (6 slides, la tension monte, rien ne se résout) :**
 1. **Cover** — l'accroche : une tension / le titre + ticker + tag secteur. Pas de chiffre-argument.
 2. **The Business** (narratif positif) — ce que la boîte fait bien, cadrage positif. Met en place le
@@ -215,6 +236,11 @@ accent orange, recadrage).
 ## Règles de rédaction
 
 - **Ton analytique, direct** — jamais de conditionnel mou ni de superlatif
+- **Voix neutre, jamais de foule anonyme** — ne jamais attribuer une position ou une croyance à un
+  groupe non identifié et non sondé : « most traders », « everyone waits for », « what the consensus
+  missed », « what the bears think », « nobody prices ». On ne lit pas leur avis, on ne parle pas
+  pour eux. Donner NOTRE lecture directement, ou le fait brut. (Ex. #14 slide 5 : « Most traders are
+  long half the index without knowing the regime » → « Half the Hang Seng turns on this regime. »)
 - **Pas de conseil financier** — pas de "acheter", "vendre", "position"
 - **CTA fixe :** "Analyse complète : lien dans la bio." (jamais "link in bio", jamais de tiret cadratin)
 - **Pas d'emojis dans le visuel** (ok dans la légende IG, pas dans le graphisme)

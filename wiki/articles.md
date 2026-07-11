@@ -4,7 +4,7 @@ tags: [trading852, wiki, articles]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-27
+updated: 2026-07-11
 ---
 
 # Trading852 v2, Articles
@@ -25,24 +25,28 @@ Drafts live at [publish/drafts/](../publish/drafts/). They are built into `dist/
 
 ## Published articles
 
-| File | Ticker | Title | Date |
-|---|---|---|---|
-| [publish/analyses/1361-361degrees.html](../publish/analyses/1361-361degrees.html) | 1361.HK | Five Years of +17% Growth. EV/EBIT at 2.26×. ANTA Is at 20×. | 2026-06-29 |
-| [publish/analyses/gold-regime.html](../publish/analyses/gold-regime.html) | - | Gold: When a 23% Correction Becomes a Buy, live tracker (see [gold-regime](gold-regime.md)) | 2026-06-28 |
-| [publish/analyses/rate-convexity.html](../publish/analyses/rate-convexity.html) | - | Rate Convexity: The Hidden Factor Behind Every HK Financial, live tracker (see [convexity-tracker](convexity-tracker.md)) | 2026-06-28 |
-| [publish/analyses/hong-kong-discount-cheap-two-ways.html](../publish/analyses/hong-kong-discount-cheap-two-ways.html) | - | Cheap Is a Question, Not an Answer | 2026-06-21 |
-| [publish/analyses/0300-midea.html](../publish/analyses/0300-midea.html) | 0300.HK | It Owns One of the World's Four Big Robot Makers. The Market Prices It as a Washing-Machine Company. | 2026-06-02 |
-| [publish/analyses/spy-747-level.html](../publish/analyses/spy-747-level.html) | SPY | The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One. | 2026-05-11 |
+**Issue numbers (`#`)** are stable IDs, assigned oldest-first: `#01` = inaugural (2026-04-11); same-date ties break by alphabetical slug. Future drafts reserve `#17` onward (see [DRAFT/](../DRAFT/)). The `#` is this catalog's ID only — it is never written into a published filename, because the filename is the live URL slug.
+
+| # | File | Ticker | Title | Date |
+|---|---|---|---|---|
+| #16 | [publish/analyses/usd-strength-hk-transmission.html](../publish/analyses/usd-strength-hk-transmission.html) | - | The 1983 Peg Still Sets Hong Kong Stock Prices | 2026-07-10 |
+| #15 | [publish/analyses/1361-361degrees.html](../publish/analyses/1361-361degrees.html) | 1361.HK | Five Years of +17% Growth. EV/EBIT at 2.26×. ANTA Is at 20×. | 2026-06-29 |
+| #14 | [publish/analyses/rate-convexity.html](../publish/analyses/rate-convexity.html) | - | Rate Convexity: The Hidden Factor Behind Every HK Financial, live tracker (see [convexity-tracker](convexity-tracker.md)) | 2026-06-28 |
+| #13 | [publish/analyses/gold-regime.html](../publish/analyses/gold-regime.html) | - | Gold: When a 23% Correction Becomes a Buy, live tracker (see [gold-regime](gold-regime.md)) | 2026-06-28 |
+| #12 | [publish/analyses/hang-seng-gdp-paradox.html](../publish/analyses/hang-seng-gdp-paradox.html) | - | China Tripled Its GDP. The Hang Seng Didn't Move. | 2026-06-24 |
+| #11 | [publish/analyses/hong-kong-discount-cheap-two-ways.html](../publish/analyses/hong-kong-discount-cheap-two-ways.html) | - | Cheap Is a Question, Not an Answer | 2026-06-21 |
+| #10 | [publish/analyses/0300-midea.html](../publish/analyses/0300-midea.html) | 0300.HK | It Owns One of the World's Four Big Robot Makers. The Market Prices It as a Washing-Machine Company. | 2026-06-02 |
+| #09 | [publish/analyses/spy-747-level.html](../publish/analyses/spy-747-level.html) | SPY | The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One. | 2026-05-11 |
+| #08 | [publish/analyses/1698-tencent-music.html](../publish/analyses/1698-tencent-music.html) | 1698.HK | Profit +66%, Stock -66% from ATH. Spotify Trades at Four Times the Multiple. | 2026-05-04 |
+| #07 | [publish/analyses/6690-haier.html](../publish/analyses/6690-haier.html) | 6690.HK | The World's Largest Appliance Maker Trades at 6.85×. Midea at 12×. Electrolux at 14×. | 2026-04-25 |
+| #06 | [publish/analyses/9988-alibaba.html](../publish/analyses/9988-alibaba.html) | 9988.HK | EBITA Down 57%. Cloud Up 36%. This Is What Amazon Looked Like in 2014. | 2026-04-14 |
+| #05 | [publish/analyses/1585-yadea.html](../publish/analyses/1585-yadea.html) | 1585.HK | Profit +129%. EV/EBIT 6.1x. The Market Sees a Bicycle Company. | 2026-04-14 |
+| #04 | [publish/analyses/1167-jacobio.html](../publish/analyses/1167-jacobio.html) | 1167.HK | AstraZeneca Paid US$100M for One Molecule. The Rest Trades at US$507M. | 2026-04-14 |
+| #03 | [publish/analyses/1913-prada.html](../publish/analyses/1913-prada.html) | 1913.HK | EPS Down 74%. Revenue Up 9%. One of These Numbers Is a Distraction. | 2026-04-12 |
+| #02 | [publish/analyses/hsi-35-year-trendline.html](../publish/analyses/hsi-35-year-trendline.html) | HSI | Six Bounces. One Break. Now the Retest. | 2026-04-11 |
+| #01 | [publish/analyses/0113-dickson-concepts.html](../publish/analyses/0113-dickson-concepts.html) | 0113.HK | The Market Is Paying You HKD 375M to Buy This Company | 2026-04-11 |
 
 > **SPY structural level methodology note:** all calculations (level formula, ceiling, distance, backtest data) use **unadjusted SPY prices, dividends off**. When verifying on TradingView or any charting tool, turn off dividend adjustment before reading price vs. level distances. Adjusted prices produce different distances and will not match the published levels.
-| [publish/analyses/1698-tencent-music.html](../publish/analyses/1698-tencent-music.html) | 1698.HK | Profit +66%, Stock -66% from ATH. Spotify Trades at Four Times the Multiple. | 2026-05-04 |
-| [publish/analyses/6690-haier.html](../publish/analyses/6690-haier.html) | 6690.HK | The World's Largest Appliance Maker Trades at 6.85×. Midea at 12×. Electrolux at 14×. | 2026-04-25 |
-| [publish/analyses/9988-alibaba.html](../publish/analyses/9988-alibaba.html) | 9988.HK | EBITA Down 57%. Cloud Up 36%. This Is What Amazon Looked Like in 2014. | 2026-04-14 |
-| [publish/analyses/1585-yadea.html](../publish/analyses/1585-yadea.html) | 1585.HK | Profit +129%. EV/EBIT 6.1x. The Market Sees a Bicycle Company. | 2026-04-14 |
-| [publish/analyses/1167-jacobio.html](../publish/analyses/1167-jacobio.html) | 1167.HK | AstraZeneca Paid US$100M for One Molecule. The Rest Trades at US$507M. | 2026-04-14 |
-| [publish/analyses/1913-prada.html](../publish/analyses/1913-prada.html) | 1913.HK | EPS Down 74%. Revenue Up 9%. One of These Numbers Is a Distraction. | 2026-04-12 |
-| [publish/analyses/0113-dickson-concepts.html](../publish/analyses/0113-dickson-concepts.html) | 0113.HK | The Market Is Paying You HKD 375M to Buy This Company | 2026-04-11 |
-| [publish/analyses/hsi-35-year-trendline.html](../publish/analyses/hsi-35-year-trendline.html) |: | Six Bounces. One Break. Now the Retest. | 2026-04-11 |
 
 ---
 
