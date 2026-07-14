@@ -4,7 +4,7 @@ tags: [trading852, wiki, scorecard]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-27
+updated: 2026-07-14
 ---
 
 # Trading852 v2, Scorecard
@@ -46,6 +46,8 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 **What counts as a position (automatic)**: any `publish/analyses/*.html` whose hero has both a `meta-ticker` matching `NNNN.HK` and a `meta-verdict`. The SPY/HSI market-thesis pages and the sector hubs have no stock ticker, so they are excluded automatically. ticker / eyebrow (sector + ` · Monitor` when the verdict is MONITOR) / slug are read from the article; entry date defaults to `pubDate`.
 
 **Overrides**: curated short names and the Apr-10 inaugural issue dates live in the `SCORECARD_OVERRIDES` map in `build.js`. A single article can also override via CONFIG: `scorecardName` (display name) and `scorecardEntryDate` (`YYYY-MM-DD`, when the issue/entry date differs from `pubDate`). The 2800.HK Tracker Fund benchmark is a fixed entry (`SCORECARD_BENCHMARK` in `build.js`), not derived from an article.
+
+> **Weekend publish with a Monday byline → `scorecardEntryDate` is mandatory, not optional.** `pubDate` doubles as both the displayed byline date and the input to `scorecard.js`'s `isWeekendPub` check (`getUTCDay()` on `pubDate`). If an article is committed on a Saturday/Sunday but given the following Monday as its editorial `pubDate`, the weekend branch never fires — the code sees a weekday and falls into the same-day-close case (Monday's own bar is timestamped after `pubDate`'s UTC midnight, so it wrongly qualifies as "first close strictly after"), showing Monday's *close* as entry instead of Monday's *open*. Always set `scorecardEntryDate` to the true weekend calendar date in that case. Caught and fixed for 0027-galaxy (entry 31.00 → 31.60) on Jul 14, 2026 — see [log.md](log.md#jul-14-2026-galaxy-0027hk-scorecard-entry-date-bug-fixed).
 
 **Article and scorecard entry are inseparable, by construction**: positions are derived from the articles themselves, so a scorecard row cannot exist without its published article.
 

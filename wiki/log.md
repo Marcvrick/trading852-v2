@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-10
+updated: 2026-07-14
 ---
 
 # Trading852 v2, Changelog
@@ -240,6 +240,13 @@ This section supersedes all prior instructions on writing style. It is the sourc
 - **Action when it lands:** re-check the figure at the HKMA press release under `news-and-media/press-releases/2026/07/` (Currency Board Account / Aggregate Balance), update the "Why Hong Kong's banks tighten when the Fed does" section of the draft with the confirmed June number, and reconfirm HIBOR direction still matches the article's thesis before this article is moved to `publish/analyses/`.
 - A session-only cron reminder was also set for Jul 14; this log entry is the durable fallback in case that session has since ended.
 - **Update, same day:** Dany reviewed the draft (title changed to "The 1983 Peg Still Sets Hong Kong Stock Prices", DXY chart swapped for the real weekly chart, DXY paragraph rewritten to match it) and gave explicit go to publish despite the pending May-vs-June Aggregate Balance gap. Published to `publish/analyses/usd-strength-hk-transmission.html`. **Action still open:** when the June Currency Board Account lands Jul 14, re-check the HK$54B figure and HIBOR direction against the live article and patch if materially different.
+
+### Jul 14, 2026 · Galaxy (0027.HK) scorecard entry-date bug fixed
+
+- **Bug found:** Galaxy Entertainment's Scorecard entry showed HK$31.00 instead of the weekend-pub rule's Monday-open price. Root cause: [0027-galaxy.html](../publish/analyses/0027-galaxy.html)'s `CONFIG.pubDate` is `"2026-07-13"` (the Monday byline date), but the article was actually committed/published Sunday `2026-07-12 22:32 +0200`. `generateScorecardData()` in [build.js](../build.js) falls back to `config.pubDate` for `issueDate` when no override is set, so `scorecard.js`'s `isWeekendPub` check (`getUTCDay()` on the pubDate) saw a Monday and skipped the weekend branch, landing on Monday's own close (31.00) instead of Monday's open (31.60).
+- **Fix:** added `"scorecardEntryDate": "2026-07-12"` to the article's `CONFIG` block — the existing override field `generateScorecardData()` already checks before falling back to `pubDate` (`config.scorecardEntryDate || ov.entryDate || config.pubDate`). `pubDate`/byline stay Monday for display; only the scorecard entry-date calc now sees the true Sunday publish day. Rebuilt, verified `scorecard-recos.json` issueDate → `2026-07-12`, pushed, confirmed live: Entry now reads `31.60 · open Jul 13`.
+- **Scope check:** cross-referenced every other ticker article's `CONFIG.pubDate` against its actual first-commit date. Galaxy was the only mismatch — the rest either match their real publish day or were part of the June 24 bulk migration (dates come from the hardcoded `SCORECARD_OVERRIDES` entryDates, unaffected).
+- **General rule going forward:** if an article is authored/committed on a weekend but given a Monday byline date (editorial convention), always set `CONFIG.scorecardEntryDate` to the real weekend calendar date explicitly — do not rely on `pubDate` alone to carry both the display date and the scorecard weekend-detection.
 
 ---
 [Wiki index](index.md)
