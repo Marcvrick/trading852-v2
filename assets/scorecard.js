@@ -156,7 +156,29 @@
         }
         if (last == null) throw new Error("no_close");
 
-        var pct = stopped ? lockedPct : (last + divSinceEntry - entry) / entry * 100;
+        // Partial exit ("Reduced"): blend the frozen realized portion (priced at the
+        // trim fill) with the live remainder. The banked gain survives a full
+        // round-trip — if the live leg falls back to entry, the realized leg still
+        // holds. v1 prices the realized leg on capital return only (no dividend
+        // credit for the sold shares); the live leg keeps the ex-div adjustment.
+        var exits = rec.reduced && rec.reduced.exits;
+        var pct;
+        if (exits && exits.length) {
+          var realizedFrac = 0, realizedPctSum = 0;
+          for (var ei = 0; ei < exits.length; ei++) {
+            realizedFrac += exits[ei].fraction;
+            realizedPctSum += exits[ei].fraction * ((exits[ei].fillPrice - entry) / entry * 100);
+          }
+          var remFrac = Math.max(0, 1 - realizedFrac);
+          var remPct = stopped
+            ? lockedPct
+            : (last + divSinceEntry - entry) / entry * 100;
+          pct = realizedPctSum + remFrac * remPct;
+        } else if (stopped) {
+          pct = lockedPct;
+        } else {
+          pct = (last + divSinceEntry - entry) / entry * 100;
+        }
 
         return Object.assign({}, rec, {
           entry: entry,
@@ -189,6 +211,18 @@
     if (!d) return "n/a";
     var m = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return m[d.getUTCMonth()] + " " + d.getUTCDate();
+  }
+  // Summarise a pick's partial exits for display. fracPct = % of the original
+  // position sold across all exits; fill/date/label come from the single-exit case.
+  function reducedInfo(r) {
+    var ex = r && r.reduced && r.reduced.exits;
+    if (!ex || !ex.length) return null;
+    var frac = 0, fill = null, date = null;
+    for (var i = 0; i < ex.length; i++) {
+      frac += ex[i].fraction;
+      if (ex.length === 1) { fill = ex[i].fillPrice; date = ex[i].fillDate; }
+    }
+    return { fracPct: Math.round(frac * 100), fill: fill, date: date };
   }
 
   function renderStrip(rows) {
@@ -253,15 +287,26 @@
     var benchmarkPct = null;
     rows.forEach(function (r) {
       var pctCls = r.pct == null ? "" : r.pct >= 0 ? "pos" : "neg";
-      var pctCell = r.stopped
-        ? fmtPct(r.pct) + '<div class="sc-stopped-label">Stopped</div>'
-        : fmtPct(r.pct) + (r.dividendSinceEntry > 0
+      var red = reducedInfo(r);
+      var pctCell;
+      if (r.stopped) {
+        pctCell = fmtPct(r.pct) + '<div class="sc-stopped-label">Stopped</div>';
+      } else if (red) {
+        pctCell = fmtPct(r.pct) + '<div class="sc-reduced-label">' + red.fracPct + '% banked · ' + (100 - red.fracPct) + '% live</div>';
+      } else {
+        pctCell = fmtPct(r.pct) + (r.dividendSinceEntry > 0
             ? '<div class="sc-div-note" title="HKD ' + r.dividendSinceEntry.toFixed(3) + ' per share went ex-dividend after entry. That one-off ex-dividend price drop is adjusted out, so it is not counted as a loss. The dividend is not added as income.">ex-div adj</div>'
             : '');
-      var rowCls = r.stopped ? "sc-row-stopped" : r.isBenchmark ? "sc-row-benchmark" : "";
-      var badge = r.stopped
-        ? ' <span class="sc-badge sc-badge-stopped">Stopped</span>'
-        : '';
+      }
+      var rowCls = red ? "sc-row-reduced" : r.stopped ? "sc-row-stopped" : r.isBenchmark ? "sc-row-benchmark" : "";
+      var badge = '';
+      if (r.stopped) badge += ' <span class="sc-badge sc-badge-stopped">Stopped</span>';
+      if (red) {
+        var rbt = 'Reduced ' + red.fracPct + '%';
+        if (red.fill != null) rbt += ' @' + fmtPrice(red.fill);
+        if (red.date) rbt += ' · ' + fmtDate(new Date(red.date + 'T00:00:00Z'));
+        badge += ' <span class="sc-badge sc-badge-reduced">' + rbt + '</span>';
+      }
       var lastCell = r.stopped
         ? '<span class="sc-last-stop">' + fmtPrice(r.stopLevel) + '</span>' +
           '<div class="sc-stop-date">stop hit ' + fmtDate(r.stopDate) + '</div>'

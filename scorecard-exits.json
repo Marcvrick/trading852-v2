@@ -1,0 +1,8 @@
+{
+  "_comment": "Hand-maintained partial-exit ('Reduced') trade log for the scorecard. Keyed by ticker. Append one object to exits[] per trim. Read by build.js → merged into scorecard-recos.json → blended into the row % by scorecard.js. See wiki/scorecard.md 'Partial exits (Reduced state)'.",
+  "0300.HK": {
+    "exits": [
+      { "fraction": 0.667, "fillPrice": 94.30, "fillDate": "2026-07-20", "label": "Target 1 (Base 95)" }
+    ]
+  }
+}

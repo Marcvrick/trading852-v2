@@ -167,6 +167,24 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
 }
 
 .sc-table .sc-row-stopped .sc-badge-stopped { opacity: 1; }
+
+.sc-table tr.sc-row-reduced td { background: #f0f7f3; }
+.sc-table tr.sc-row-reduced:hover td { background: #e9f5ee; }
+.sc-badge-reduced {
+  background: #e6f4ec;
+  color: #0f9d66;
+  border: 1px solid #b7e4cd;
+}
+.sc-reduced-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #0f9d66;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+}
+
 .sc-last-stop { text-decoration: line-through; color: var(--dp-c-gray-2); }
 
 .sc-stop-date {

@@ -318,6 +318,15 @@ const SCORECARD_BENCHMARK = {
   t: '2800.HK', company: 'Tracker Fund (HSI)', eyebrow: 'Benchmark',
   slug: 'hsi-35-year-trendline', issueDate: '2026-04-10', isBenchmark: true,
 };
+// Partial-exit ("Reduced") trade log. Hand-maintained at ROOT/scorecard-exits.json,
+// keyed by ticker, one exits[] entry per trim: { fraction, fillPrice, fillDate, label }.
+// Attached to a pick as `reduced`; scorecard.js blends the frozen realized portion
+// with the live remainder so a round-trip cannot give the banked gain back.
+// See wiki/scorecard.md → "Partial exits (Reduced state)".
+let SCORECARD_EXITS = {};
+try {
+  SCORECARD_EXITS = JSON.parse(fs.readFileSync(path.join(ROOT, 'scorecard-exits.json'), 'utf8'));
+} catch (e) { /* missing or invalid file = no reduced state on any pick */ }
 function cleanCompanyName(s) {
   if (!s) return '';
   return s.replace(/\s*(Group Holdings? Ltd\.?|Holdings? Ltd\.?|International Ltd\.?|Co\.,?\s*Ltd\.?|S\.p\.A\.|Inc\.?|,?\s*Ltd\.?)\s*$/i, '').trim() || s;
@@ -339,7 +348,8 @@ function generateScorecardData() {
     const company   = config.scorecardName || ov.name || cleanCompanyName(about) || slug;
     const issueDate = config.scorecardEntryDate || ov.entryDate || config.pubDate || '';
     const eyebrow   = sector + (verdict.trim().toUpperCase() === 'MONITOR' ? ' · Monitor' : '');
-    picks.push({ t: ticker, company, eyebrow, slug, issueDate });
+    const reduced = SCORECARD_EXITS[ticker];
+    picks.push({ t: ticker, company, eyebrow, slug, issueDate, ...(reduced ? { reduced } : {}) });
   }
   picks.sort((a, b) => (a.issueDate < b.issueDate ? -1 : a.issueDate > b.issueDate ? 1 : (a.t < b.t ? -1 : 1)));
   return picks.concat([SCORECARD_BENCHMARK]);

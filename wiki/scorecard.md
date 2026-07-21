@@ -4,7 +4,7 @@ tags: [trading852, wiki, scorecard]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-14
+updated: 2026-07-20
 ---
 
 # Trading852 v2, Scorecard
@@ -52,6 +52,34 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 **Article and scorecard entry are inseparable, by construction**: positions are derived from the articles themselves, so a scorecard row cannot exist without its published article.
 
 **To add a pick**: just publish the stock article with the standard hero (`meta-ticker` + `meta-verdict`). The next `node build.js` registers it automatically (Vercel runs `build.js` on deploy, so commit and push is enough). Set `scorecardName` in CONFIG only if you want a shorter display name than the schema `about.name`.
+
+## Partial exits — the "Reduced" state
+
+When a pick reaches a published target and part of the position is trimmed, the row enters a **Reduced** state: the banked gain is frozen into the row's `%` so a round-trip cannot give it back, protecting the portfolio's lead over the HSI benchmark in a drawdown. This is the one hand-maintained layer on the scorecard — positions themselves stay auto-generated from articles, but a discretionary trim is a real event the article cannot derive.
+
+**Data source**: `scorecard-exits.json` at the repo root, keyed by ticker, one `exits[]` entry per trim:
+
+```json
+{ "0300.HK": { "exits": [ { "fraction": 0.667, "fillPrice": 94.30, "fillDate": "2026-07-20", "label": "Target 1 (Base 95)" } ] } }
+```
+
+`build.js` reads it once at module load (missing or invalid file = no Reduced state on any pick) and attaches `reduced` to the matching pick in `scorecard-recos.json`. The benchmark and untouched picks are unchanged.
+
+**Blended `%`** (`scorecard.js`, replacing the single-line pct):
+
+- Realized leg: `Σ fractionᵢ × (fillPriceᵢ − entry) / entry`, frozen at the trim fill.
+- Live leg: `(1 − Σfraction) × livePct`, where `livePct` is the normal entry→last return, or `lockedPct` if the remainder has been stopped.
+- Row `pct = realizedPctSum + remFrac × remPct`.
+
+Worked example (0300.HK, entry 89.70, 2/3 trimmed @94.30): realized leg = 0.667 × +5.13% = **+3.42% banked**. If the live third round-trips to entry (livePct 0%), the row holds at +3.42%. The gain is locked.
+
+**Ratchet interaction**: the trailing-stop scan still runs on the full price history. A Reduced pick can also be Stopped (the remainder got stopped out); then the live leg takes `lockedPct` while the realized leg stays frozen at the fill. Both badges render on the ticker.
+
+**Average**: the portfolio mean (`!isBenchmark`) reads each row's blended `pct`, so banked gains hold the average — and the "Portfolio vs HSI" alpha — through a drawdown. Reduced picks count as winners/losers by their blended `pct`.
+
+**v1 simplification**: the realized leg is capital return only. Dividends that went ex-div on the sold shares before the trim are not credited to the realized leg (the live leg keeps its ex-div adjustment). Immaterial for short-hold trims; revisit if a Reduced pick carries a large interim dividend.
+
+**Rendering**: a muted-green row tint (`sc-row-reduced`), a `Reduced NN% @price · date` badge on the ticker, and a `%`-cell sub-line (`NN% banked · MM% live`). Mirrors the Stopped state's classes; CSS in `publish/styles/scorecard.css`.
 
 ---
 
