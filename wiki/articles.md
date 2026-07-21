@@ -4,7 +4,7 @@ tags: [trading852, wiki, articles]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-11
+updated: 2026-07-15
 ---
 
 # Trading852 v2, Articles
@@ -25,10 +25,14 @@ Drafts live at [publish/drafts/](../publish/drafts/). They are built into `dist/
 
 ## Published articles
 
-**Issue numbers (`#`)** are stable IDs, assigned oldest-first: `#01` = inaugural (2026-04-11); same-date ties break by alphabetical slug. Future drafts reserve `#17` onward (see [DRAFT/](../DRAFT/)). The `#` is this catalog's ID only — it is never written into a published filename, because the filename is the live URL slug.
+**Issue numbers (`#`)** are stable IDs, assigned oldest-first: `#01` = inaugural (2026-04-11); same-date ties break by alphabetical slug. The next published article takes `#19`. The `#` is this catalog's ID only, it is never written into a published filename, because the filename is the live URL slug.
+
+> **Catalog gap closed 2026-07-15.** Galaxy and Tencent had been live since July 13 and 14 but were absent from this table; they are now `#17` and `#18`. `#18` briefly collided with `DRAFT/#18-0086-sun-hung-kai.html`, but the `DRAFT/` folder was emptied the same day (stale work, tickers dropped from coverage), so the collision resolved itself and no renumbering is needed. `#20` was never used.
 
 | # | File | Ticker | Title | Date |
 |---|---|---|---|---|
+| #18 | [publish/analyses/0700-tencent.html](../publish/analyses/0700-tencent.html) | 0700.HK | Tencent Is Spending Billions on AI and Still Getting Richer. The RMB 708 Billion Portfolio Is a Free Option. | 2026-07-14 |
+| #17 | [publish/analyses/0027-galaxy.html](../publish/analyses/0027-galaxy.html) | 0027.HK | The Only Debt-Free Operator in Macau Is Priced Like the Most Levered | 2026-07-13 |
 | #16 | [publish/analyses/usd-strength-hk-transmission.html](../publish/analyses/usd-strength-hk-transmission.html) | - | The 1983 Peg Still Sets Hong Kong Stock Prices | 2026-07-10 |
 | #15 | [publish/analyses/1361-361degrees.html](../publish/analyses/1361-361degrees.html) | 1361.HK | Five Years of +17% Growth. EV/EBIT at 2.26×. ANTA Is at 20×. | 2026-06-29 |
 | #14 | [publish/analyses/rate-convexity.html](../publish/analyses/rate-convexity.html) | - | Rate Convexity: The Hidden Factor Behind Every HK Financial, live tracker (see [convexity-tracker](convexity-tracker.md)) | 2026-06-28 |

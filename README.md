@@ -4,7 +4,7 @@ tags: [readme, trading852, static-site, hk-stocks]
 category: Trading/Blog
 type: readme
 created: 2026-04-26
-updated: 2026-06-24
+updated: 2026-07-15
 ---
 
 # Trading852 v2
@@ -29,6 +29,7 @@ Full documentation lives in [wiki/](wiki/). Pick your entry point:
 
 **I want to...**
 - **Publish an article** → [Editorial](wiki/editorial.md) (DRAFT-first workflow, voice rules, pre-publish checklist)
+- **Check what we already claimed** → [Knowledge](wiki/knowledge/index.md) (frames, published peer multiples, HSI/banks/gold, cross-article contradictions)
 - **Optimize for SEO** → [SEO](wiki/seo/index.md) (ticker-analysis pattern, per-page checklist)
 - **Understand how the site builds** → [Build Pipeline](wiki/build-pipeline.md) (build.js, source format, CONFIG, layouts)
 - **Deploy, preview, or troubleshoot** → [Ops](wiki/ops.md) (runbooks: build, preview, deploy, live HSI quote)

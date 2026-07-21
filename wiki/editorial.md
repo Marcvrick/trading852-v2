@@ -4,7 +4,7 @@ tags: [trading852, wiki, editorial, writing]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-24
+updated: 2026-07-15
 ---
 
 # Trading852 v2, Editorial Workflow
@@ -15,7 +15,7 @@ Part of the [Trading852 wiki](index.md).
 
 The full, canonical style guide is [style-guide.md](style-guide.md): voice, the 7 sections, pre-flight tests, pitfalls. Voice parameters: [VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md). This page keeps the workflow and the absolute guardrails; it does not re-copy the guide.
 
-- **DRAFT first.** Articles are drafted into `DRAFT/` and never published to `publish/analyses/` without review.
+- **DRAFT first.** Articles are drafted into `DRAFT/` and never published to `publish/analyses/` without review. `DRAFT/` (not yet reviewed) and `publish/drafts/` (reviewed, awaiting a price trigger) are two different states, never interchangeable.
 - **No em dash** (em dash or double hyphen) anywhere: articles, metadata, titles, changelog. Use a period, a colon, or restructure. The middle dot is the only title separator.
 - **7-section escalator:** Hook, Company/Context, Discount, Catalyst, Valuation, Risks, Decision.
 - **Sentences 15 to 25 words, never over 30.** Max 3 consecutive number-sentences, then an interpretation sentence.
@@ -169,12 +169,22 @@ Vercel rebuilds and deploys on push.
 ### Rule: Articles must pass DRAFT + review before publication
 
 **Absolute sequence:**
-1. Claude drafts → deposits in `DRAFT/` folder
+1. Claude drafts → deposits in `DRAFT/` folder (never `publish/analyses/`, never `publish/drafts/`)
 2. Dany reviews and validates
 3. Dany requests publication → Claude moves to `publish/analyses/`, updates homepage, updates feed/sitemap, commits
 4. Claude never publishes directly to `publish/analyses/` without prior review
 
 **Why:** The style guide is comprehensive. Articles that skip review publish with endemic voice/style errors that read as corporate templates, not Marc's perspective. Review before publication is not optional.
+
+**The three folders are three states. Never substitute one for another** ([style-guide.md](style-guide.md) makes step 1 absolute):
+
+| Folder | State | Built by build.js | Readable |
+|---|---|---|---|
+| `DRAFT/` | written, not yet reviewed | no | no, source fragment with no DOCTYPE and no stylesheet |
+| `publish/drafts/` | reviewed and approved, **awaiting a price trigger** | yes, into `dist/drafts/` | yes, unlinked from homepage, feed, sitemap |
+| `publish/analyses/` | published | yes, into `dist/analyses/` | yes, linked everywhere |
+
+> **`DRAFT/` is empty as of 2026-07-15.** Its six drafts were deleted on purpose: stale work, tickers dropped from coverage. Recreate the folder on the next draft, it is a location and not a store. Do not restore the old files, they remain in git history. Note `DRAFT/` files never rendered for review, which is worth fixing separately if review-by-reading matters more than the folder split.
 
 ---
 
@@ -197,9 +207,10 @@ Vercel rebuilds and deploys on push.
 - [ ] Source material identified, read
 - [ ] Style guide + VOIX-Marc read
 - [ ] CONFIG + JSONLD blocks complete and JSON-valid
-- [ ] **SEO pattern applied**: see "SEO pattern (mandatory for all ticker analyses)" section above. Diff against `DRAFT/1913-prada-SEO-OPTIMIZED.html` to verify
+- [ ] **SEO pattern applied**: see "SEO pattern (mandatory for all ticker analyses)" section above. Diff against [publish/analyses/1913-prada.html](../publish/analyses/1913-prada.html), the reference implementation (the old `DRAFT/1913-prada-SEO-OPTIMIZED.html` target never existed on disk or in git history)
 - [ ] No bullet points in body text
 - [ ] Every number has a date or source
+- [ ] **Knowledge layer checked** ([wiki/knowledge/](knowledge/index.md)): no number silently contradicts a previously published claim, and nothing in [open-questions.md](knowledge/open-questions.md) touches this article's numbers. A contradiction is either stated in the article or fixed with a dated update note on the older one. Run this *after* the live price fetch, never instead of it: the layer is a check, never a source
 - [ ] Valuation / NAV table present
 - [ ] Scenario table present (3 rows max)
 - [ ] Risks: exactly 2, named in bold
@@ -216,6 +227,7 @@ Vercel rebuilds and deploys on push.
 - [ ] No em dash anywhere (`grep -rn ", \|, " publish/ assets/` returns nothing)
 - [ ] `node build.js` runs clean
 - [ ] Spot-checked `dist/analyses/<slug>.html` in a browser
+- [ ] **Knowledge layer written back** in this same commit: new peer sets, new frames, reversed readings, and any new contradiction recorded in [wiki/knowledge/](knowledge/index.md). Same-commit rule as the homepage card. A follow-up pass does not happen. **Published only:** a draft's claims enter the layer when it ships to `publish/analyses/`, never while it sits in `DRAFT/` or `publish/drafts/`
 - [ ] Committed and pushed
 
 ---

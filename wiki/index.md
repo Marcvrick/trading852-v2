@@ -4,7 +4,7 @@ tags: [trading852, wiki, hub, static-site, hk-stocks]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-24
+updated: 2026-07-15
 ---
 
 # Trading852 v2, Wiki
@@ -20,6 +20,7 @@ Authored pages in [publish/](../publish/) are assembled into `dist/` by [build.j
 
 - [Style guide](style-guide.md): the single source of truth for article voice, structure, and the 7-section template
 - [Editorial](editorial.md): DRAFT-first workflow, hard voice rules, what to never write, pre-publish checklist
+- [Knowledge layer](knowledge/index.md): sub-hub, what the site has already claimed. Frames, published peer multiples, HSI and peg, banks, gold, and the contradictions between articles. A consistency check, never a price source
 - [Build pipeline](build-pipeline.md): build.js, source format, CONFIG, layouts, folder structure, Vercel, site plumbing
 - [SEO](seo/index.md): sub-hub, the mandatory ticker-analysis pattern + strategy, structure, calendar, competitors, roadmap, audit
 - [Scorecard](scorecard.md): the auto-generated live performance tracker
@@ -38,4 +39,4 @@ Authored pages in [publish/](../publish/) are assembled into `dist/` by [build.j
 Touch a thing, update its page. When work changes how the site is built, written, or deployed, the matching wiki page is updated in the same commit. The question to ask before reporting done: which page is now stale because of what I just did?
 
 ---
-Pages: [style-guide](style-guide.md) . [editorial](editorial.md) . [build-pipeline](build-pipeline.md) . [seo](seo/index.md) . [scorecard](scorecard.md) . [convexity-tracker](convexity-tracker.md) . [gold-regime](gold-regime.md) . [ops](ops.md) . [articles](articles.md) . [log](log.md)
+Pages: [style-guide](style-guide.md) . [editorial](editorial.md) . [knowledge](knowledge/index.md) . [build-pipeline](build-pipeline.md) . [seo](seo/index.md) . [scorecard](scorecard.md) . [convexity-tracker](convexity-tracker.md) . [gold-regime](gold-regime.md) . [ops](ops.md) . [articles](articles.md) . [log](log.md)

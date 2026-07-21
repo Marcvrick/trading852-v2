@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-14
+updated: 2026-07-21
 ---
 
 # Trading852 v2, Changelog
@@ -12,6 +12,58 @@ updated: 2026-07-14
 Part of the [Trading852 wiki](index.md).
 
 ## Changelog
+
+### July 21, 2026 · Scorecard hero — article count dropped
+
+Removed the "Eleven articles." count from the scorecard hero title, plus the now-dead JS that populated it (the `WORDS` array + `sc-article-count` updater in `scorecard.js`). The hero now reads: "The Hang Seng as benchmark. Entry at first close after publication. Live performance." No orphan code.
+
+### July 20, 2026 · Scorecard "Reduced" state — partial exits lock banked gains
+
+New per-pick state for the public scorecard: when a published pick is trimmed at a target, the realized portion is frozen into the row's `%` so a round-trip cannot give it back. Protects the portfolio's lead over the 2800.HK benchmark in a drawdown.
+
+- First record: **0300.HK (Midea)**, 2/3 trimmed @94.30 on Jul 20 at the published Base target floor (HKD 95–100).
+- Data: `scorecard-exits.json` at the repo root, keyed by ticker, hand-maintained (one `exits[]` entry per trim). Read by `build.js`, attached as `reduced` on the pick. Positions themselves stay auto-generated.
+- Blend (`scorecard.js`): realized leg frozen at fill + live leg at current price (or `lockedPct` if the remainder stopped). For 0300: **+3.42% banked** regardless of what the live third does.
+- Render: green `sc-row-reduced` tint, `Reduced NN% @price · date` badge, `NN% banked · MM% live` sub-line. Mirrors the Stopped state.
+- Wiki: [scorecard.md](scorecard.md) → "Partial exits (Reduced state)".
+
+### July 15, 2026 · DRAFT/ emptied, six stale drafts dropped
+
+Dany deleted the six `DRAFT/` files: the work had gone stale and the tickers left coverage (0123 Yuexiu, 0816 Jinmao, 2050 Sanhua, Man Yue capacitors, a China consumer bifurcation piece, and a second 0086 Sun Hung Kai). Deliberate, not to be restored; all seven paths including `DRAFT/images/` remain in git history.
+
+**The workflow is unchanged.** `DRAFT/` is a location, not a store: recreate it on the next draft. The three folders stay three distinct states, and [style-guide.md](style-guide.md) step 1 is absolute on this: `DRAFT/` (written, not yet reviewed) then `publish/drafts/` (reviewed, awaiting a price trigger) then `publish/analyses/` (published). They are never interchangeable, and `publish/drafts/` in particular is not a review area.
+
+**Knock-on effects:**
+
+- The `#18` numbering collision resolved itself. `DRAFT/#18-0086-sun-hung-kai.html` is gone, so Tencent keeps `#18` and no renumbering is needed. Next published article takes `#19`.
+- The knowledge layer needed no content change, since drafts were never admitted. Its scope table was updated: Yuexiu no longer holds a pending draft, Sun Hung Kai still does in `publish/drafts/`.
+- `publish/drafts/` is untouched: 0086 (HKD 4.28 anchor) and 6160 BeOne (HKD ~132) still stand.
+
+**Two findings from the audit that prompted this:**
+
+- **`build.js` never read `DRAFT/`.** Its only source is `const SRC = path.join(ROOT, 'publish')`. `DRAFT/` files were source fragments with no DOCTYPE and no stylesheet, so they never rendered for review, which was the folder's whole purpose. Worth fixing if review-by-reading matters more than the folder split.
+- **`DRAFT/1913-prada-SEO-OPTIMIZED.html`**, the SEO diff target in the pre-publish checklist, never existed on disk or in git history. The checklist now points at [publish/analyses/1913-prada.html](../publish/analyses/1913-prada.html).
+
+### July 15, 2026 · Knowledge layer created + 11 cross-article contradictions found
+
+**New sub-hub** [wiki/knowledge/](knowledge/index.md), seven pages. The claims and valuation numbers of all 18 published articles, held as entries rather than prose. Built because nothing in the repo stored them: [articles.md](articles.md) holds titles, [log.md](log.md) narrates changes, the scorecard holds identity plus entry date, and every number otherwise existed exactly once, inside one HTML file, invisible to the next article.
+
+Pages: [index](knowledge/index.md) (the rules), [frames](knowledge/frames.md) (about 40 reusable analytical patterns), [macro-hsi](knowledge/macro-hsi.md), [financials-rates](knowledge/financials-rates.md), [gold](knowledge/gold.md), [peer-multiples](knowledge/peer-multiples.md) (every published peer set), [levels](knowledge/levels.md), [open-questions](knowledge/open-questions.md).
+
+**The hard rule, and the reason the layer is shaped this way:** it is a consistency check, never a price source. [style-guide.md](style-guide.md) test 4 forbids reusing a price found in any prior document (the 0992 Lenovo incident), and a store of prior numbers is exactly that artifact. Sequence is fixed: fetch live, write the article, then check the layer for contradictions. Every entry is bucketed DURABLE (mechanisms, completed history, ownership facts, closed events) or PERISHABLE (anything carrying an `as_of`).
+
+**First full cross-read of the corpus found 11 live contradictions**, all still on the site. The four that block reuse today:
+
+- **The Hang Seng's own multiple**: 14x (Jun 21) against 8-9x (Jun 24), three days apart, and the second article uses 8-9x as both a discount and a multiple within itself.
+- **The 35-year trendline touch count**: the title says six, the schema says five, the body says five and enumerates four, and a risk callout says the line never broke. It is in the title, the schema and the homepage card.
+- **Dickson's HKD 7.20 offer**: argued as an empirically demonstrated floor in April, and as a ceiling at roughly cash value in the June update. Both readings live in the same file, unstruck. June supersedes.
+- **Midea's EV/EBIT**: 12x in the Haier piece, about 11x in the Midea piece, both labelled April 2026. The Haier bull target (HKD 36.80) depends on which is right.
+
+Also: Alibaba's net cash "rose" from US$40B to US$36B; Hermes at 30x and 40x on one page; gold's drawdown at 23% five times and 26% once; "SPY 1.3% from $747" meaning both above and below on the same page.
+
+**Wired in.** [CLAUDE.md](../CLAUDE.md) read-before-writing item 4; [editorial.md](editorial.md) pre-publish checklist gets a check gate (after the live fetch) and a same-commit write-back gate, on the homepage-card pattern; [wiki/index.md](index.md) and [README](../README.md) navigation. CLAUDE.md's second checklist now defers to editorial.md, which is authoritative: the two had diverged.
+
+**Catalog fixed.** [articles.md](articles.md) was missing two published articles, [0027-galaxy](../publish/analyses/0027-galaxy.html) (Jul 13) and [0700-tencent](../publish/analyses/0700-tencent.html) (Jul 14), now `#17` and `#18`. This collides with `DRAFT/#18-0086-sun-hung-kai.html`: published articles hold the stable IDs, so the draft block needs renumbering to `#19` onward. Not done, it renames six files.
 
 ### June 29, 2026 · 361 Degrees (1361.HK) + publishing rules hardened
 
