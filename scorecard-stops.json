@@ -1,0 +1,9 @@
+{
+  "_comment": "Hand-maintained permanent stop-loss ledger for the scorecard. Keyed by ticker. Once a pick's trailing stop fires, its stopDate/stopLevel/lockedPct are recorded here from the FULL (from-inception) price history, computed once and frozen. Read by build.js -> attached as `forcedStop` -> scorecard.js skips its own live stop-scan for these tickers and uses these fixed values instead. This exists because scorecard.js's live fetch is a rolling 3-month window: once a pick's entry date rolls outside that window, the live scan silently re-anchors 'entry' to a later bar, which can erase or corrupt a real historical stop event. See wiki/scorecard.md 'Permanent stop ledger' and wiki/log.md 2026-07-23 entry (1913.HK Prada incident).",
+  "1913.HK": { "stopDate": "2026-04-30", "stopLevel": 35.028, "lockedPct": -10 },
+  "1167.HK": { "stopDate": "2026-04-24", "stopLevel": 7.220,  "lockedPct": 0 },
+  "1585.HK": { "stopDate": "2026-04-23", "stopLevel": 11.951, "lockedPct": -5 },
+  "9988.HK": { "stopDate": "2026-05-21", "stopLevel": 125.500, "lockedPct": 0 },
+  "6690.HK": { "stopDate": "2026-05-26", "stopLevel": 19.722, "lockedPct": -5 },
+  "1698.HK": { "stopDate": "2026-05-15", "stopLevel": 33.934, "lockedPct": -5 }
+}

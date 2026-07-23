@@ -327,6 +327,18 @@ let SCORECARD_EXITS = {};
 try {
   SCORECARD_EXITS = JSON.parse(fs.readFileSync(path.join(ROOT, 'scorecard-exits.json'), 'utf8'));
 } catch (e) { /* missing or invalid file = no reduced state on any pick */ }
+
+// Permanent stop-loss ledger. Hand-maintained at ROOT/scorecard-stops.json, keyed by
+// ticker: { stopDate, stopLevel, lockedPct }, computed once from full from-inception
+// history. Attached to a pick as `forcedStop`; scorecard.js skips its own live
+// trailing-stop scan for these tickers and uses these frozen values instead, so a
+// price recovery (or the live fetch's rolling 3-month window rolling past the entry
+// date) can never silently erase or corrupt a real historical stop.
+// See wiki/scorecard.md -> "Permanent stop ledger".
+let SCORECARD_STOPS = {};
+try {
+  SCORECARD_STOPS = JSON.parse(fs.readFileSync(path.join(ROOT, 'scorecard-stops.json'), 'utf8'));
+} catch (e) { /* missing or invalid file = no forced stop on any pick */ }
 function cleanCompanyName(s) {
   if (!s) return '';
   return s.replace(/\s*(Group Holdings? Ltd\.?|Holdings? Ltd\.?|International Ltd\.?|Co\.,?\s*Ltd\.?|S\.p\.A\.|Inc\.?|,?\s*Ltd\.?)\s*$/i, '').trim() || s;
@@ -349,7 +361,8 @@ function generateScorecardData() {
     const issueDate = config.scorecardEntryDate || ov.entryDate || config.pubDate || '';
     const eyebrow   = sector + (verdict.trim().toUpperCase() === 'MONITOR' ? ' · Monitor' : '');
     const reduced = SCORECARD_EXITS[ticker];
-    picks.push({ t: ticker, company, eyebrow, slug, issueDate, ...(reduced ? { reduced } : {}) });
+    const forcedStop = SCORECARD_STOPS[ticker];
+    picks.push({ t: ticker, company, eyebrow, slug, issueDate, ...(reduced ? { reduced } : {}), ...(forcedStop ? { forcedStop } : {}) });
   }
   picks.sort((a, b) => (a.issueDate < b.issueDate ? -1 : a.issueDate > b.issueDate ? 1 : (a.t < b.t ? -1 : 1)));
   return picks.concat([SCORECARD_BENCHMARK]);

@@ -4,7 +4,7 @@ tags: [trading852, wiki, scorecard]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-20
+updated: 2026-07-23
 ---
 
 # Trading852 v2, Scorecard
@@ -80,6 +80,18 @@ Worked example (0300.HK, entry 89.70, 2/3 trimmed @94.30): realized leg = 0.667 
 **v1 simplification**: the realized leg is capital return only. Dividends that went ex-div on the sold shares before the trim are not credited to the realized leg (the live leg keeps its ex-div adjustment). Immaterial for short-hold trims; revisit if a Reduced pick carries a large interim dividend.
 
 **Rendering**: a muted-green row tint (`sc-row-reduced`), a `Reduced NN% @price · date` badge on the ticker, and a `%`-cell sub-line (`NN% banked · MM% live`). Mirrors the Stopped state's classes; CSS in `publish/styles/scorecard.css`.
+
+## Permanent stop ledger
+
+The live trailing-stop scan in `scorecard.js` (`fetchOne`) fetches only a **rolling window** from Yahoo (`range=1y`, was `range=3mo` until Jul 23, 2026). Once a pick's entry date rolls outside that window, the entry-finding loop can no longer see the true entry bar and silently substitutes whatever bar is now first in the window as a fake "entry" — which erases the peak-price history needed to arm the tighter stop tiers, and can invent a wrong stop date, level, or locked %, or erase a real stop entirely.
+
+**Caught 2026-07-23**: 1913.HK Prada's real Apr 30 stop (locked −10%) had silently vanished this way (the site showed it "recovered" to +10.92%, never stopped), and 1167.HK Jacobio / 1585.HK Yadea / 9988.HK Alibaba were showing wrong stop dates and, for Jacobio, a wrong locked % (−10% shown vs the true breakeven 0%). Root cause: all four share an April 10 entry date; by mid-July the 3-month window had rolled past it. 6690.HK Haier and 1698.HK Tencent Music were still correct at the time (their entry dates were still inside the window) and were used to cross-validate the true computation method.
+
+**Fix, two parts:**
+1. **`scorecard-stops.json`** (repo root): a hand-maintained permanent ledger, keyed by ticker, computed once from the full from-inception price history: `{ "1913.HK": { "stopDate": "2026-04-30", "stopLevel": 35.028, "lockedPct": -10 }, ... }`. `build.js` loads it and attaches `forcedStop` to the matching pick (same pattern as `scorecard-exits.json` → `reduced`). In `scorecard.js`, `fetchOne` checks `rec.forcedStop` first: if present, it skips the live stop-scan entirely and uses the frozen `stopDate` / `stopLevel` / `lockedPct` directly. A live price is still fetched and shown as the informational `now: XX.XX` line, but `pct` and the Stopped state can never again depend on the rolling window.
+2. **Fetch range widened** `3mo` → `1y`, buying headroom before any *currently active* (not yet stopped) pick's own entry date rolls out of view and its % return or peak-tracking silently corrupts the same way. Not a permanent fix by itself (a pick older than a year would hit the same wall) — the permanent ledger in (1) is the structural fix; the wider range just delays when a *new*, not-yet-recorded stop could be missed.
+
+**When a new pick's trailing stop fires**: add it to `scorecard-stops.json` once confirmed (do not rely on the live scan to keep remembering it indefinitely). Compute `stopDate`/`stopLevel`/`lockedPct` from the full price history from the pick's true entry date (weekday pub: first close strictly after the entry-cutoff calendar day; in practice, per the Jul 23 investigation, the live algorithm's entry-finding loop treats the entry/issue date's own trading session as eligible whenever its intraday timestamp is later than midnight UTC of that date — verify against a still-in-window pick before trusting a computed value).
 
 ---
 

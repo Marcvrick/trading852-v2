@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-21
+updated: 2026-07-23
 ---
 
 # Trading852 v2, Changelog
@@ -12,6 +12,27 @@ updated: 2026-07-21
 Part of the [Trading852 wiki](index.md).
 
 ## Changelog
+
+### July 23, 2026 · Scorecard: Prada silently un-stopped — rolling-window bug, 4 positions had wrong stop data
+
+Dany noticed 1913.HK Prada had flipped from Stopped back to an active +10.92% position with no manual action on his side. Investigation traced it to `scorecard.js`'s live trailing-stop scan, which fetched only a rolling `range=3mo` window from Yahoo. All of the April 10 inaugural-issue picks (0113 Dickson, 1913 Prada, 1167 Jacobio, 1585 Yadea, 9988 Alibaba) share that entry date; by mid-July the 3-month window had rolled past it, so the entry-finding loop silently substituted a much later bar as a fake "entry" once the true one aged out. That erases the peak-price history needed to arm the tighter stop tiers, and can invent a wrong stop date/level or erase a real stop entirely.
+
+**Verified against full from-inception price history (Yahoo `range=1y`, cross-checked via 6690 Haier and 1698 Tencent Music, whose entry dates were still inside the 3-month window and so were provably still correct):**
+
+| Ticker | Was showing (corrupted) | True value |
+|---|---|---|
+| 1913.HK Prada | not stopped, +10.92% | **STOPPED Apr 30 at −10%** |
+| 1167.HK Jacobio | stopped May 5, −10% | **STOPPED Apr 24 at 0% (breakeven)** — it had first spiked to +14.68% peak, arming the breakeven tier, before round-tripping back to entry |
+| 1585.HK Yadea | stopped Jun 8, −5% | **STOPPED Apr 23**, −5% |
+| 9988.HK Alibaba | stopped May 18, 0% | **STOPPED May 21**, 0% |
+
+Jacobio's public locked return had been overstated as a −10% loss when the true result was breakeven.
+
+**Fix, two parts:**
+1. **`scorecard-stops.json`** (new, repo root): permanent stop ledger, keyed by ticker, `{ stopDate, stopLevel, lockedPct }`, computed once from full history and frozen. `build.js` attaches it as `forcedStop`; `scorecard.js` skips the live scan entirely for a ticker carrying `forcedStop` and uses the recorded values, so a price recovery (or the window rolling further) can never again erase or corrupt a real stop. All 6 currently-stopped tickers (the 4 above plus Haier and Tencent Music) are now locked in.
+2. **Fetch range widened `3mo` → `1y`** in `scorecard.js`, buying headroom before a *currently active* pick's own entry date rolls out of view and its % return silently corrupts the same way. Not a permanent fix alone (a pick older than a year hits the same wall) — the permanent ledger is the structural fix.
+
+Wiki: [scorecard.md](scorecard.md) new "Permanent stop ledger" section.
 
 ### July 21, 2026 · Scorecard hero — article count dropped
 

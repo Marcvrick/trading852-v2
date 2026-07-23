@@ -47,8 +47,17 @@
   var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
   var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
 
+  // range=1y (was 3mo until Jul 23, 2026). A rolling 3-month window silently rolls
+  // past a pick's entry date once the pick is >3 months old: fetchOne's entry-finding
+  // loop then falls back to whatever bar is now first in the window as a substitute
+  // "entry", which can erase or corrupt a real historical stop (peak-since-entry
+  // history is lost, so a tier that should be armed never arms). Caught 2026-07-23:
+  // 1913.HK Prada's real Apr 30 stop (-10%) had silently vanished this way, and
+  // 1167/1585/9988 were showing wrong stop dates/levels for the same reason. See
+  // wiki/log.md. Currently-known stops are also hard-locked via scorecard-stops.json
+  // (forcedStop) as a second, independent safeguard.
   function fetchOne(rec) {
-    var url = PROXY + encodeURIComponent(CHART + rec.t + "?range=3mo&interval=1d&events=div");
+    var url = PROXY + encodeURIComponent(CHART + rec.t + "?range=1y&interval=1d&events=div");
     return fetch(url, { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (j) {
@@ -112,7 +121,18 @@
         var lockedPct = activeTier.lockedPct;
         var peakVal = entry;
         var stopped = false, stopDate = null;
-        if (!rec.isBenchmark) {
+        if (rec.forcedStop) {
+          // Permanent stop ledger override (scorecard-stops.json via build.js,
+          // attached at build time). Skips the live scan below entirely: this
+          // fetch's rolling window can silently corrupt or erase a real historical
+          // stop once the pick's entry date rolls outside it (see the range=1y
+          // comment above fetchOne). These values are hand-verified once from the
+          // full from-inception price history and then frozen.
+          stopped = true;
+          stopDate = new Date(rec.forcedStop.stopDate + "T00:00:00Z");
+          stopLevel = rec.forcedStop.stopLevel;
+          lockedPct = rec.forcedStop.lockedPct;
+        } else if (!rec.isBenchmark) {
           // Scan subsequent bars: arm the tightest tier whose +pct trigger has been
           // reached by the running intraday HIGH (tiers ratchet tighter only), then
           // check if the bar's intraday LOW breaches the active stop level.
