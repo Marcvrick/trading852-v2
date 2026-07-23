@@ -79,7 +79,7 @@ Worked example (0300.HK, entry 89.70, 2/3 trimmed @94.30): realized leg = 0.667 
 
 **v1 simplification**: the realized leg is capital return only. Dividends that went ex-div on the sold shares before the trim are not credited to the realized leg (the live leg keeps its ex-div adjustment). Immaterial for short-hold trims; revisit if a Reduced pick carries a large interim dividend.
 
-**Rendering**: a muted-green row tint (`sc-row-reduced`), a `Reduced NN% @price · date` badge on the ticker, and a `%`-cell sub-line (`NN% banked · MM% live`). Mirrors the Stopped state's classes; CSS in `publish/styles/scorecard.css`.
+**Rendering**: a `Reduced NN% @price · date` badge on the ticker and a `%`-cell sub-line (`NN% banked · MM% live`) always render. The muted-green row tint (`sc-row-reduced`) is reserved for a **fully closed** position (`fracPct >= 100`, i.e. every exit fraction summed to 100%): a partial trim (like 0300.HK Midea at 67%) is still an open position and stays plain white like any other active pick, badge and sub-line only. CSS in `publish/styles/scorecard.css`.
 
 ## Permanent stop ledger
 

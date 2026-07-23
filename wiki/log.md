@@ -34,6 +34,10 @@ Jacobio's public locked return had been overstated as a −10% loss when the tru
 
 Wiki: [scorecard.md](scorecard.md) new "Permanent stop ledger" section.
 
+### July 23, 2026 · Scorecard: Reduced row tint reserved for a fully closed position
+
+Dany flagged that 0300.HK Midea's row carried the green `sc-row-reduced` background tint at only 67% trimmed — the position is still two-thirds open, so a colored row read as more settled than it is. Fix in `assets/scorecard.js` (`renderTable`): the tint now only applies when `reducedInfo(r).fracPct >= 100` (every exit fraction summed to a full close). A partial trim still shows the `Reduced NN% @price · date` badge and the `NN% banked · MM% live` sub-line, just on a plain white row like any other active pick. Wiki: [scorecard.md](scorecard.md) Rendering line updated.
+
 ### July 21, 2026 · Scorecard hero — article count dropped
 
 Removed the "Eleven articles." count from the scorecard hero title, plus the now-dead JS that populated it (the `WORDS` array + `sc-article-count` updater in `scorecard.js`). The hero now reads: "The Hang Seng as benchmark. Entry at first close after publication. Live performance." No orphan code.

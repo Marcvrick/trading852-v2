@@ -318,7 +318,11 @@
             ? '<div class="sc-div-note" title="HKD ' + r.dividendSinceEntry.toFixed(3) + ' per share went ex-dividend after entry. That one-off ex-dividend price drop is adjusted out, so it is not counted as a loss. The dividend is not added as income.">ex-div adj</div>'
             : '');
       }
-      var rowCls = red ? "sc-row-reduced" : r.stopped ? "sc-row-stopped" : r.isBenchmark ? "sc-row-benchmark" : "";
+      // Row background tint is reserved for a fully closed position (100% exited).
+      // A partial trim still gets the badge + banked/live sub-line, but the position
+      // is still open, so the row stays plain white like any other active pick.
+      var fullyClosed = red && red.fracPct >= 100;
+      var rowCls = fullyClosed ? "sc-row-reduced" : r.stopped ? "sc-row-stopped" : r.isBenchmark ? "sc-row-benchmark" : "";
       var badge = '';
       if (r.stopped) badge += ' <span class="sc-badge sc-badge-stopped">Stopped</span>';
       if (red) {
