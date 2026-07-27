@@ -282,7 +282,10 @@ function generateOurAnalysesHTML() {
   const listArticles = articles.slice(3); // Skip first 3 (featured + small card 1 + small card 2)
   for (let i = 0; i < listArticles.length; i++) {
     const a = listArticles[i];
-    const num = String(i + 1).padStart(2, '0');
+    // Number by position in the full catalogue, newest-first, not by position in
+    // this list. The 3 newest articles sit in the hero and are not numbered, so
+    // the list opens at (total - 3) and counts down to 01.
+    const num = String(listArticles.length - i).padStart(2, '0');
     html += `
             <div class="node-type-experience_article">
               <a href="${a.href}" class="our-work__link">
