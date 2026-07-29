@@ -393,6 +393,88 @@ function validateInternalLinks() {
   }
 }
 
+// ── sitemap.xml + feed.xml auto-generation ────────────────────────────────────
+// Both were hand-maintained and drifted (3 articles missing from the sitemap,
+// 7 from the feed). Generated from disk on every build instead.
+const STATIC_PAGES = ['/about', '/scorecard', '/disclaimer', '/legal-notice'];
+const FEED_MAX_ITEMS = 20;
+
+const xmlEscape = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// "2026-07-27" → "Mon, 27 Jul 2026 00:00:00 +0800" (HK time, matches existing feed)
+function rfc822(dateStr) {
+  const d = new Date(`${dateStr}T00:00:00+08:00`);
+  const days   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const [y, m, day] = dateStr.split('-');
+  return `${days[d.getUTCDay()]}, ${day} ${months[parseInt(m) - 1]} ${y} 00:00:00 +0800`;
+}
+
+// Every .html under publish/analyses/, dated or not. Sector hubs and
+// market-thesis carry no CONFIG.pubDate, so getAllArticles() skips them —
+// they still belong in the sitemap.
+function getAllAnalysisPages() {
+  const dir = path.join(SRC, 'analyses');
+  return fs.readdirSync(dir)
+    .filter(f => f.endsWith('.html'))
+    .map(f => {
+      const { config } = parseSource(fs.readFileSync(path.join(dir, f), 'utf8'));
+      return { href: `/analyses/${f.replace(/\.html$/, '')}`, date: config.pubDate || null };
+    })
+    .sort((a, b) => a.href.localeCompare(b.href));
+}
+
+function generateSitemap(pages, newest) {
+  // ponytail: <priority> is ignored by Google, so one value for all analyses.
+  const url = (loc, lastmod, changefreq, priority) => [
+    '  <url>',
+    `    <loc>${SITE_ORIGIN}${loc}</loc>`,
+    lastmod ? `    <lastmod>${lastmod}</lastmod>` : null,
+    `    <changefreq>${changefreq}</changefreq>`,
+    `    <priority>${priority}</priority>`,
+    '  </url>',
+  ].filter(Boolean).join('\n');
+
+  const entries = [
+    url('/', newest, 'weekly', '1.0'),
+    ...pages.map(p => url(p.href, p.date, 'monthly', '0.8')),
+    ...STATIC_PAGES.map(p => url(p, null, 'yearly', '0.5')),
+  ];
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+${entries.join('\n\n')}
+
+</urlset>
+`;
+}
+
+function generateFeed(articles) {
+  const items = articles.slice(0, FEED_MAX_ITEMS).map(a => `    <item>
+      <title>${xmlEscape(a.title)}</title>
+      <link>${SITE_ORIGIN}${a.href}</link>
+      <guid>${SITE_ORIGIN}${a.href}</guid>
+      <pubDate>${rfc822(a.date)}</pubDate>
+      <description>${xmlEscape(a.description)}</description>
+    </item>`).join('\n\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Trading852</title>
+    <link>${SITE_ORIGIN}</link>
+    <description>Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.</description>
+    <language>en</language>
+    <lastBuildDate>${rfc822(articles[0].date)}</lastBuildDate>
+    <atom:link href="${SITE_ORIGIN}/feed.xml" rel="self" type="application/rss+xml"/>
+
+${items}
+
+  </channel>
+</rss>
+`;
+}
+
 // ── Main ───────────────────────────────────────────────────────────────────────
 function build() {
   fs.rmSync(DIST, { recursive: true, force: true });
@@ -435,6 +517,14 @@ function build() {
   } catch (e) {
     console.error('Scorecard generation failed:', e.message);
   }
+
+  // Regenerate sitemap.xml + feed.xml from disk (never hand-edit them).
+  const articles = getAllArticles();
+  const pages = getAllAnalysisPages();
+  fs.mkdirSync(path.join(DIST, 'static'), { recursive: true });
+  fs.writeFileSync(path.join(DIST, 'static', 'sitemap.xml'), generateSitemap(pages, articles[0].date));
+  fs.writeFileSync(path.join(DIST, 'feed.xml'), generateFeed(articles));
+  console.log(`Sitemap: ${pages.length + STATIC_PAGES.length + 1} URLs · Feed: ${Math.min(articles.length, FEED_MAX_ITEMS)} items`);
 
   console.log(`Built ${built} HTML pages, copied ${copied} files → dist/`);
 
