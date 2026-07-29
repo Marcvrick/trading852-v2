@@ -4,7 +4,7 @@ tags: [trading852, wiki, hub, static-site, hk-stocks]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-15
+updated: 2026-07-29
 ---
 
 # Trading852 v2, Wiki
@@ -22,6 +22,8 @@ Authored pages in [publish/](../publish/) are assembled into `dist/` by [build.j
 - [Editorial](editorial.md): DRAFT-first workflow, hard voice rules, what to never write, pre-publish checklist
 - [Knowledge layer](knowledge/index.md): sub-hub, what the site has already claimed. Frames, published peer multiples, HSI and peg, banks, gold, and the contradictions between articles. A consistency check, never a price source
 - [Build pipeline](build-pipeline.md): build.js, source format, CONFIG, layouts, folder structure, Vercel, site plumbing
+- [Design convention](design-convention.md): colors, type, layout mood. Which hexes are semantic and therefore off-limits for decoration
+- [Logo brief](logo-brief.md): what to hand a designer. Deliverables, sizes, and the four charter conflicts in the current draft
 - [SEO](seo/index.md): sub-hub, the mandatory ticker-analysis pattern + strategy, structure, calendar, competitors, roadmap, audit
 - [Scorecard](scorecard.md): the auto-generated live performance tracker
 - [Convexity tracker](convexity-tracker.md): the live rate-convexity regime gauge for HK financials (baked + client-side, free Yahoo data)
