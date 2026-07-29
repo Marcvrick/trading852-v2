@@ -112,7 +112,8 @@ function buildHead(config, jsonld, cssFiles, content) {
     '{{OG_IMAGE_WIDTH}}':     config.ogImageWidth  || '1200',
     '{{OG_IMAGE_HEIGHT}}':    config.ogImageHeight || '630',
     '{{OG_IMAGE_TYPE}}':      config.ogImageType   || 'image/png',
-    '{{OG_IMAGE_ALT}}':       config.ogImageAlt    || 'Trading852: independent equity research on HKEX-listed companies',
+    // The generated cover renders the headline as the image, so the headline is the alt text.
+    '{{OG_IMAGE_ALT}}':       config.ogImageAlt    || ogTitle,
     '{{CSS_LINKS}}':          cssLinks,
     '{{ARTICLE_META}}':       articleMeta,
     '{{JSONLD}}':             jsonldBlock,
