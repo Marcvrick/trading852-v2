@@ -397,6 +397,18 @@ function validateInternalLinks() {
 // Both were hand-maintained and drifted (3 articles missing from the sitemap,
 // 7 from the feed). Generated from disk on every build instead.
 const STATIC_PAGES = ['/about', '/scorecard', '/disclaimer', '/legal-notice'];
+
+// ── Social cover auto-wiring ──────────────────────────────────────────────────
+// scripts/make_og.py writes assets/og/{slug}.png. Use it for the article's
+// og:image unless CONFIG names a real bespoke image (not the shared placeholder).
+const GENERIC_OG = `${SITE_ORIGIN}/assets/og-image.png`;
+
+function resolveOgImage(rel, config) {
+  const m = rel.match(/^analyses[/\\](.+)\.html$/);
+  if (!m || (config.ogImage && config.ogImage !== GENERIC_OG)) return config.ogImage;
+  const cover = path.join(ROOT, 'assets', 'og', `${m[1]}.png`);
+  return fs.existsSync(cover) ? `${SITE_ORIGIN}/assets/og/${m[1]}.png` : config.ogImage;
+}
 const FEED_MAX_ITEMS = 20;
 
 const xmlEscape = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -494,6 +506,7 @@ function build() {
     if (file.endsWith('.html')) {
       let source = fs.readFileSync(file, 'utf8');
       const { config, jsonld, content } = parseSource(source);
+      config.ogImage = resolveOgImage(rel, config);
       let page = assemblePage(config, jsonld, content);
       // Substitute {{RECENT_ANALYSES}} and {{OUR_ANALYSES}} tokens on the homepage.
       if (rel === 'index.html') {
