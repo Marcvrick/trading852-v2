@@ -38,23 +38,26 @@ def read_config(path):
     return json.loads(m.group(1)) if m else {}
 
 
-def headline_size(title):
-    # ponytail: char-count ramp instead of real text measurement. Titles run
-    # 40-110 chars; if one overflows, add a step rather than a layout engine.
-    n = len(title)
-    if n <= 45:
-        return 92
-    if n <= 70:
+def stat_size(text):
+    # ponytail: char-count ramp instead of real text measurement. contextLine
+    # runs 30-60 chars; if one overflows, add a step rather than a layout engine.
+    n = len(text)
+    if n <= 35:
+        return 88
+    if n <= 48:
         return 74
-    if n <= 95:
+    if n <= 60:
         return 62
     return 52
 
 
 def template(cfg):
-    title = cfg.get("ogTitle") or cfg.get("title") or "Trading852"
+    # X renders og:title as its own caption directly under this image, so the
+    # cover must NOT repeat the headline — that duplicated it on every card.
+    # The cover carries only the sector + the one-line stat; the headline is
+    # X's job.
+    stat = cfg.get("contextLine") or cfg.get("ogTitle") or cfg.get("title") or "Trading852"
     eyebrow = (cfg.get("articleSection") or "Analysis").upper()
-    context = cfg.get("contextLine") or ""
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face {{ font-family: SG; src: url("{FONT}") format("woff2"); font-weight: 700; }}
 @font-face {{ font-family: SG; src: url("{FONT_REG}") format("woff2"); font-weight: 400; }}
@@ -68,8 +71,7 @@ body {{
 .main {{ flex: 1; display: flex; flex-direction: column; justify-content: center; }}
 .eyebrow {{ font-size: 21px; font-weight: 700; letter-spacing: .18em; color: #5b6478; }}
 .rule {{ width: 64px; height: 4px; background: #56d49f; margin: 22px 0 30px; }}
-h1 {{ font-size: {headline_size(title)}px; font-weight: 700; line-height: 1.08; letter-spacing: -.02em; }}
-.context {{ font-size: 26px; font-weight: 400; color: #d6d5db; margin-top: 26px; line-height: 1.35; }}
+.stat {{ font-size: {stat_size(stat)}px; font-weight: 700; line-height: 1.12; letter-spacing: -.02em; }}
 footer {{ display: flex; justify-content: space-between; align-items: baseline;
   font-size: 20px; font-weight: 700; letter-spacing: .1em; color: #5b6478;
   border-top: 1px solid #2a2a30; padding-top: 22px; }}
@@ -78,8 +80,7 @@ footer .brand {{ color: #fff; }}
 <div class="main">
   <div class="eyebrow">{eyebrow}</div>
   <div class="rule"></div>
-  <h1>{title}</h1>
-  {f'<div class="context">{context}</div>' if context else ''}
+  <div class="stat">{stat}</div>
 </div>
 <footer><span class="brand">TRADING852</span><span>HKEX RESEARCH</span></footer>
 </body></html>"""
