@@ -58,6 +58,25 @@ Two secondary issues: the "852" is set far larger than "Trading", so the eye rea
 
 ---
 
+## The lockup Dany wants (decided 2026-07-29)
+
+Two stacked lines, centred, inside a dark round mark:
+
+```
+   T R A D I N G      <- small, wide letterspacing, uppercase
+       $852           <- large, bold, the dominant element
+```
+
+- **`TRADING`** sits on top: uppercase, small, generous tracking (roughly `0.25em`), optically centred over the numerals below.
+- **`$852`** carries the mark. The `$` is deliberate — it makes the numerals read as a ticker rather than a phone code, which is the right association for the audience.
+- **Red edge on the bottom 10% of `$852`.** The HK red `#DE2910` fills the bottom tenth of the glyph height, clipped *to the letterforms themselves*, not painted as a rectangle behind or under them. The letters look dipped in red at their base. This is the mark's single Hong Kong signal, and it replaces the gold entirely.
+- **No gold anywhere.** `TRADING` is white, or `--dp-c-gray-2` `#5b6478` if it needs to recede. Gold is the regime-gauge transition state and cannot appear in the identity.
+- The reference image shows a separate red dot floating outside the circle. Drop it — the charter allows one HK-red element, and the dipped base is that element.
+
+Container: a filled circle. On the site it sits on `#000`, so the circle must be either pure black with a hairline edge, or transparent with no disc at all. A navy disc is out, per the conflict list above.
+
+---
+
 ## What to deliver
 
 - **Horizontal lockup** — primary. Sized to sit at 13px cap height without loss.
