@@ -303,8 +303,28 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
 /* ── Responsive ───────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .sc-table thead th.num .th-sub { display: none; }
-  .sc-table tbody td, .sc-table thead th { padding: 0.75rem 0.5rem; }
+  .sc-table tbody td, .sc-table thead th { padding: 0.75rem 0.3rem; }
   .hero-lede { font-size: var(--fs-16); }
   .sc-chart-canvas { height: 14rem; }
   .sc-chart-key { gap: 0.9rem; font-size: var(--fs-12); }
+
+  /* The table's min-content width (406px at its desktop padding) used to push
+     the whole page into a horizontal scroll on a 390px viewport. Three changes,
+     smallest first: tighter cell padding above, badges stacked under the ticker
+     instead of widening that column, and one step down on the table font. The
+     table then fits 390px exactly; 320/360px screens scroll it inside its own
+     box (below), which is the point of that rule. */
+  .sc-ticker .sc-badge {
+    display: block;
+    width: fit-content;
+    margin: 0.3rem 0 0 0;
+  }
+  .sc-alpha-label { padding-left: 0.3rem; }
+  /* Last 24px: the four narrow columns are sized by their digits, so one step
+     down on the table font is what actually closes the gap on a 390px screen. */
+  .sc-table { font-size: var(--fs-12); }
 }
+
+/* Guarantee, independent of the tuning above: however wide the table's content
+   gets, it scrolls inside its own box and never the page. */
+#scorecard-table { overflow-x: auto; }
