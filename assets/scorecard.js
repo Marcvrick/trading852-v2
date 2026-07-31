@@ -120,6 +120,12 @@
         var stopLevel = entry * activeTier.stopMul;
         var lockedPct = activeTier.lockedPct;
         var peakVal = entry;
+        // A fully exited pick has no shares left to stop out. Its pct is already
+        // frozen by the realized legs, so a late stop could not change the number,
+        // but the live scan would still label the row "Stopped · stop hit <date>"
+        // on a position that was closed by sale — the badge would simply be false.
+        // Same skip as the benchmark, for the same reason: there is no open trade.
+        var exitedPct = (reducedInfo(rec) || {}).fracPct || 0;
         var stopped = false, stopDate = null;
         if (rec.forcedStop) {
           // Permanent stop ledger override (scorecard-stops.json via build.js,
@@ -132,7 +138,7 @@
           stopDate = new Date(rec.forcedStop.stopDate + "T00:00:00Z");
           stopLevel = rec.forcedStop.stopLevel;
           lockedPct = rec.forcedStop.lockedPct;
-        } else if (!rec.isBenchmark) {
+        } else if (!rec.isBenchmark && exitedPct < 100) {
           // Scan subsequent bars: arm the tightest tier whose +pct trigger has been
           // reached by the running intraday HIGH (tiers ratchet tighter only), then
           // check if the bar's intraday LOW breaches the active stop level.

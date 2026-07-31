@@ -4,7 +4,7 @@ tags: [trading852, wiki, scorecard]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-23
+updated: 2026-07-31
 ---
 
 # Trading852 v2, Scorecard
@@ -73,7 +73,11 @@ When a pick reaches a published target and part of the position is trimmed, the 
 
 Worked example (0300.HK, entry 89.70, 2/3 trimmed @94.30): realized leg = 0.667 × +5.13% = **+3.42% banked**. If the live third round-trips to entry (livePct 0%), the row holds at +3.42%. The gain is locked.
 
-**Ratchet interaction**: the trailing-stop scan still runs on the full price history. A Reduced pick can also be Stopped (the remainder got stopped out); then the live leg takes `lockedPct` while the realized leg stays frozen at the fill. Both badges render on the ticker.
+**Ratchet interaction**: the trailing-stop scan still runs on the full price history for a *partially* trimmed pick. It can also be Stopped (the remainder got stopped out); then the live leg takes `lockedPct` while the realized leg stays frozen at the fill. Both badges render on the ticker.
+
+> **A fully exited pick is exempt from the stop scan** (`exitedPct < 100` in `fetchOne`, the same skip the benchmark gets). With no shares left, `remFrac` is 0, so a late stop could not move `pct` — but the live scan would still label the row `Stopped · stop hit <date>` on a position that was closed by sale, and the badge would simply be false. Added Jul 31, 2026 when 0300.HK Midea became the first fully closed pick: its peak of 99.75 had armed the breakeven tier at the 89.70 entry, so any drop back through 89.70 would have stamped a phantom stop on a trade already sold at 99.10. Regression check: `python3 scripts/test-stop-guard.py http://localhost:3000`.
+
+**Known display gap on a closed pick**: the Last column keeps showing the live price (a closed Midea would read `Last 60.00` beside `+6.91%`), and with more than one exit the badge drops the fill and date — `reducedInfo()` only fills those when `exits.length === 1`, so it reads a bare `Reduced 100%`. The numbers are right; the row just does not show what it was sold at.
 
 **Average**: the portfolio mean (`!isBenchmark`) reads each row's blended `pct`, so banked gains hold the average — and the "Portfolio vs HSI" alpha — through a drawdown. Reduced picks count as winners/losers by their blended `pct`.
 

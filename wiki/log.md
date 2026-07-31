@@ -13,6 +13,14 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### July 31, 2026 · Scorecard: fully exited picks exempt from the stop scan
+
+0300.HK Midea became the first fully closed pick this morning, which exposed a latent labelling bug. Its peak of 99.75 had armed the breakeven stop tier at the 89.70 entry, so a later drop back through 89.70 would have stamped `Stopped · stop hit <date>` on a position already sold in full at 99.10. `pct` was never at risk (`remFrac` = 0 freezes it at the banked +6.91 %) — only the badge would have lied.
+
+`fetchOne` now skips the live stop scan when the exit fractions sum to 100 %, the same exemption the benchmark gets and for the same reason: there is no open trade. Regression check reproduces the bug on the pre-fix code and passes after: `python3 scripts/test-stop-guard.py http://localhost:3000`.
+
+Two display gaps left open on a closed row, both cosmetic: the Last column still shows the live price, and a multi-exit pick shows a bare `Reduced 100%` because `reducedInfo()` only carries fill/date when there is exactly one exit.
+
 ### July 31, 2026 · Homepage: "Updated" tag on recently revisited analyses
 
 A refreshed article was indistinguishable from an untouched one in the "Our Analyses" list. Lines now carry an `Updated <date>` pill, driven by the `modDate` already present in each article's CONFIG — no new field to maintain.
