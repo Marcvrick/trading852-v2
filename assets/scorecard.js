@@ -590,11 +590,8 @@
     var note = document.getElementById("scorecard-chart-key");
     if (note) {
       var pp = last.port - last.bench;
-      var buybacks = rows.reduce(function (a, r) { return a + (r.reEntries || 0); }, 0);
       note.innerHTML =
         '<span class="sc-key sc-key-port">Portfolio ' + fmtPct(last.port) + '</span>' +
-        '<span class="sc-key sc-key-re" title="' + buybacks + ' buy-back' +
-          (buybacks === 1 ? '' : 's') + ' triggered">With buy-backs ' + fmtPct(last.re) + '</span>' +
         '<span class="sc-key sc-key-bench">HSI ' + fmtPct(last.bench) + '</span>' +
         '<span class="sc-key sc-key-alpha ' + (pp >= 0 ? 'pos' : 'neg') + '">' +
           (pp >= 0 ? '+' : '') + pp.toFixed(2) + ' pp vs HSI</span>';
@@ -608,10 +605,10 @@
           pointHoverBackgroundColor: '#fff', tension: 0,
           fill: { target: { value: 0 }, above: 'rgba(15,157,102,0.09)', below: 'rgba(201,51,56,0.07)' },
           order: 1 },
-        { label: 'With buy-backs', data: data.map(function (d) { return d.re; }),
-          borderColor: '#4760ff', borderWidth: 1.75, pointRadius: 0,
-          pointHoverRadius: 4, pointHoverBackgroundColor: '#fff', tension: 0,
-          fill: false, order: 2 },
+        // The buy-back line is WITHHELD from the public page while its rule is
+        // still being settled (2026-07-31). reSeries is still computed, so
+        // scripts/check-buyback-model.py and any local work keep running; only
+        // the dataset and its key are off. Re-add both together to restore it.
         { label: 'HSI', data: data.map(function (d) { return d.bench; }),
           borderColor: '#5b6478', borderWidth: 1.5, pointRadius: 0,
           pointHoverRadius: 4, pointHoverBackgroundColor: '#fff', tension: 0,
