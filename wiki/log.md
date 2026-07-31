@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-23
+updated: 2026-07-31
 ---
 
 # Trading852 v2, Changelog
@@ -12,6 +12,19 @@ updated: 2026-07-23
 Part of the [Trading852 wiki](index.md).
 
 ## Changelog
+
+### July 31, 2026 · 0300.HK Midea fully exited — first closed position on the scorecard
+
+Dany sold the remaining third at **99.10**, closing the position. Second entry appended to `scorecard-exits.json`:
+
+| Date | Fraction | Fill | Return on that leg |
+|---|---|---|---|
+| Jul 20 | 0.667 | 94.30 | +5.13 % |
+| Jul 31 | 0.333 | 99.10 | +10.48 % |
+
+Entry 89.70, blended row `pct` = **+6.91 %**, now frozen (`remFrac` = 0, so the live leg no longer contributes). Fractions sum to exactly 1.000 → `fracPct` = 100 → the row takes the muted-green `sc-row-reduced` tint and reads `100 % banked · 0 % live`.
+
+**Display note, first multi-exit pick:** `reducedInfo()` in [scorecard.js](../assets/scorecard.js) only fills `fill`/`date` when `exits.length === 1`, so the ticker badge reads a bare `Reduced 100%` with no price or date — the per-leg detail lives in `scorecard-exits.json` and this log, not on the page. Left as is; change only if a closed row should carry its final fill.
 
 ### July 23, 2026 · Scorecard: Prada silently un-stopped — rolling-window bug, 4 positions had wrong stop data
 
