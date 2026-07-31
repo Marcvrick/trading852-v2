@@ -79,41 +79,59 @@ A line chart above the table, from the April 10 issue to today: the portfolio in
 
 > **It is an average of open positions, not an equity curve.** A pick joins the mean at 0 % on its entry date, so publishing a new article pulls the green line toward zero that day. This is the same property the headline average has always had; the chart just makes it visible. The tooltip shows `N picks live` at every point so the dilution is readable rather than hidden. Do not present this line as the return on a fixed pot of money.
 
-### The buy-back line (third series)
+### The buy-back line (third series) — WITHHELD, not on the public page
+
+> **Status 2026-07-31: computed but not displayed.** `reSeries` is still built in `fetchOne`, so `scripts/check-buyback-model.py` and any local work keep running, but the chart dataset, its key entry and the methodology paragraph are removed. Restore all three together. Pulled at Dany's instruction after the modelled result kept moving under him: −0.13 % → −0.31 % → −1.26 % across three corrections in one afternoon. **Do not put it back before the open question below is answered.**
 
 Answers one question Dany asked on 2026-07-31: a position gets stopped out, the price later climbs back to where it was first bought, you buy it back and ride it — what would that have done to the portfolio?
 
-**Model** (`fetchOne`, `reSeries`): each leg is the published rule unchanged — the same 3-tier trailing ratchet, anchored again at the **original** entry price, because that is the level being bought back. Re-entry fires **the next time the price reaches that entry** — intraday high, dividend-adjusted — and fills there, i.e. a resting limit buy at the entry price. Legs compound. Repeats without limit: Prada went through three buy-backs. The first leg honours `scorecard-stops.json` so the line starts from the same history the table shows; later legs scan live.
+**Model** (`fetchOne`, `reSeries`): each leg is the published rule unchanged — the same 3-tier trailing ratchet, re-anchored at what the buy-back actually cost. Legs compound, and it repeats without limit (Prada: three buy-backs). The first leg honours `scorecard-stops.json` so the line starts from the same history the table shows; later legs scan live. A pick closed by a decision to sell rather than by a stop (0300.HK Midea) carries its actual result on both lines, as does the benchmark.
 
-> **The trigger was questioned and confirmed on 2026-07-31.** Dany found the line implausible; the check was 1585.HK, whose two buy-backs drive the worst single result. Both are correct under the rule: after the Apr 23 stop, the first session whose high reaches 12.58 is **May 12 (high exactly 12.58)**, and the second is Jun 8, which opens at 12.69 — above the level — and falls back through it, so a resting limit buy at 12.58 fills on the way down. Dany's ruling: *"on devrait re-rentrer en position la prochaine fois que le prix monte à 12.58."*
->
-> A milder **close-confirmation** variant was computed and rejected: requiring a close at or above the entry skips both 1585 buy-backs entirely (no session ever closed back at 12.58) and skips 1167 as well, scoring the portfolio **+0.83 %** instead of −0.13 %. It is not free — re-entering at a close above the entry re-anchors the stop higher, which turns 1913.HK Prada from +3.51 % into −9.32 %. Different question, kept out of the shipped line.
+**Trigger** — confirmed by Dany, not chosen: re-entry fires *the next time the price reaches the original entry*, on the intraday high, i.e. a buy-stop at that level. *"On devrait re-rentrer en position la prochaine fois que le prix monte à 12.58."* A close-confirmation variant was computed and rejected.
 
-**Not modelled**: a pick closed by a decision to sell rather than by a stop (0300.HK Midea) carries its actual result on both lines. Same for the benchmark.
+**Fill** — at the entry whenever the session trades there (its low comes back through the level), otherwise at the open. Only a session that gaps and never returns pays the open: 9988.HK opened 128.20 on May 22 with a 126.00 low against a 125.50 entry, so 125.50 was never available. 1585.HK on Jun 8 opened 12.69 but its low was 11.38, so it does fill at 12.58.
 
-**Fill rule**: at the entry whenever the session trades there — its low comes back through the level — otherwise at the open. Only a session that gaps and never returns pays the open: 9988.HK on May 22 opened 128.20 with a low of 126.00 against a 125.50 entry, so 125.50 was never available. 1585.HK on Jun 8 opened 12.69 but its low was 11.38, so it does fill at 12.58.
+**Dividends** accrue to a leg only while that leg holds the shares, and the re-entry test compares raw prices — a position that is not held receives nothing.
 
-**Dividends accrue to a leg only while that leg holds the shares.** A dividend that goes ex while the model is out of the market is not received, and the re-entry test compares **raw** prices against the raw entry for the same reason. 1913.HK is the case that forced this: HKD 1.5025 went ex on May 6, between the Apr 30 stop and the May 7 buy-back. Crediting it inflated every later bar of that pick — enough to lift the Jul 29 low of 38.00 (below the 38.92 entry) to a 39.50 that never came back, buying at 39.74 instead of 38.92, and to turn a −9.97 % chain into +3.51 %.
+#### The open question that stopped the work
 
-**Answer, as of 2026-07-31: it would have been worse — +1.15 % actual against −1.26 %, a gap of 2.41 pp.** Seven picks have been stopped, so seven diverge:
+**After a stock goes ex-dividend while the model is out of the market, does the buy-back level stay at the original entry, or drop by the dividend?**
+
+The rule above is applied only on one side, and that asymmetry is probably wrong. 1913.HK is the case. HKD 1.5025 went ex on May 6, between the Apr 30 stop and the May 7 buy-back. Not crediting it is right — the shares were not held. But after the ex-date the price is permanently ~1.50 lower, so requiring it to climb back to **38.92** demands a *larger* recovery than the one originally bought. The level arguably should fall to ~**37.42**.
+
+It is not academic. With the level at 38.92 the second leg was set up to fail, and it did: stopped May 18 at −10 % on a 34.90 low against a 35.03 stop. That single stop is the whole disagreement with Dany, who reads Prada's current +11.15 % over entry and expects the buy-back chain to be positive. It is −9.97 % because it realised −10 % twice, on Apr 30 and again on May 18, before the leg now open.
+
+| | Prada chain as modelled |
+|---|---|
+| Apr 30 | stop −10 % → banked 0.90 |
+| May 07 | buy back @38.92 |
+| May 18 | stop −10 % (low 34.90 vs stop 35.03) → banked 0.81 |
+| Jun 03 | buy back @38.92 |
+| Jun 22 | stop 0 % (breakeven tier armed) → banked 0.81 |
+| Jun 29 | buy back @38.92, still held; open leg +11.15 % |
+| **Total** | **0.81 × 1.1115 − 1 = −9.97 %** |
+
+**Last computed figures, on the withheld model** — recorded so the next attempt has a baseline, not as a published claim. Actual +1.15 % against −1.26 %, a gap of 2.41 pp:
 
 | Ticker | Actual | With buy-backs | Buy-backs | Note |
 |---|---|---|---|---|
 | 1585.HK Yadea | −5 % | **−23.05 %** | 2 | buy May 12 @12.58 → stop May 28; buy Jun 8 @12.58 → stop Jun 9 |
 | 9988.HK Alibaba | 0 % | **−10.00 %** | 1 | buy May 22 @128.20 (gap, never returned) → stop Jun 10 |
 | 1167.HK Jacobio | 0 % | **−10.00 %** | 1 | buy Apr 27 @7.22 → stop May 5 |
-| 1913.HK Prada | −10 % | −9.97 % | 3 | buy May 7 → stop May 18 −10 %; buy Jun 3 → stop Jun 22 0 %; buy Jun 29, leg open |
+| 1913.HK Prada | −10 % | −9.97 % | 3 | see the chain above; hinges on the open question |
 | 6690.HK Haier | −5 % | −1.75 % | 2 | leg open |
 | 1698.HK Tencent Music | −5 % | −2.73 % | 2 | leg open |
 | 0700.HK Tencent | −5 % | −1.35 % | 1 | leg open |
 
-> **"But those never came back to their entry" — they did.** Checked on 2026-07-31 against raw bars, with no dividend adjustment involved in any of the three: 1167.HK opened **7.51** on Apr 27 against a 7.22 entry; 9988.HK traded above 125.50 in **six** sessions, reaching 131.20 and closing 130.90 on Jun 2; 1585.HK printed a 12.58 high on May 12 and opened 12.69 on Jun 8. All three are far below entry *today* (4.67, 117.00, 10.73), which is the thing that makes them look like they never recovered. Each did recover to the entry, was bought back, and fell away again — that round trip is precisely what the buy-back rule is exposed to.
+Four of the seven buy-back legs are still open, so any verdict leans on live marks. Only the three closed cases are settled, and all three are worse.
 
-Three improved (Haier, Tencent Music, Tencent, all still open), three got much worse, and Prada lands within 0.03 pp of its actual result after three round trips. The pattern in the losers is the same each time: re-entry puts the position back into a market that is still falling, and the ratchet stops it again within days.
+#### Two things already checked, do not re-litigate
 
-> **Caveat: four of the seven buy-back legs are still open.** Haier, Tencent Music, Tencent and Prada are marked at live prices, not realised. The 2.41 pp verdict leans on those marks and can move. What is settled is the three closed cases, all worse.
+> **"Those names never came back to their entry" — they did.** Verified 2026-07-31 on raw bars, with no dividend adjustment involved in any of the three: 1167.HK opened **7.51** on Apr 27 against a 7.22 entry; 9988.HK traded above 125.50 in **six** sessions, reaching 131.20 and closing 130.90 on Jun 2; 1585.HK printed a 12.58 high on May 12 and opened 12.69 on Jun 8. All three sit far below entry *today* (4.67, 117.00, 10.73), which is what makes them look like they never recovered. Each recovered to the entry, was bought back, and fell away again — precisely what the rule is exposed to.
 
-**Cross-check**: `scripts/check-buyback-model.py` replicates the whole model from Yahoo independently of the JS and must print the same portfolio figure. Its "never stopped" picks reproduce the live table exactly, which is what validates the entry-finding and dividend handling.
+> **1585.HK cross-verified against three independent feeds**, because it drives the worst single result: Yahoo, FinMC_3 `cache_unadjusted` and eastmoney all give May 12 high 12.58 and Jun 8 open 12.69 / high 12.70. On `cache_adjusted` (TV-exact) the entry is 11.930 and May 12's high is 11.930 — the same touch.
+
+**Cross-check**: `scripts/check-buyback-model.py` replicates the model from Yahoo independently of the JS and must print the same portfolio figure. Its "never stopped" picks reproduce the live table exactly, which validates the entry-finding. It marks the open leg from `meta.regularMarketPrice`, as the page does — walking the close array instead prices a different session, since Yahoo's daily array trails `meta` by one bar, and the two then disagree for no real reason.
 
 **Calendar**: the benchmark's own bars are the x-axis (2800.HK trades every HK session from the Apr-10 entry). Each pick holds a pointer into its own series and contributes its last value at or before the current session, so a pick that misses a bar carries forward instead of dropping out of the mean.
 

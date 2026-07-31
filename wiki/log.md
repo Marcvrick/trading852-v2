@@ -13,23 +13,21 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
-### July 31, 2026 · Scorecard chart: third line, buying stopped positions back at the entry
+### July 31, 2026 · Buy-back line built, corrected three times, then withheld from the page
 
-Dany's question: a pick gets stopped, the price later returns to where it was first bought, you buy it back and ride — what would that have done? Blue third line on the chart, modelled in `fetchOne` as `reSeries`.
+Dany's question: a pick gets stopped, the price later returns to where it was first bought, you buy it back and ride — what would that have done? Built as a blue third line on the scorecard chart (`reSeries` in `fetchOne`), then **pulled from the public page the same afternoon**. It is still computed; only the chart dataset, its key entry and the methodology paragraph are removed. Restore the three together.
 
-**Rules, settled after Dany challenged the line three times — each challenge found something:**
+**Why it was pulled:** the modelled result moved three times under Dany while he was reading it — **−0.13 % → −0.31 % → −1.26 %** — each move a real bug I had shipped, each found because he refused the number rather than because a test caught it. That is the failure worth recording. Every one of these would have been caught by tracing a single pick's cash flows by hand before drawing the line:
 
-1. **Trigger confirmed, not changed.** Re-entry fires the next time the price reaches the original entry. 1585.HK was the test case: after the Apr 23 stop the first session whose high reaches 12.58 is May 12, at exactly 12.58. Verified against three independent feeds — Yahoo, FinMC_3's `cache_unadjusted`, and eastmoney — plus `cache_adjusted`, where the entry is 11.930 and May 12's high is 11.930. It came back.
-2. **Fill price — real bug.** The model filled every re-entry at the entry price, including sessions that gapped above it and never traded back down. 9988.HK opened 128.20 on May 22 against a 125.50 entry with a 126.00 low: that fill was a price never available. Now it fills at the entry whenever the session's low comes back through it, and at the open otherwise.
-3. **Dividends while out of the market — the bigger bug.** A dividend was credited to the buy-back chain even when it went ex during a period the model held nothing. 1913.HK: HKD 1.5025 ex on May 6, between the Apr 30 stop and the May 7 buy-back. That inflated every later bar of the pick, lifted the Jul 29 low of 38.00 (below the 38.92 entry) to a 39.50 that never came back, and turned a −9.97 % chain into +3.51 %. Dividends now accrue to a leg only while that leg holds the shares, and the re-entry test compares raw prices.
+1. **Fill on a gap.** Re-entry filled at the entry price even when the session gapped above it and never traded back down — 9988.HK opened 128.20 on May 22 against a 125.50 entry with a 126.00 low, a price never available. Now: fill at the entry when the session's low comes back through it, at the open otherwise.
+2. **Dividends while out of the market.** A dividend was credited to the chain even when it went ex during a period the model held nothing. 1913.HK, HKD 1.5025 ex on May 6, between the Apr 30 stop and the May 7 buy-back. It inflated every later bar, lifted the Jul 29 low of 38.00 to a phantom 39.50, and turned a −9.97 % chain into +3.51 %.
+3. **Cross-check priced a different session.** `check-buyback-model.py` walked the daily close array while the page reads `meta.regularMarketPrice`, which leads it by one bar — the same trap as the SPY 747 counter bug. Made them agree by reading `meta` in both.
 
-**Answer: it would have been worse — +1.15 % actual against −1.26 %, 2.41 pp given up.** Three picks improve (Haier, Tencent Music, Tencent, all still open), three get much worse — 1585 Yadea −5 % → −23.05 %, 9988 and 1167 from 0 % to −10 % — and Prada lands within 0.03 pp of its actual result after three round trips. The losing pattern repeats: re-entry puts the position back into a market still falling and the ratchet stops it again within days.
+**The trigger itself was challenged and confirmed, not changed.** 1585.HK did return to 12.58 on May 12, verified against Yahoo, FinMC_3's `cache_unadjusted` and eastmoney independently, and on `cache_adjusted` too (entry 11.930, May 12 high 11.930). Recorded in [scorecard.md](scorecard.md) so it is not re-argued.
 
-**Four of the seven buy-back legs are still open**, so the verdict leans on live marks. The three closed cases are all worse; that part is settled.
+**What is still open, and why the line stays down:** after a stock goes ex-dividend while the model is out, does the buy-back level stay at the original entry or drop by the dividend? Not crediting the dividend is right, but the level was left at 38.92 against a permanently ~1.50 lower price, which demands a bigger recovery than the one originally bought. That asymmetry is what produces Prada's May 18 stop, and that stop is the entire disagreement: Dany reads Prada's +11.15 % over entry and expects a positive chain; the model says −9.97 % because it realised −10 % twice first. Awaiting Dany's ruling before any further work.
 
-Also settled: the April 10 picks enter at **April 10's own close**, not the next session's. The entry loop compares HK bar timestamps (01:30 UTC) against midnight UTC of the issue date, so the issue day qualifies as "strictly after". Surfaced while checking Yadea (12.58 vs Apr 13's 12.84) and confirmed by Dany as the intended behaviour, which makes it the rule rather than the documented-but-unimplemented one.
-
-Cross-checked throughout against `scripts/check-buyback-model.py`, an independent Python replication that must print the same portfolio figure; its untouched picks reproduce the live table exactly.
+Also settled along the way: the April 10 picks enter at **April 10's own close**, not the next session's. The entry loop compares HK bar timestamps (01:30 UTC) against midnight UTC of the issue date, so the issue day passes the "strictly after" test. Surfaced while checking Yadea (12.58 versus April 13's 12.84) and confirmed by Dany as intended, which makes it the rule rather than the documented-but-unimplemented one.
 
 ### July 31, 2026 · Article ticker links to its scorecard row, and the mobile table stops breaking the page
 
