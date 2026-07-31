@@ -53,6 +53,20 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 
 **To add a pick**: just publish the stock article with the standard hero (`meta-ticker` + `meta-verdict`). The next `node build.js` registers it automatically (Vercel runs `build.js` on deploy, so commit and push is enough). Set `scorecardName` in CONFIG only if you want a shorter display name than the schema `about.name`.
 
+## Portfolio vs HSI chart
+
+A line chart above the table, from the April 10 issue to today: the portfolio in solid green against 2800.HK dashed grey, both as % return. Built in `renderChart` / `buildPortfolioSeries` (`scorecard.js`), drawn with the Chart.js 4.4.1 already vendored at `publish/static/chart.umd.js` for the SPY 747 article. No new dependency, no build step: the series is computed client-side from the OHLC each pick already fetches.
+
+**What the line means.** At each session, the portfolio value is the simple arithmetic mean of the return of every pick that has entered by that date — the exact rule behind the headline average, evaluated on every bar instead of only the last one. `fetchOne` now returns a `series` array alongside the scalars, applying the same blend per bar: the stop locks the live leg from its own bar onward, and each exit freezes its fraction from its fill date. **The right edge therefore equals the summary's average by construction**, and `scripts/test-chart-parity.py` asserts it.
+
+> **It is an average of open positions, not an equity curve.** A pick joins the mean at 0 % on its entry date, so publishing a new article pulls the green line toward zero that day. This is the same property the headline average has always had; the chart just makes it visible. The tooltip shows `N picks live` at every point so the dilution is readable rather than hidden. Do not present this line as the return on a fixed pot of money.
+
+**Calendar**: the benchmark's own bars are the x-axis (2800.HK trades every HK session from the Apr-10 entry). Each pick holds a pointer into its own series and contributes its last value at or before the current session, so a pick that misses a bar carries forward instead of dropping out of the mean.
+
+**Palette**: the scorecard page body is white (`html, body` in `scorecard.css`), unlike the dark article background the SPY chart sits on. The chart uses the on-light pair the table already uses — `#0f9d66` positive, `#c93338` negative, `#5b6478` for the benchmark — not the `--pos` / `--neg` variables, which are tuned for the dark hero. The `#scorecard-chart-key` swatches double as the legend, so the chart itself renders none.
+
+`renderChart` no-ops when `#scorecard-chart` or `Chart` is absent, so the same `scorecard.js` keeps driving the homepage strip untouched.
+
 ## Partial exits — the "Reduced" state
 
 When a pick reaches a published target and part of the position is trimmed, the row enters a **Reduced** state: the banked gain is frozen into the row's `%` so a round-trip cannot give it back, protecting the portfolio's lead over the HSI benchmark in a drawdown. This is the one hand-maintained layer on the scorecard — positions themselves stay auto-generated from articles, but a discretionary trim is a real event the article cannot derive.

@@ -25,6 +25,15 @@
   <section class="page-body">
     <div class="container">
 
+      <script src="/static/chart.umd.js"></script>
+      <figure class="sc-chart-block">
+        <figcaption class="sc-chart-head">
+          <h2>Portfolio vs the Hang Seng, since April 10</h2>
+          <div id="scorecard-chart-key" class="sc-chart-key"></div>
+        </figcaption>
+        <div class="sc-chart-canvas"><canvas id="scorecard-chart"></canvas></div>
+      </figure>
+
       <div id="scorecard-table">
         <div class="sc-loading">Fetching latest prices&hellip;</div>
       </div>
@@ -71,6 +80,14 @@
           stop loss and can never be marked <em>Stopped</em>. It sits at the
           foot of the table and is excluded from the average return and the
           winners/losers tally.
+        </p>
+        <p>
+          <strong>The chart</strong> plots that same average return on every
+          trading session since April 10, against the Tracker Fund over the same
+          period. A pick joins the average at 0% on its entry date, so publishing
+          a new article pulls the green line toward zero that day. It is an
+          average of the positions open at each date, not the equity curve of a
+          fixed pot of money. Hover any point to see how many picks were live.
         </p>
         <p>
           <strong>Average return</strong> is the simple arithmetic mean of the

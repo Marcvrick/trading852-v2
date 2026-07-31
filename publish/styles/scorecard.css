@@ -259,9 +259,52 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
 
 .methodology p + p { margin-top: 0.75rem; }
 
+/* ── Portfolio vs HSI chart ───────────────────────────────────────────────────── */
+.sc-chart-block { margin: 0 0 3rem 0; }
+
+.sc-chart-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.sc-chart-head h2 {
+  font-family: var(--ff-sans);
+  font-size: var(--fs-14);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sc-chart-key { display: flex; gap: 1.25rem; font-size: var(--fs-14); }
+
+/* Each key doubles as the chart's legend: the swatch matches the line it names,
+   so the chart itself carries no legend box. */
+.sc-key { display: inline-flex; align-items: center; gap: 0.45rem; color: #333; }
+.sc-key::before {
+  content: "";
+  width: 1rem;
+  height: 0;
+  border-top: 2.5px solid transparent;
+}
+.sc-key-port::before { border-top-color: #0f9d66; }
+.sc-key-bench::before { border-top: 2px dashed #5b6478; }
+.sc-key-alpha { font-weight: 700; }
+.sc-key-alpha::before { content: none; }
+.sc-key-alpha.pos { color: #0f9d66; }
+.sc-key-alpha.neg { color: #c93338; }
+
+/* Chart.js with maintainAspectRatio:false needs an explicitly sized parent. */
+.sc-chart-canvas { position: relative; height: 20rem; }
+
 /* ── Responsive ───────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .sc-table thead th.num .th-sub { display: none; }
   .sc-table tbody td, .sc-table thead th { padding: 0.75rem 0.5rem; }
   .hero-lede { font-size: var(--fs-16); }
+  .sc-chart-canvas { height: 14rem; }
+  .sc-chart-key { gap: 0.9rem; font-size: var(--fs-12); }
 }

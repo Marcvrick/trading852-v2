@@ -206,7 +206,34 @@
           pct = (last + divSinceEntry - entry) / entry * 100;
         }
 
+        // Daily return path for the chart: the same blend as `pct` above, but
+        // evaluated bar by bar instead of only at the last bar. A leg only counts
+        // from the session it happened in — the stop locks the live leg from its
+        // own bar onward, and an exit freezes its fraction from its fill date —
+        // so the last point of this series equals the scalar `pct` by construction.
+        var stopTs = stopDate ? stopDate.getTime() / 1000 : null;
+        var exitLegs = (exits || []).map(function (e) {
+          return { ts: Date.parse(e.fillDate + "T00:00:00Z") / 1000, frac: e.fraction,
+                   pct: (e.fillPrice - entry) / entry * 100 };
+        });
+        var series = [];
+        for (var si = entryIdx; si < ts.length; si++) {
+          if (closes[si] == null) continue;
+          var barTs = ts[si];
+          var livePct = (closes[si] + cumDivThrough(barTs) - entry) / entry * 100;
+          if (stopTs != null && barTs >= stopTs) livePct = lockedPct;
+          var realized = 0, soldFrac = 0;
+          for (var li = 0; li < exitLegs.length; li++) {
+            if (exitLegs[li].ts <= barTs) {
+              realized += exitLegs[li].frac * exitLegs[li].pct;
+              soldFrac += exitLegs[li].frac;
+            }
+          }
+          series.push({ t: barTs, pct: realized + Math.max(0, 1 - soldFrac) * livePct });
+        }
+
         return Object.assign({}, rec, {
+          series: series,
           entry: entry,
           entryDate: entryDate,
           entryIsOpen: entryIsOpen,
@@ -337,9 +364,23 @@
         if (red.date) rbt += ' · ' + fmtDate(new Date(red.date + 'T00:00:00Z'));
         badge += ' <span class="sc-badge sc-badge-reduced">' + rbt + '</span>';
       }
+      // On a closed position the live price is not what happened to the money, so
+      // the column shows the final exit fill instead — the same substitution a
+      // stopped row makes when it shows its stop level. Picked by latest fillDate
+      // rather than array order: scorecard-exits.json is hand-maintained, so the
+      // legs are not guaranteed to be appended in chronological order.
+      var finalExit = null;
+      if (fullyClosed) {
+        finalExit = r.reduced.exits.reduce(function (a, b) {
+          return b.fillDate > a.fillDate ? b : a;
+        });
+      }
       var lastCell = r.stopped
         ? '<span class="sc-last-stop">' + fmtPrice(r.stopLevel) + '</span>' +
           '<div class="sc-stop-date">stop hit ' + fmtDate(r.stopDate) + '</div>'
+        : finalExit
+        ? fmtPrice(finalExit.fillPrice) +
+          '<div class="sc-stop-date">exited ' + fmtDate(new Date(finalExit.fillDate + 'T00:00:00Z')) + '</div>'
         : fmtPrice(r.last);
       if (r.isBenchmark && r.pct != null) benchmarkPct = r.pct;
       html +=
@@ -367,6 +408,99 @@
     el.innerHTML = html;
   }
 
+  // Portfolio curve = the headline average return, evaluated on every session
+  // instead of only today. At each date it is the simple mean of the return of
+  // every pick that has entered by then, exactly the rule renderTable uses, so
+  // the right edge of the curve lands on the number in the summary.
+  //
+  // Consequence worth knowing before reading the line: a pick joins the mean at
+  // 0% on its entry date, so publishing a new article pulls the curve toward
+  // zero that day. This is an average of open positions, not the equity curve of
+  // a fixed pot of money — same reason the headline average moves when a pick is
+  // added. The `n picks live` line in the tooltip is there to make that visible.
+  function buildPortfolioSeries(rows) {
+    var bench = null, picks = [];
+    rows.forEach(function (r) {
+      if (!r.series || !r.series.length) return;
+      if (r.isBenchmark) bench = r; else picks.push(r);
+    });
+    if (!bench || !picks.length) return null;
+    // The benchmark trades every HK session from the Apr-10 entry, so its bars
+    // are the calendar. Each pick carries its own pointer and contributes its
+    // last known value at or before the current session (a pick can miss a bar).
+    var ptr = picks.map(function () { return -1; });
+    var out = [];
+    bench.series.forEach(function (b) {
+      var sum = 0, n = 0;
+      for (var i = 0; i < picks.length; i++) {
+        var s = picks[i].series;
+        while (ptr[i] + 1 < s.length && s[ptr[i] + 1].t <= b.t) ptr[i]++;
+        if (ptr[i] >= 0) { sum += s[ptr[i]].pct; n++; }
+      }
+      if (n) out.push({ t: b.t, port: sum / n, bench: b.pct, n: n });
+    });
+    return out.length ? out : null;
+  }
+
+  function renderChart(rows) {
+    var canvas = document.getElementById("scorecard-chart");
+    if (!canvas || typeof Chart === "undefined") return; // homepage has neither
+    var data = buildPortfolioSeries(rows);
+    if (!data) { canvas.parentNode.innerHTML = '<div class="sc-loading">Chart unavailable</div>'; return; }
+    var last = data[data.length - 1];
+    var note = document.getElementById("scorecard-chart-key");
+    if (note) {
+      var pp = last.port - last.bench;
+      note.innerHTML =
+        '<span class="sc-key sc-key-port">Portfolio ' + fmtPct(last.port) + '</span>' +
+        '<span class="sc-key sc-key-bench">HSI ' + fmtPct(last.bench) + '</span>' +
+        '<span class="sc-key sc-key-alpha ' + (pp >= 0 ? 'pos' : 'neg') + '">' +
+          (pp >= 0 ? '+' : '') + pp.toFixed(2) + ' pp</span>';
+    }
+    Chart.defaults.font.family = "'Space Grotesk',system-ui,sans-serif";
+    new Chart(canvas, {
+      type: 'line',
+      data: { labels: data.map(function (d) { return fmtDate(new Date(d.t * 1000)); }), datasets: [
+        { label: 'Portfolio', data: data.map(function (d) { return d.port; }),
+          borderColor: '#0f9d66', borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#fff', tension: 0,
+          fill: { target: { value: 0 }, above: 'rgba(15,157,102,0.09)', below: 'rgba(201,51,56,0.07)' },
+          order: 1 },
+        { label: 'HSI', data: data.map(function (d) { return d.bench; }),
+          borderColor: '#5b6478', borderWidth: 1.5, pointRadius: 0,
+          pointHoverRadius: 4, pointHoverBackgroundColor: '#fff', tension: 0,
+          borderDash: [5, 4], fill: false, order: 2 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false, animation: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { display: false },
+          tooltip: { backgroundColor: 'rgba(5,6,15,0.95)',
+            titleColor: 'rgba(255,255,255,0.45)', bodyColor: '#fff',
+            borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, padding: 10,
+            callbacks: {
+              label: function (x) { return x.dataset.label + ' ' + fmtPct(x.parsed.y); },
+              afterBody: function (items) {
+                var d = data[items[0].dataIndex];
+                return d.n + (d.n === 1 ? ' pick live' : ' picks live');
+              } } } },
+        scales: {
+          x: { ticks: { color: '#5b6478', font: { size: 10 },
+                maxRotation: 0, autoSkip: true, maxTicksLimit: 8 },
+               grid: { display: false }, border: { display: false } },
+          y: { ticks: { color: '#5b6478', font: { size: 10 },
+                callback: function (v) { return (v > 0 ? '+' : '') + v + '%'; } },
+               grid: { color: 'rgba(0,0,0,0.07)' }, border: { display: false } }
+        }},
+      plugins: [{ id: 'zeroline', afterDraw: function (ch) {
+        var c = ch.ctx, y = ch.scales.y.getPixelForValue(0);
+        c.save();
+        c.strokeStyle = 'rgba(0,0,0,0.25)'; c.lineWidth = 1;
+        c.beginPath(); c.moveTo(ch.chartArea.left, y); c.lineTo(ch.chartArea.right, y); c.stroke();
+        c.restore();
+      } }]
+    });
+  }
+
   function boot() {
     fetch(RECOS_URL, { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
@@ -387,6 +521,7 @@
         });
         renderStrip(rows);
         renderTable(rows);
+        renderChart(rows);
       })
       .catch(function () { renderStrip([]); renderTable([]); });
   }

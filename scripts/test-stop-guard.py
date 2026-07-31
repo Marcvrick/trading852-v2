@@ -62,5 +62,9 @@ with sync_playwright() as p:
     assert 'REDUCED 100%' in up, 'FAIL: expected the Reduced 100% badge'
     assert '+6.91%' in txt, 'FAIL: pct must stay frozen at the banked +6.91%'
     assert 'sc-row-reduced' in cls, 'FAIL: expected the fully-closed row tint'
-    print('OK: fully exited pick stays unstopped through a crash to 60')
+    # The Last column must show the exit fill, never the (crashed) live price.
+    assert '99.10' in txt, 'FAIL: Last column must show the 99.10 exit fill, got ' + txt
+    assert 'exited Jul 31' in txt, 'FAIL: expected the exit date under the fill'
+    assert '60.00' not in txt, 'FAIL: live price leaked into a closed row'
+    print('OK: fully exited pick stays unstopped and shows its exit fill')
     b.close()

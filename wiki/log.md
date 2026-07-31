@@ -13,6 +13,16 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### July 31, 2026 · Scorecard: Portfolio vs HSI chart, and the exit fill in the Last column
+
+**Chart.** New line chart above the table, April 10 to today, portfolio against 2800.HK. `fetchOne` now also returns a per-bar `series`; `buildPortfolioSeries` averages across every pick entered by each date, and `renderChart` draws it with the Chart.js already vendored for the SPY 747 article. Endpoint equals the table's average by construction — `scripts/test-chart-parity.py` asserts exactly that, since a drift between the two paths is the only way this chart can lie.
+
+Reading as of today: the portfolio held the June drawdown far better than the index (HSI reached about −11 %, the portfolio about −4 %), then the HSI's July recovery overtook it. Portfolio **+1.15 %** vs HSI **+1.64 %**, i.e. **−0.50 pp**, matching the existing "Portfolio vs HSI" table row.
+
+Caveat carried into the page methodology and [scorecard.md](scorecard.md): a pick joins the mean at 0 % on its entry date, so a new article pulls the line toward zero that day. It is an average of open positions, not an equity curve. The tooltip shows `N picks live` to keep that visible.
+
+**Last column on a closed pick** now shows the exit fill and date (`99.10 / exited Jul 31`) instead of the live price, mirroring how a stopped row shows its stop level. The final leg is picked by latest `fillDate`, not array position, because `scorecard-exits.json` is hand-maintained and legs are not guaranteed to be appended in order.
+
 ### July 31, 2026 · Scorecard: fully exited picks exempt from the stop scan
 
 0300.HK Midea became the first fully closed pick this morning, which exposed a latent labelling bug. Its peak of 99.75 had armed the breakeven stop tier at the 89.70 entry, so a later drop back through 89.70 would have stamped `Stopped · stop hit <date>` on a position already sold in full at 99.10. `pct` was never at risk (`remFrac` = 0 freezes it at the banked +6.91 %) — only the badge would have lied.
