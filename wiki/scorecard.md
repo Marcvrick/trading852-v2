@@ -79,6 +79,32 @@ A line chart above the table, from the April 10 issue to today: the portfolio in
 
 > **It is an average of open positions, not an equity curve.** A pick joins the mean at 0 % on its entry date, so publishing a new article pulls the green line toward zero that day. This is the same property the headline average has always had; the chart just makes it visible. The tooltip shows `N picks live` at every point so the dilution is readable rather than hidden. Do not present this line as the return on a fixed pot of money.
 
+### The buy-back line (third series)
+
+Answers one question Dany asked on 2026-07-31: a position gets stopped out, the price later climbs back to where it was first bought, you buy it back and ride it — what would that have done to the portfolio?
+
+**Model** (`fetchOne`, `reSeries`): each leg is the published rule unchanged — the same 3-tier trailing ratchet, anchored again at the **original** entry price, because that is the level being bought back. Re-entry triggers on a session whose intraday high (dividend-adjusted) reaches that entry, and is assumed to fill there. Legs compound. Repeats without limit: Prada went through three buy-backs. The first leg honours `scorecard-stops.json` so the line starts from the same history the table shows; later legs scan live.
+
+**Not modelled**: a pick closed by a decision to sell rather than by a stop (0300.HK Midea) carries its actual result on both lines. Same for the benchmark.
+
+**Answer, as of 2026-07-31: it would have been worse — +1.15 % actual against −0.13 %, a gap of 1.28 pp.** Seven picks have been stopped, so seven diverge:
+
+| Ticker | Actual | With buy-backs | Buy-backs | Note |
+|---|---|---|---|---|
+| 1585.HK Yadea | −5 % | **−23.05 %** | 2 | stopped again both times |
+| 9988.HK Alibaba | 0 % | **−10.00 %** | 1 | |
+| 1167.HK Jacobio | 0 % | **−10.00 %** | 1 | back in Apr 27, stopped May 5 |
+| 6690.HK Haier | −5 % | −1.75 % | 2 | leg open |
+| 1698.HK Tencent Music | −5 % | −2.73 % | 2 | leg open |
+| 0700.HK Tencent | −5 % | −1.35 % | 1 | leg open |
+| 1913.HK Prada | −10 % | **+3.51 %** | 3 | leg open |
+
+Four improved, three got worse, and the three losers gave back more than the four winners gained. The pattern in the losers is the same each time: re-entry puts the position back into a market that is still falling, and the ratchet stops it again within days.
+
+> **Caveat that changes the reading: four of the seven buy-back legs are still open.** Haier, Tencent Music, Tencent and Prada are marked at live prices, not realised. The 1.28 pp verdict leans on those marks and can move. What is settled is the three closed cases, all worse.
+
+**Cross-check**: `scripts/check-buyback-model.py` replicates the whole model from Yahoo independently of the JS. Its "never stopped" picks reproduce the live table exactly, which is what validates the entry-finding and dividend handling. It averages only the picks it models (11) and so prints −0.78 %; the page averages all 12, carrying Midea's actual +6.91 % on both lines, and `(−0.78 × 11 + 6.91) / 12 = −0.13`. Same model, different denominator, on purpose — the two curves must cover the same portfolio to be comparable.
+
 **Calendar**: the benchmark's own bars are the x-axis (2800.HK trades every HK session from the Apr-10 entry). Each pick holds a pointer into its own series and contributes its last value at or before the current session, so a pick that misses a bar carries forward instead of dropping out of the mean.
 
 **Palette**: the scorecard page body is white (`html, body` in `scorecard.css`), unlike the dark article background the SPY chart sits on. The chart uses the on-light pair the table already uses — `#0f9d66` positive, `#c93338` negative, `#5b6478` for the benchmark — not the `--pos` / `--neg` variables, which are tuned for the dark hero. The `#scorecard-chart-key` swatches double as the legend, so the chart itself renders none.

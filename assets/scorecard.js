@@ -232,8 +232,77 @@
           series.push({ t: barTs, pct: realized + Math.max(0, 1 - soldFrac) * livePct });
         }
 
+        // ── Buy-back variant ────────────────────────────────────────────────
+        // "Stopped out, then the price comes back to where we first bought, so
+        // we buy again and ride." Each leg is the published rule unchanged: the
+        // same 3-tier trailing ratchet, anchored again at the ORIGINAL entry
+        // price, because that is the level being bought back. Legs compound.
+        //
+        // Re-entry triggers on a bar whose intraday HIGH reaches the original
+        // entry, and fills AT that entry price — the level was traded, so the
+        // fill is assumable, but it is an assumption and a real fill would slip.
+        // Not modelled for a pick closed by sale or trimmed: the buy-back rule
+        // is about being stopped out, not about a discretionary exit.
+        var reSeries = [], reEntries = 0;
+        if (rec.isBenchmark || exitedPct > 0) {
+          reSeries = series;
+        } else {
+          var banked = 1;            // compounded return of the legs already closed
+          var open = true;           // holding shares right now?
+          var legOpenIdx = entryIdx; // bar the current leg opened on
+          var rTier = STOP_TIERS[STOP_TIERS.length - 1];
+          var rLevel = entry * rTier.stopMul, rLocked = rTier.lockedPct, rPeak = entry;
+          // Honour the frozen ledger stop for the first leg so this line starts
+          // from the same history the table shows; later legs scan live.
+          var forcedTs = rec.forcedStop ? Date.parse(rec.forcedStop.stopDate + "T00:00:00Z") / 1000 : null;
+
+          for (var ri = entryIdx; ri < ts.length; ri++) {
+            if (closes[ri] == null) continue;
+            var rTs = ts[ri], rDiv = cumDivThrough(rTs);
+            if (open) {
+              if (ri > legOpenIdx) {
+                var rHi = highs[ri];
+                if (rHi != null && rHi + rDiv > rPeak) rPeak = rHi + rDiv;
+                var rGain = (rPeak - entry) / entry * 100;
+                for (var rt = 0; rt < STOP_TIERS.length; rt++) {
+                  if (rGain >= STOP_TIERS[rt].triggerPct) {
+                    rTier = STOP_TIERS[rt];
+                    rLevel = entry * rTier.stopMul;
+                    rLocked = rTier.lockedPct;
+                    break;
+                  }
+                }
+                var rLo = lows[ri];
+                var byLedger = forcedTs != null && rTs >= forcedTs;
+                if (byLedger || (rLo != null && (rLo + rDiv) <= rLevel)) {
+                  banked *= 1 + (byLedger ? rec.forcedStop.lockedPct : rLocked) / 100;
+                  open = false;
+                  forcedTs = null;   // the ledger records the first stop only
+                  reSeries.push({ t: rTs, pct: (banked - 1) * 100 });
+                  continue;
+                }
+              }
+              reSeries.push({ t: rTs, pct: (banked * (1 + (closes[ri] + rDiv - entry) / entry) - 1) * 100 });
+            } else {
+              var backHi = highs[ri];
+              if (backHi != null && (backHi + rDiv) >= entry) {
+                open = true; legOpenIdx = ri; reEntries++;
+                rPeak = entry;
+                rTier = STOP_TIERS[STOP_TIERS.length - 1];
+                rLevel = entry * rTier.stopMul;
+                rLocked = rTier.lockedPct;
+                reSeries.push({ t: rTs, pct: (banked * (1 + (closes[ri] + rDiv - entry) / entry) - 1) * 100 });
+              } else {
+                reSeries.push({ t: rTs, pct: (banked - 1) * 100 });
+              }
+            }
+          }
+        }
+
         return Object.assign({}, rec, {
           series: series,
+          reSeries: reSeries,
+          reEntries: reEntries,
           entry: entry,
           entryDate: entryDate,
           entryIsOpen: entryIsOpen,
@@ -452,13 +521,19 @@
     var ptr = picks.map(function () { return -1; });
     var out = [];
     bench.series.forEach(function (b) {
-      var sum = 0, n = 0;
+      var sum = 0, reSum = 0, n = 0;
       for (var i = 0; i < picks.length; i++) {
         var s = picks[i].series;
         while (ptr[i] + 1 < s.length && s[ptr[i] + 1].t <= b.t) ptr[i]++;
-        if (ptr[i] >= 0) { sum += s[ptr[i]].pct; n++; }
+        if (ptr[i] >= 0) {
+          sum += s[ptr[i]].pct;
+          // reSeries is built from the same bars, so it shares the pointer.
+          var rs = picks[i].reSeries;
+          reSum += (rs && rs[ptr[i]] ? rs[ptr[i]].pct : s[ptr[i]].pct);
+          n++;
+        }
       }
-      if (n) out.push({ t: b.t, port: sum / n, bench: b.pct, n: n });
+      if (n) out.push({ t: b.t, port: sum / n, re: reSum / n, bench: b.pct, n: n });
     });
     return out.length ? out : null;
   }
@@ -472,11 +547,14 @@
     var note = document.getElementById("scorecard-chart-key");
     if (note) {
       var pp = last.port - last.bench;
+      var buybacks = rows.reduce(function (a, r) { return a + (r.reEntries || 0); }, 0);
       note.innerHTML =
         '<span class="sc-key sc-key-port">Portfolio ' + fmtPct(last.port) + '</span>' +
+        '<span class="sc-key sc-key-re" title="' + buybacks + ' buy-back' +
+          (buybacks === 1 ? '' : 's') + ' triggered">With buy-backs ' + fmtPct(last.re) + '</span>' +
         '<span class="sc-key sc-key-bench">HSI ' + fmtPct(last.bench) + '</span>' +
         '<span class="sc-key sc-key-alpha ' + (pp >= 0 ? 'pos' : 'neg') + '">' +
-          (pp >= 0 ? '+' : '') + pp.toFixed(2) + ' pp</span>';
+          (pp >= 0 ? '+' : '') + pp.toFixed(2) + ' pp vs HSI</span>';
     }
     Chart.defaults.font.family = "'Space Grotesk',system-ui,sans-serif";
     new Chart(canvas, {
@@ -487,10 +565,14 @@
           pointHoverBackgroundColor: '#fff', tension: 0,
           fill: { target: { value: 0 }, above: 'rgba(15,157,102,0.09)', below: 'rgba(201,51,56,0.07)' },
           order: 1 },
+        { label: 'With buy-backs', data: data.map(function (d) { return d.re; }),
+          borderColor: '#4760ff', borderWidth: 1.75, pointRadius: 0,
+          pointHoverRadius: 4, pointHoverBackgroundColor: '#fff', tension: 0,
+          fill: false, order: 2 },
         { label: 'HSI', data: data.map(function (d) { return d.bench; }),
           borderColor: '#5b6478', borderWidth: 1.5, pointRadius: 0,
           pointHoverRadius: 4, pointHoverBackgroundColor: '#fff', tension: 0,
-          borderDash: [5, 4], fill: false, order: 2 }
+          borderDash: [5, 4], fill: false, order: 3 }
       ]},
       options: { responsive: true, maintainAspectRatio: false, animation: false,
         interaction: { mode: 'index', intersect: false },

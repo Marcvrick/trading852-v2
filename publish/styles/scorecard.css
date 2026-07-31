@@ -287,7 +287,10 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   text-transform: uppercase;
 }
 
-.sc-chart-key { display: flex; gap: 1.25rem; font-size: var(--fs-14); }
+/* Wrap whole keys rather than let a label break mid-word: with four of them,
+   390px is not enough for one row. */
+.sc-chart-key { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; font-size: var(--fs-14); }
+.sc-key { white-space: nowrap; }
 
 /* Each key doubles as the chart's legend: the swatch matches the line it names,
    so the chart itself carries no legend box. */
@@ -299,6 +302,7 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   border-top: 2.5px solid transparent;
 }
 .sc-key-port::before { border-top-color: #0f9d66; }
+.sc-key-re::before { border-top-color: #4760ff; }
 .sc-key-bench::before { border-top: 2px dashed #5b6478; }
 .sc-key-alpha { font-weight: 700; }
 .sc-key-alpha::before { content: none; }

@@ -13,6 +13,18 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### July 31, 2026 · Scorecard chart: third line, buying stopped positions back at the entry
+
+Dany's question: a pick gets stopped, the price later returns to where it was first bought, you buy it back and ride — what would that have done? Now a blue third line on the chart, modelled in `fetchOne` as `reSeries`.
+
+Each leg is the published rule unchanged: the same trailing ratchet, re-anchored at the **original** entry price, legs compounding, repeating without limit (Prada: three buy-backs). Re-entry triggers on a session whose high reaches the entry and is assumed to fill there.
+
+**It would have been worse: +1.15 % actual against −0.13 %, 1.28 pp given up.** Four of the seven stopped picks improved, three got worse, and the three losers gave back more than the four winners gained — 1585.HK Yadea goes from −5 % to −23.05 % across two buy-backs, 9988 and 1167 from 0 % to −10 %. Prada is the counter-example, −10 % to +3.51 % over three round trips. The losing pattern repeats: re-entry puts the position back into a market still falling, and the ratchet stops it again within days.
+
+**Four of the seven buy-back legs are still open**, so the verdict leans on live marks. The three closed cases are all worse; that part is settled.
+
+Cross-checked against `scripts/check-buyback-model.py`, an independent Python replication — its untouched picks reproduce the live table exactly. It averages the 11 modelled picks (−0.78 %) while the page averages all 12 including Midea's actual +6.91 % on both lines, which reconciles to −0.13 %. Deliberate: the two curves have to cover the same portfolio to be compared.
+
 ### July 31, 2026 · Article ticker links to its scorecard row, and the mobile table stops breaking the page
 
 **Prose ticker links, and the first-mention miss.** Extended the deep link to the ticker as it appears in the running text, on every article. The first version linked only the *first* mention per ticker, on the reasoning that repeating it would be noise. Dany reported not seeing any link on the live Chery page, and he was right: that single link had landed in the hero standfirst, where `color: inherit` resolves to `rgba(255,255,255,0.55)` on the dark hero — invisible — while every body section he actually read carried none. The noise estimate was also wrong: it counted raw file occurrences including CONFIG and JSON-LD, so 9973-chery looked like twelve mentions when the body has seven.
