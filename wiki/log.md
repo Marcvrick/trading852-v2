@@ -13,6 +13,17 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### July 31, 2026 · Homepage: "Updated" tag on recently revisited analyses
+
+A refreshed article was indistinguishable from an untouched one in the "Our Analyses" list. Lines now carry an `Updated <date>` pill, driven by the `modDate` already present in each article's CONFIG — no new field to maintain.
+
+Two windows, both in [build.js](../build.js) as `UPDATE_MIN_GAP_DAYS` / `UPDATE_FRESH_DAYS`:
+
+- **modDate ≥ 7 days after pubDate.** A next-day correction is not an update. This is what keeps 0700-tencent (mod = pub + 1) untagged.
+- **modDate ≤ 30 days old** at build time. Without it the tag would sit on 8 of the 12 articles permanently and stop being a signal. Note this is evaluated *at build time*, so a long gap between deploys leaves a stale tag up.
+
+Today that tags 1913-prada alone. Reuses the orphaned `.verdict-tag` pill style rather than adding a new one. Unlike `.verdict-tag` it is **not** hidden below 48rem — it takes its own row there, because the title column is already narrow (`.our-work__read-more` holds a fixed 9rem) and an inline pill squeezed the title to one word per line. Self-check: `node scripts/test-update-tag.js`.
+
 ### July 31, 2026 · 0300.HK Midea fully exited — first closed position on the scorecard
 
 Dany sold the remaining third at **99.10**, closing the position. Second entry appended to `scorecard-exits.json`:
