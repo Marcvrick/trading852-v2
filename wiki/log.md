@@ -15,7 +15,13 @@ Part of the [Trading852 wiki](index.md).
 
 ### July 31, 2026 · Article ticker links to its scorecard row, and the mobile table stops breaking the page
 
-**Prose ticker links.** Extended the same deep link to the ticker as it appears in the running text, on every article, not just the hero pill. First mention only — 9973-chery says 9973.HK twelve times. 13 links across the 12 stock articles (0700-tencent also cross-links 9988.HK). Untracked peers stay plain text: Chery names 0175.HK and 1211.HK, neither is on the scorecard, neither got a link. The rewrite steps over tags, comments, scripts, headings and existing anchors, so JSON-LD still parses and no anchor nests inside the hero pill.
+**Prose ticker links, and the first-mention miss.** Extended the deep link to the ticker as it appears in the running text, on every article. The first version linked only the *first* mention per ticker, on the reasoning that repeating it would be noise. Dany reported not seeing any link on the live Chery page, and he was right: that single link had landed in the hero standfirst, where `color: inherit` resolves to `rgba(255,255,255,0.55)` on the dark hero — invisible — while every body section he actually read carried none. The noise estimate was also wrong: it counted raw file occurrences including CONFIG and JSON-LD, so 9973-chery looked like twelve mentions when the body has seven.
+
+Now every body mention is linked and the standfirst is excluded outright: it is unreadable there and the linked pill sits directly above it. 31 body links across the 12 stock articles. Untracked peers stay plain text — Chery names 0175.HK and 1211.HK, neither on the scorecard, neither linked.
+
+The test now asserts the thing that actually failed: **no tracked ticker may be left unlinked in any article body.** Counting links would have passed the broken version.
+
+Written up as a standing procedure in [CLAUDE.md](../CLAUDE.md) § "Every ticker links to its scorecard row" and the [editorial.md](editorial.md) pre-publish checklist, since the rule only holds for future articles if the build keeps doing it and nobody hand-writes the anchors.
 
 **Ticker deep link.** The hero `meta-ticker` pill now links to `/scorecard#t-<ticker>`. Done in `build.js`, not per article, and only for tickers the scorecard has a row for — all 12 stock articles picked it up on the next build, sector hubs correctly got nothing. `scorecard.js` writes the matching `<tr id>` and `focusHashRow()` performs the jump after render, since the table does not exist when the browser tries the hash itself. Bound to `hashchange` too: a second anchor followed from the scorecard is a same-document navigation, so the script would otherwise never run again — a gap the first version of the test accidentally exposed by re-using an open page.
 

@@ -63,9 +63,13 @@ The `meta-ticker` pill in an article hero links to that ticker's row: `/scorecar
 
 **Highlight**: `sc-row-target` paints via `background-image`, not `background-color`, so it layers over the stopped / reduced / benchmark tints instead of replacing them, plus a blue inset bar on the first cell.
 
-**Prose mentions too** (`linkifyBodyTickers` in `build.js`): the **first** mention of a tracked ticker in an article's running text becomes a link to the same row. First only — an article names its own ticker up to a dozen times and linking all of them is noise. The pass steps over tags, HTML comments (the CONFIG and JSON-LD blocks), `<script>` / `<style>` / `<title>`, headings, and any existing `<a>…</a>`, which is what stops it nesting an anchor inside the hero pill `linkifyHeroTicker` just created. Order matters: hero first, prose second.
+**Body prose too, at every mention** (`linkifyBodyTickers` in `build.js`): each occurrence of a tracked ticker in an article's running text links to the same row. Articles carry 2–7 mentions each, so a reader who scrolls to any section finds the link where they are. The pass steps over tags, HTML comments (the CONFIG and JSON-LD blocks), `<script>` / `<style>` / `<title>`, headings, and any existing `<a>…</a>`, which is what stops it nesting an anchor inside the hero pill `linkifyHeroTicker` just created. Order matters: hero first, prose second.
 
-A ticker with no scorecard row is left as plain text, so an article can name a peer freely — 9973-chery mentions 0175.HK and 1211.HK, neither of which is tracked, and both stay unlinked. Cross-references between tracked names do link: 0700-tencent carries one to 9988.HK. Current state: 13 prose links across the 12 stock articles. `scripts/test-ticker-links.py` checks the count per article, that no link lands in a script or comment, that no anchors nest, and that every JSON-LD block still parses.
+> **The hero standfirst (`.article-subtitle`) is excluded on purpose.** It sits on the dark hero, where a `color: inherit` link renders at 55% white and is effectively invisible, and the linked pill sits directly above it. This is exactly how the first version failed on 2026-07-31: it linked only the *first* mention per ticker, that mention was the standfirst, and every visible body section had no link. Verified live, the only anchor on 9973-chery was `rgba(255,255,255,0.55)` in the hero.
+
+A ticker with no scorecard row is left as plain text, so an article can name a peer freely — 9973-chery mentions 0175.HK and 1211.HK, neither tracked, both unlinked. Cross-references between tracked names do link: 0700-tencent carries one to 9988.HK. Current state: 31 body links across the 12 stock articles.
+
+`scripts/test-ticker-links.py` asserts every hero and body link resolves to a real row, that **no tracked ticker is left unlinked in any body** (the exact failure above), that the standfirst carries none, that no link lands in a script or comment, that no anchors nest, and that every JSON-LD block still parses after the rewrite.
 
 ## Portfolio vs HSI chart
 

@@ -19,6 +19,21 @@ This section is checked first, every session, regardless of what task in this re
 
 ## Publishing Rules
 
+### ⚠️ MANDATORY: Every ticker links to its scorecard row
+
+**Rule:** Every mention of a tracked HK ticker — in the hero pill and at every occurrence in the article body — links to that ticker's row on the scorecard, `/scorecard#t-<ticker>`.
+
+**Claude writes none of these links by hand.** `build.js` inserts them on every build (`linkifyHeroTicker` + `linkifyBodyTickers`), so a new article picks them up automatically the moment its ticker has a scorecard row. Writing `<a href="/scorecard#...">` into the source by hand is wrong: the prose pass skips existing anchors, so a hand-written link silently opts that mention out of the automation and will not follow a ticker rename.
+
+**What Claude must do when publishing a new article:**
+1. Write the ticker as plain text — `9973.HK`, and `<span class="meta-ticker">9973.HK</span>` in the hero. Nothing else.
+2. Run `node build.js`, then `python3 scripts/test-ticker-links.py http://localhost:3000` with the preview server up. It fails if any tracked ticker is left unlinked in a body, if a link lands in a script or comment, if anchors nest, or if a JSON-LD block stops parsing.
+3. A ticker with no scorecard row stays plain text on purpose — that is how peers get named without minting dead links (9973-chery mentions 0175.HK and 1211.HK, neither tracked, neither linked). A pick only gets a row once its article carries both `meta-ticker` and `meta-verdict`, so the article and its links arrive together.
+
+**Not linked, deliberately:** the hero standfirst (`.article-subtitle`). It sits on the dark hero where an inherited-colour link renders at 55% white and cannot be seen, and the linked pill is directly above it. This was the 2026-07-31 miss: the first version linked only the first mention, that mention happened to be the standfirst, and the article body carried no visible link at all.
+
+Mechanics and rationale: [wiki/scorecard.md](wiki/scorecard.md) § "Article ticker → scorecard row".
+
 ### ⚠️ MANDATORY: Internal Linking on Every Article
 
 **Rule:** Every article published to `publish/analyses/` MUST include at least one internal link to another Trading852 article before push.

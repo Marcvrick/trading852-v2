@@ -4,7 +4,7 @@ tags: [trading852, wiki, editorial, writing]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-15
+updated: 2026-07-31
 ---
 
 # Trading852 v2, Editorial Workflow
@@ -224,6 +224,7 @@ Vercel rebuilds and deploys on push.
 - [ ] feed.xml: new `<item>` + `<lastBuildDate>` updated
 - [ ] sitemap.xml: new `<url>` + homepage `<lastmod>` updated. **Refresh of an existing article** = bump that article's `<lastmod>` AND the homepage `<lastmod>` AND JSON-LD `dateModified` to the refresh date
 - [ ] Scorecard: **automatic** (no action) for stock articles with `meta-ticker` + `meta-verdict` in the hero. Set CONFIG `scorecardName` only if a shorter display name is wanted
+- [ ] Ticker → scorecard links: **automatic, but verify.** Write every ticker as plain text (`9973.HK`), hero as `<span class="meta-ticker">9973.HK</span>`; `build.js` links the pill and every body mention to `/scorecard#t-<ticker>`. Never hand-write `<a href="/scorecard#…">` — the prose pass skips existing anchors, so a manual link opts that mention out of the automation. Verify with the preview server up: `python3 scripts/test-ticker-links.py http://localhost:3000`
 - [ ] No em dash anywhere (`grep -rn ", \|, " publish/ assets/` returns nothing)
 - [ ] `node build.js` runs clean
 - [ ] Spot-checked `dist/analyses/<slug>.html` in a browser

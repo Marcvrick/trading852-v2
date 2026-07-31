@@ -39,11 +39,34 @@ assert anchors, 'FAIL: no linkified hero tickers found in dist/analyses (run nod
 print('hero links:', len(anchors))
 print('prose links:', sum(len(v) for v in prose.values()), 'across', len(prose), 'articles')
 
-# Every stock article must carry its own ticker in the prose, linked exactly once.
+# Every stock article links its own ticker in the body, at every mention.
 for slug, a in anchors.items():
     assert slug in prose, 'FAIL: %s has no prose ticker link' % slug
-    assert prose[slug].count(a) == 1, \
-        'FAIL: %s links its own ticker %d times in prose, expected once' % (slug, prose[slug].count(a))
+    assert a in prose[slug], 'FAIL: %s never links its own ticker %s in the body' % (slug, a)
+
+# The standfirst sits on the dark hero, where an inherited-colour link renders at
+# 55% white and cannot be seen — and the linked pill is directly above it.
+for f in sorted(DIST.glob('*.html')):
+    sub = re.search(r'<p class="article-subtitle">([\s\S]*?)</p>', f.read_text())
+    if sub:
+        assert 'ticker-link' not in sub.group(1), \
+            'FAIL: %s linked a ticker in the hero standfirst' % f.name
+
+# No tracked ticker may be left unlinked in the body: that is the failure Dany
+# hit — the only link sat in the standfirst and the section he read had none.
+NON_PROSE = re.compile(
+    r'<!--[\s\S]*?-->|<script\b[\s\S]*?</script>|<style\b[\s\S]*?</style>'
+    r'|<title\b[\s\S]*?</title>|<p class="article-subtitle"[\s\S]*?</p>'
+    r'|<a\b[\s\S]*?</a>|<h[1-6]\b[\s\S]*?</h[1-6]>|<[^>]+>', re.I)
+
+recos = json.loads((DIST.parent / 'assets' / 'scorecard-recos.json').read_text())
+tracked = {r['t'] for r in recos}
+for f in sorted(DIST.glob('*.html')):
+    leftover = [t for t in re.findall(r'\b\d{3,4}\.HK\b', NON_PROSE.sub(' ', f.read_text()))
+                if t in tracked]
+    assert not leftover, \
+        'FAIL: %s leaves tracked tickers unlinked in the body: %s' % (f.name, sorted(set(leftover)))
+print('every tracked ticker mention in every body is linked')
 
 with sync_playwright() as p:
     b = p.chromium.launch()

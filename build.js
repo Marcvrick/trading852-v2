@@ -412,34 +412,36 @@ function linkifyHeroTicker(page, tickers) {
     });
 }
 
-// Ticker mentions in the prose link to the scorecard row too, not only the hero
-// pill. Only the FIRST mention of each ticker in a page is linked: an article
-// names its own ticker a dozen times and linking all of them is noise.
+// Every mention of a tracked ticker in the body prose links to its scorecard
+// row, not only the hero pill. Every one, not just the first: articles carry
+// 2–7 mentions each, so a reader who scrolls to any section finds the link
+// where they are rather than having to remember one near the top.
 //
-// Everything that is not prose is stepped over — tags, HTML comments (the CONFIG
-// and JSON-LD blocks), <script>/<style>/<title>, headings, and any existing
-// <a>…</a>. That last one is what keeps this from nesting an anchor inside the
-// hero pill, which linkifyHeroTicker has already turned into a link.
-const NON_PROSE = /<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>|<title\b[\s\S]*?<\/title>|<a\b[\s\S]*?<\/a>|<h[1-6]\b[\s\S]*?<\/h[1-6]>|<[^>]+>/gi;
+// Everything that is not body prose is stepped over — tags, HTML comments (the
+// CONFIG and JSON-LD blocks), <script>/<style>/<title>, headings, any existing
+// <a>…</a>, and the hero standfirst. The anchor skip is what keeps this from
+// nesting a link inside the hero pill linkifyHeroTicker just created; the
+// standfirst skip is because it sits on the dark hero, where an inherited-colour
+// link renders at 55% white and is invisible — and the pill is right above it.
+const NON_PROSE = /<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>|<title\b[\s\S]*?<\/title>|<p class="article-subtitle"[\s\S]*?<\/p>|<a\b[\s\S]*?<\/a>|<h[1-6]\b[\s\S]*?<\/h[1-6]>|<[^>]+>/gi;
 
 function linkifyBodyTickers(page, tickers) {
-  const seen = new Set();
-  const linkFirst = (text) => {
+  const linkAll = (text) => {
     if (!text || text.indexOf('.HK') === -1) return text;
-    return text.replace(/\b\d{3,4}\.HK\b/g, (t) => {
-      if (seen.has(t) || !tickers.has(t)) return t;
-      seen.add(t);
-      return '<a class="ticker-link" href="/scorecard#' + tickerAnchor(t) +
-             '" title="' + t + ' on the scorecard">' + t + '</a>';
-    });
+    return text.replace(/\b\d{3,4}\.HK\b/g, (t) => (
+      tickers.has(t)
+        ? '<a class="ticker-link" href="/scorecard#' + tickerAnchor(t) +
+          '" title="' + t + ' on the scorecard">' + t + '</a>'
+        : t
+    ));
   };
   let out = '', last = 0, m;
   NON_PROSE.lastIndex = 0;
   while ((m = NON_PROSE.exec(page)) !== null) {
-    out += linkFirst(page.slice(last, m.index)) + m[0];
+    out += linkAll(page.slice(last, m.index)) + m[0];
     last = m.index + m[0].length;
   }
-  return out + linkFirst(page.slice(last));
+  return out + linkAll(page.slice(last));
 }
 
 // ── Validate internal linking ─────────────────────────────────────────────────
