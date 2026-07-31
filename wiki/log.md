@@ -17,9 +17,9 @@ Part of the [Trading852 wiki](index.md).
 
 Dany's question: a pick gets stopped, the price later returns to where it was first bought, you buy it back and ride — what would that have done? Now a blue third line on the chart, modelled in `fetchOne` as `reSeries`.
 
-Each leg is the published rule unchanged: the same trailing ratchet, re-anchored at the **original** entry price, legs compounding, repeating without limit (Prada: three buy-backs). Re-entry triggers on a session whose high reaches the entry and is assumed to fill there.
+Each leg is the published rule unchanged: the same trailing ratchet, legs compounding, repeating without limit (Prada: three buy-backs). Re-entry is a buy-stop at the **original** entry price — triggered the next time a session's high reaches it, filled at `max(entry, open)` — and each leg is then measured from what it actually cost.
 
-**It would have been worse: +1.15 % actual against −0.31 %, 1.46 pp given up.** Four of the seven stopped picks improved, three got worse, and the three losers gave back more than the four winners gained — 1585.HK Yadea goes from −5 % to −23.05 % across two buy-backs, 9988 and 1167 from 0 % to −10 %. Prada is the counter-example, −10 % to +3.51 % over three round trips. The losing pattern repeats: re-entry puts the position back into a market still falling, and the ratchet stops it again within days.
+**It would have been worse: +1.15 % actual against −0.31 %, 1.46 pp given up.** Four of the seven stopped picks improved, three got worse, and the three losers gave back more than the four winners gained — 1585.HK Yadea goes from −5 % to −23.05 % across two buy-backs, 9988 and 1167 from 0 % to −10 %. Prada is the counter-example, −10 % to +1.37 % over three round trips. The losing pattern repeats: re-entry puts the position back into a market still falling, and the ratchet stops it again within days.
 
 **Four of the seven buy-back legs are still open**, so the verdict leans on live marks. The three closed cases are all worse; that part is settled.
 
@@ -27,7 +27,7 @@ Two corrections came out of Dany challenging the line. First, the trigger was co
 
 Also checked, because Dany believed those names never recovered: 1167.HK opened 7.51 on Apr 27 (entry 7.22), 9988.HK traded above 125.50 in six sessions reaching 131.20, 1585.HK printed 12.58 on May 12. All three are far below entry *today*, which is what makes them look like they never came back. Each recovered, was bought back, and fell away again.
 
-Cross-checked against `scripts/check-buyback-model.py`, an independent Python replication — its untouched picks reproduce the live table exactly. It averages the 11 modelled picks (−0.78 %) while the page averages all 12 including Midea's actual +6.91 % on both lines, which reconciles to −0.13 %. Deliberate: the two curves have to cover the same portfolio to be compared.
+Cross-checked against `scripts/check-buyback-model.py`, an independent Python replication — its untouched picks reproduce the live table exactly. It averages only the picks it models while the page averages all 12, carrying Midea's actual +6.91 % on both lines. Deliberate: the two curves have to cover the same portfolio to be compared.
 
 ### July 31, 2026 · Article ticker links to its scorecard row, and the mobile table stops breaking the page
 
