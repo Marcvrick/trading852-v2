@@ -391,6 +391,27 @@ function generateScorecardData() {
   return picks.concat([SCORECARD_BENCHMARK]);
 }
 
+// The ticker in an article's hero names the same position the scorecard tracks,
+// so it links straight to that row. Both sides derive the anchor from the ticker
+// through this one function — scorecard.js has the identical rule — so the link
+// and its target cannot drift apart.
+function tickerAnchor(ticker) {
+  return 't-' + ticker.toLowerCase().replace(/\./g, '-');
+}
+
+// Only linkify a ticker the scorecard actually carries a row for. An article
+// without a verdict (or a sector hub) has no row, and would otherwise get a
+// link that lands on the scorecard and highlights nothing.
+function linkifyHeroTicker(page, tickers) {
+  return page.replace(/<span class="meta-ticker">([^<]+)<\/span>/,
+    function (whole, ticker) {
+      var t = ticker.trim();
+      if (!tickers.has(t)) return whole;
+      return '<a class="meta-ticker" href="/scorecard#' + tickerAnchor(t) +
+             '" title="' + t + ' on the scorecard">' + ticker + '</a>';
+    });
+}
+
 // ── Validate internal linking ─────────────────────────────────────────────────
 // Warn if any published article has zero internal links to other articles.
 function validateInternalLinks() {
@@ -518,6 +539,12 @@ function build() {
 
   let built = 0, copied = 0;
 
+  // Computed before the page loop so hero tickers can be linked to their row,
+  // and reused below for the JSON so both come from one scan.
+  let recos = [];
+  try { recos = generateScorecardData(); } catch (e) { console.error('Scorecard generation failed:', e.message); }
+  const scorecardTickers = new Set(recos.map(r => r.t));
+
   for (const file of walkSrc(SRC)) {
     const rel     = path.relative(SRC, file);
     const outPath = path.join(DIST, rel);
@@ -533,6 +560,7 @@ function build() {
         page = page.replace('{{RECENT_ANALYSES}}', generateRecentAnalysesHTML());
         page = page.replace('{{OUR_ANALYSES}}', generateOurAnalysesHTML());
       }
+      page = linkifyHeroTicker(page, scorecardTickers);
       fs.writeFileSync(outPath, page);
       built++;
     } else {
@@ -542,13 +570,10 @@ function build() {
   }
 
   // Auto-generate scorecard positions from published stock articles.
-  try {
-    const recos = generateScorecardData();
+  if (recos.length) {
     fs.mkdirSync(path.join(DIST, 'assets'), { recursive: true });
     fs.writeFileSync(path.join(DIST, 'assets', 'scorecard-recos.json'), JSON.stringify(recos, null, 2));
     console.log(`Scorecard: ${recos.length - 1} stock positions + 1 benchmark generated`);
-  } catch (e) {
-    console.error('Scorecard generation failed:', e.message);
   }
 
   // Regenerate sitemap.xml + feed.xml from disk (never hand-edit them).

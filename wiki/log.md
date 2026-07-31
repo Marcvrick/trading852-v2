@@ -13,6 +13,14 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### July 31, 2026 · Article ticker links to its scorecard row, and the mobile table stops breaking the page
+
+**Ticker deep link.** The hero `meta-ticker` pill now links to `/scorecard#t-<ticker>`. Done in `build.js`, not per article, and only for tickers the scorecard has a row for — all 12 stock articles picked it up on the next build, sector hubs correctly got nothing. `scorecard.js` writes the matching `<tr id>` and `focusHashRow()` performs the jump after render, since the table does not exist when the browser tries the hash itself. Bound to `hashchange` too: a second anchor followed from the scorecard is a same-document navigation, so the script would otherwise never run again — a gap the first version of the test accidentally exposed by re-using an open page.
+
+The anchor rule is written twice (`tickerAnchor` in each file), so `scripts/test-ticker-links.py` asserts every hero link resolves to a real row instead of assuming the two stay in step.
+
+**Mobile table overflow.** The table's min-content width was 406px against a 390px viewport, so the whole scorecard page scrolled sideways on a phone. Below 640px: cell padding 0.5rem → 0.3rem, badges stacked under the ticker instead of widening that column, table font one step down. It now measures 342px at 390px — an exact fit, and no mid-word hyphenation was needed. `#scorecard-table` also carries `overflow-x: auto` as the standing guarantee, which is what 320/360px screens fall back on.
+
 ### July 31, 2026 · Scorecard: Portfolio vs HSI chart, and the exit fill in the Last column
 
 **Chart.** New line chart above the table, April 10 to today, portfolio against 2800.HK. `fetchOne` now also returns a per-bar `series`; `buildPortfolioSeries` averages across every pick entered by each date, and `renderChart` draws it with the Chart.js already vendored for the SPY 747 article. Endpoint equals the table's average by construction — `scripts/test-chart-parity.py` asserts exactly that, since a drift between the two paths is the only way this chart can lie.

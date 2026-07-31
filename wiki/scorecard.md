@@ -53,6 +53,16 @@ A stop fires when the intraday low ≤ the active stop level for that bar. Once 
 
 **To add a pick**: just publish the stock article with the standard hero (`meta-ticker` + `meta-verdict`). The next `node build.js` registers it automatically (Vercel runs `build.js` on deploy, so commit and push is enough). Set `scorecardName` in CONFIG only if you want a shorter display name than the schema `about.name`.
 
+## Article ticker → scorecard row (deep link)
+
+The `meta-ticker` pill in an article hero links to that ticker's row: `/scorecard#t-1913-hk`. Nothing to add per article — `build.js` rewrites the `<span class="meta-ticker">` into an `<a>` at build time, and only for a ticker the scorecard actually carries a row for, so an article without a verdict never gets a link that lands on nothing.
+
+**Anchor rule**: `t-` + lowercase ticker with dots as hyphens. It exists twice on purpose — `tickerAnchor()` in `build.js` writes the href, `tickerAnchor()` in `scorecard.js` writes the `<tr id>`. They are independent, so `scripts/test-ticker-links.py` asserts every hero link resolves to a real row rather than trusting them to stay in step.
+
+**Why the jump needs JavaScript**: the table is rendered after an async fetch, so the browser's own scroll-to-hash has already run and found nothing by the time the row exists. `focusHashRow()` redoes it after `renderTable`, adds `sc-row-target`, and scrolls the row to centre. It is also bound to `hashchange`, because following a second anchor from the scorecard itself (or the back button) changes only the hash and would never re-run the script.
+
+**Highlight**: `sc-row-target` paints via `background-image`, not `background-color`, so it layers over the stopped / reduced / benchmark tints instead of replacing them, plus a blue inset bar on the first cell.
+
 ## Portfolio vs HSI chart
 
 A line chart above the table, from the April 10 issue to today: the portfolio in solid green against 2800.HK dashed grey, both as % return. Built in `renderChart` / `buildPortfolioSeries` (`scorecard.js`), drawn with the Chart.js 4.4.1 already vendored at `publish/static/chart.umd.js` for the SPY 747 article. No new dependency, no build step: the series is computed client-side from the OHLC each pick already fetches.

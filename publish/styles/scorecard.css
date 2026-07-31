@@ -225,6 +225,14 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   font-weight: 700;
 }
 
+/* Row arrived at from an article's hero ticker (/scorecard#t-1913-hk). Painted
+   as a background-image layer, not background-color, so it reads on top of the
+   stopped / reduced / benchmark tints instead of replacing them. */
+.sc-table tr.sc-row-target td {
+  background-image: linear-gradient(rgba(71,96,255,0.07), rgba(71,96,255,0.07));
+}
+.sc-table tr.sc-row-target td:first-child { box-shadow: inset 3px 0 0 0 #4760ff; }
+
 .sc-loading {
   padding: 3rem 1rem;
   text-align: center;

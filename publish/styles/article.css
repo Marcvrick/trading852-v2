@@ -48,6 +48,15 @@
   border-radius: 2px;
 }
 
+/* build.js turns the hero ticker into a link to its scorecard row whenever that
+   row exists, so the pill has to read as clickable without changing shape. */
+a.meta-ticker { text-decoration: none; transition: background 0.2s, border-color 0.2s; }
+a.meta-ticker:hover,
+a.meta-ticker:focus-visible {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.75);
+}
+
 .meta-verdict {
   font-family: var(--ff-sans);
   font-size: var(--fs-12);

@@ -255,6 +255,27 @@
       });
   }
 
+  // Row anchor for deep links from an article hero (/scorecard#t-1913-hk).
+  // build.js has the identical rule in its own tickerAnchor — keep them in step.
+  function tickerAnchor(t) { return "t-" + String(t).toLowerCase().replace(/\./g, "-"); }
+
+  // The table only exists after an async fetch, so the browser's own jump to the
+  // hash has already run and found nothing. Redo it once the row is on the page.
+  // Also bound to hashchange: arriving from an article is a full load, but a
+  // second anchor followed from this page (or the back button) only changes the
+  // hash, and the script would otherwise never run again.
+  function focusHashRow() {
+    var prev = document.querySelector(".sc-row-target");
+    if (prev) prev.classList.remove("sc-row-target");
+    var id = (location.hash || "").replace(/^#/, "");
+    if (!id) return;
+    var row = document.getElementById(id);
+    if (!row) return;
+    row.classList.add("sc-row-target");
+    row.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  window.addEventListener("hashchange", focusHashRow);
+
   function fmtPrice(v) { return (v == null ? "n/a" : v.toFixed(2)); }
   function fmtPct(v) {
     if (v == null || !isFinite(v)) return "n/a";
@@ -384,7 +405,7 @@
         : fmtPrice(r.last);
       if (r.isBenchmark && r.pct != null) benchmarkPct = r.pct;
       html +=
-        '<tr class="' + rowCls + '">' +
+        '<tr id="' + tickerAnchor(r.t) + '" class="' + rowCls + '">' +
           '<td class="sc-ticker">' + (r.noLink ? r.t : '<a href="/analyses/' + r.slug + '">' + r.t + '</a>') + badge + '</td>' +
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) +
@@ -522,6 +543,7 @@
         renderStrip(rows);
         renderTable(rows);
         renderChart(rows);
+        focusHashRow();
       })
       .catch(function () { renderStrip([]); renderTable([]); });
   }
