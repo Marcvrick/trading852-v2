@@ -239,16 +239,18 @@
         // actually cost. Legs compound.
         //
         // Re-entry fires the next time the price reaches the original entry —
-        // intraday HIGH, not the close — and fills there. That is a resting
-        // limit buy at the entry price, so a session that gaps open above it and
-        // falls back through still fills: 1585.HK on Jun 8 (open 12.69, high
-        // 12.70, low 11.38, close 11.56) buys at 12.58 on the way down and is
-        // stopped two sessions later. Confirmed as the intended rule by Dany on
-        // 2026-07-31, over a close-confirmation variant that would have skipped
-        // both 1585 buy-backs (no session ever closed back at 12.58) and scored
-        // the portfolio +0.83% instead of -0.13%. Kept because "the next time
-        // the price rises to 12.58" is the rule being asked about; the milder
-        // variant is a different question.
+        // intraday HIGH, not the close — which is a buy-stop at that level.
+        // Confirmed as the intended rule by Dany on 2026-07-31 over a
+        // close-confirmation variant (that one skips both 1585.HK buy-backs and
+        // scores +0.83% instead, but re-anchors Prada's stop higher and costs it
+        // 12.8pp — a different question, see scripts/check-buyback-variants.py).
+        //
+        // The fill is max(entry, open): a buy-stop fills at the entry only if the
+        // session trades there, and on a gap it fills at the open instead. This
+        // matters — 9988.HK gapped to 128.20 on May 22 against a 125.50 entry and
+        // its low never came back, so filling at 125.50 would be buying a price
+        // that was never available that day. Every leg is then measured from what
+        // it actually cost, `anchor`, not from the original entry.
         //
         // Not modelled for a pick closed by sale or trimmed: the buy-back rule
         // is about being stopped out, not about a discretionary exit.
@@ -259,8 +261,9 @@
           var banked = 1;            // compounded return of the legs already closed
           var open = true;           // holding shares right now?
           var legOpenIdx = entryIdx; // bar the current leg opened on
+          var anchor = entry;        // what the CURRENT leg actually cost
           var rTier = STOP_TIERS[STOP_TIERS.length - 1];
-          var rLevel = entry * rTier.stopMul, rLocked = rTier.lockedPct, rPeak = entry;
+          var rLevel = anchor * rTier.stopMul, rLocked = rTier.lockedPct, rPeak = anchor;
           // Honour the frozen ledger stop for the first leg so this line starts
           // from the same history the table shows; later legs scan live.
           var forcedTs = rec.forcedStop ? Date.parse(rec.forcedStop.stopDate + "T00:00:00Z") / 1000 : null;
@@ -272,11 +275,11 @@
               if (ri > legOpenIdx) {
                 var rHi = highs[ri];
                 if (rHi != null && rHi + rDiv > rPeak) rPeak = rHi + rDiv;
-                var rGain = (rPeak - entry) / entry * 100;
+                var rGain = (rPeak - anchor) / anchor * 100;
                 for (var rt = 0; rt < STOP_TIERS.length; rt++) {
                   if (rGain >= STOP_TIERS[rt].triggerPct) {
                     rTier = STOP_TIERS[rt];
-                    rLevel = entry * rTier.stopMul;
+                    rLevel = anchor * rTier.stopMul;
                     rLocked = rTier.lockedPct;
                     break;
                   }
@@ -291,16 +294,22 @@
                   continue;
                 }
               }
-              reSeries.push({ t: rTs, pct: (banked * (1 + (closes[ri] + rDiv - entry) / entry) - 1) * 100 });
+              reSeries.push({ t: rTs, pct: (banked * (1 + (closes[ri] + rDiv - anchor) / anchor) - 1) * 100 });
             } else {
               var backHi = highs[ri];
               if (backHi != null && (backHi + rDiv) >= entry) {
+                // A buy-stop at the entry fills there only if the session trades
+                // there. When it GAPS open above — 9988.HK on May 22 opened
+                // 128.20 against a 125.50 entry and its low never came back —
+                // the order triggers at the open and fills at the open. Filling
+                // at the entry would be buying a price that was never available.
                 open = true; legOpenIdx = ri; reEntries++;
-                rPeak = entry;
+                anchor = Math.max(entry, (opens[ri] != null ? opens[ri] : entry) + rDiv);
+                rPeak = anchor;
                 rTier = STOP_TIERS[STOP_TIERS.length - 1];
-                rLevel = entry * rTier.stopMul;
+                rLevel = anchor * rTier.stopMul;
                 rLocked = rTier.lockedPct;
-                reSeries.push({ t: rTs, pct: (banked * (1 + (closes[ri] + rDiv - entry) / entry) - 1) * 100 });
+                reSeries.push({ t: rTs, pct: (banked * (1 + (closes[ri] + rDiv - anchor) / anchor) - 1) * 100 });
               } else {
                 reSeries.push({ t: rTs, pct: (banked - 1) * 100 });
               }

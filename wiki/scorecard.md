@@ -91,17 +91,21 @@ Answers one question Dany asked on 2026-07-31: a position gets stopped out, the 
 
 **Not modelled**: a pick closed by a decision to sell rather than by a stop (0300.HK Midea) carries its actual result on both lines. Same for the benchmark.
 
-**Answer, as of 2026-07-31: it would have been worse — +1.15 % actual against −0.13 %, a gap of 1.28 pp.** Seven picks have been stopped, so seven diverge:
+**Fill rule**: a buy-stop fills at the trigger only if the session trades there. On a gap it fills at the **open**. `anchor = max(entry, open)`, and each leg is measured from that anchor rather than from the original entry. Three of the eleven buy-backs were gap-opens, and filling them at the entry was buying a price never available that day — 9988.HK opened 128.20 on May 22 against a 125.50 entry with a low of 126.00. Correcting it moved the portfolio line from −0.13 % to −0.31 %; only Prada changes materially (+3.51 % → +1.37 %), because the others are stopped at fixed tier percentages regardless of the fill.
+
+**Answer, as of 2026-07-31: it would have been worse — +1.15 % actual against −0.31 %, a gap of 1.46 pp.** Seven picks have been stopped, so seven diverge:
 
 | Ticker | Actual | With buy-backs | Buy-backs | Note |
 |---|---|---|---|---|
-| 1585.HK Yadea | −5 % | **−23.05 %** | 2 | May 12 buy @12.58 → stop May 28; Jun 8 buy @12.58 → stop Jun 9 |
-| 9988.HK Alibaba | 0 % | **−10.00 %** | 1 | |
-| 1167.HK Jacobio | 0 % | **−10.00 %** | 1 | back in Apr 27, stopped May 5 |
+| 1585.HK Yadea | −5 % | **−23.05 %** | 2 | May 12 buy @12.58 → stop May 28; Jun 8 gap-open buy @12.69 → stop Jun 9 |
+| 9988.HK Alibaba | 0 % | **−10.00 %** | 1 | May 22 gap-open buy @128.20 → stop Jun 10 |
+| 1167.HK Jacobio | 0 % | **−10.00 %** | 1 | Apr 27 gap-open buy @7.51 → stop May 4 |
 | 6690.HK Haier | −5 % | −1.75 % | 2 | leg open |
 | 1698.HK Tencent Music | −5 % | −2.73 % | 2 | leg open |
 | 0700.HK Tencent | −5 % | −1.35 % | 1 | leg open |
-| 1913.HK Prada | −10 % | **+3.51 %** | 3 | leg open |
+| 1913.HK Prada | −10 % | **+1.37 %** | 3 | leg open |
+
+> **"But those never came back to their entry" — they did.** Checked on 2026-07-31 against raw bars, with no dividend adjustment involved in any of the three: 1167.HK opened **7.51** on Apr 27 against a 7.22 entry; 9988.HK traded above 125.50 in **six** sessions, reaching 131.20 and closing 130.90 on Jun 2; 1585.HK printed a 12.58 high on May 12 and opened 12.69 on Jun 8. All three are far below entry *today* (4.67, 117.00, 10.73), which is the thing that makes them look like they never recovered. Each did recover to the entry, was bought back, and fell away again — that round trip is precisely what the buy-back rule is exposed to.
 
 Four improved, three got worse, and the three losers gave back more than the four winners gained. The pattern in the losers is the same each time: re-entry puts the position back into a market that is still falling, and the ratchet stops it again within days.
 
