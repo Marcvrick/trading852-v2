@@ -268,9 +268,26 @@
           // from the same history the table shows; later legs scan live.
           var forcedTs = rec.forcedStop ? Date.parse(rec.forcedStop.stopDate + "T00:00:00Z") / 1000 : null;
 
+          // Dividends accrue to a leg only while that leg holds the shares. The
+          // single-position `series` above can use "everything since entry"
+          // because it never sells; this line does, and a dividend that goes ex
+          // while it is out is simply not received. 1913.HK is the case: HKD
+          // 1.5025 went ex on May 6, between the Apr 30 stop and the May 7
+          // buy-back, so crediting it inflated every later bar — enough to push
+          // the Jul 29 low (38.00, below the 38.92 entry) up to a 39.50 that
+          // never came back, and buy at 39.74 instead of 38.92.
+          var legOpenTs = ts[entryIdx];
+          function legDiv(barTs) {
+            var s = 0;
+            for (var di = 0; di < divs.length; di++) {
+              if (divs[di].ts > legOpenTs && divs[di].ts <= barTs) s += divs[di].amount;
+            }
+            return s;
+          }
+
           for (var ri = entryIdx; ri < ts.length; ri++) {
             if (closes[ri] == null) continue;
-            var rTs = ts[ri], rDiv = cumDivThrough(rTs);
+            var rTs = ts[ri], rDiv = open ? legDiv(rTs) : 0;
             if (open) {
               if (ri > legOpenIdx) {
                 var rHi = highs[ri];
@@ -296,15 +313,23 @@
               }
               reSeries.push({ t: rTs, pct: (banked * (1 + (closes[ri] + rDiv - anchor) / anchor) - 1) * 100 });
             } else {
+              // Out of the market: the test is the raw print against the raw
+              // entry. No dividend is credited to a position that is not held.
               var backHi = highs[ri];
-              if (backHi != null && (backHi + rDiv) >= entry) {
-                // A buy-stop at the entry fills there only if the session trades
-                // there. When it GAPS open above — 9988.HK on May 22 opened
-                // 128.20 against a 125.50 entry and its low never came back —
-                // the order triggers at the open and fills at the open. Filling
-                // at the entry would be buying a price that was never available.
-                open = true; legOpenIdx = ri; reEntries++;
-                anchor = Math.max(entry, (opens[ri] != null ? opens[ri] : entry) + rDiv);
+              if (backHi != null && backHi >= entry) {
+                // The buy-back is filled AT the entry whenever the session
+                // actually trades there — that is Dany's rule, "bought again at
+                // 12.58, not before". 1585.HK on Jun 8 opened 12.69 but its low
+                // was 11.38, so it passed through 12.58 and fills there.
+                // Only a session that never comes back down — 9988.HK on May 22,
+                // open 128.20, low 126.00, against a 125.50 entry — cannot fill
+                // at the entry, and pays the open instead. Filling at the entry
+                // there would be buying a price that was never available.
+                open = true; legOpenIdx = ri; legOpenTs = rTs; reEntries++;
+                var rLoIn = lows[ri];
+                anchor = (rLoIn != null && rLoIn <= entry)
+                  ? entry
+                  : Math.max(entry, opens[ri] != null ? opens[ri] : entry);
                 rPeak = anchor;
                 rTier = STOP_TIERS[STOP_TIERS.length - 1];
                 rLevel = anchor * rTier.stopMul;

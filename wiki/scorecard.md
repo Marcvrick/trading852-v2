@@ -91,27 +91,29 @@ Answers one question Dany asked on 2026-07-31: a position gets stopped out, the 
 
 **Not modelled**: a pick closed by a decision to sell rather than by a stop (0300.HK Midea) carries its actual result on both lines. Same for the benchmark.
 
-**Fill rule**: a buy-stop fills at the trigger only if the session trades there. On a gap it fills at the **open**. `anchor = max(entry, open)`, and each leg is measured from that anchor rather than from the original entry. Three of the eleven buy-backs were gap-opens, and filling them at the entry was buying a price never available that day — 9988.HK opened 128.20 on May 22 against a 125.50 entry with a low of 126.00. Correcting it moved the portfolio line from −0.13 % to −0.31 %; only Prada changes materially (+3.51 % → +1.37 %), because the others are stopped at fixed tier percentages regardless of the fill.
+**Fill rule**: at the entry whenever the session trades there — its low comes back through the level — otherwise at the open. Only a session that gaps and never returns pays the open: 9988.HK on May 22 opened 128.20 with a low of 126.00 against a 125.50 entry, so 125.50 was never available. 1585.HK on Jun 8 opened 12.69 but its low was 11.38, so it does fill at 12.58.
 
-**Answer, as of 2026-07-31: it would have been worse — +1.15 % actual against −0.31 %, a gap of 1.46 pp.** Seven picks have been stopped, so seven diverge:
+**Dividends accrue to a leg only while that leg holds the shares.** A dividend that goes ex while the model is out of the market is not received, and the re-entry test compares **raw** prices against the raw entry for the same reason. 1913.HK is the case that forced this: HKD 1.5025 went ex on May 6, between the Apr 30 stop and the May 7 buy-back. Crediting it inflated every later bar of that pick — enough to lift the Jul 29 low of 38.00 (below the 38.92 entry) to a 39.50 that never came back, buying at 39.74 instead of 38.92, and to turn a −9.97 % chain into +3.51 %.
+
+**Answer, as of 2026-07-31: it would have been worse — +1.15 % actual against −1.26 %, a gap of 2.41 pp.** Seven picks have been stopped, so seven diverge:
 
 | Ticker | Actual | With buy-backs | Buy-backs | Note |
 |---|---|---|---|---|
-| 1585.HK Yadea | −5 % | **−23.05 %** | 2 | May 12 buy @12.58 → stop May 28; Jun 8 gap-open buy @12.69 → stop Jun 9 |
-| 9988.HK Alibaba | 0 % | **−10.00 %** | 1 | May 22 gap-open buy @128.20 → stop Jun 10 |
-| 1167.HK Jacobio | 0 % | **−10.00 %** | 1 | Apr 27 gap-open buy @7.51 → stop May 4 |
+| 1585.HK Yadea | −5 % | **−23.05 %** | 2 | buy May 12 @12.58 → stop May 28; buy Jun 8 @12.58 → stop Jun 9 |
+| 9988.HK Alibaba | 0 % | **−10.00 %** | 1 | buy May 22 @128.20 (gap, never returned) → stop Jun 10 |
+| 1167.HK Jacobio | 0 % | **−10.00 %** | 1 | buy Apr 27 @7.22 → stop May 5 |
+| 1913.HK Prada | −10 % | −9.97 % | 3 | buy May 7 → stop May 18 −10 %; buy Jun 3 → stop Jun 22 0 %; buy Jun 29, leg open |
 | 6690.HK Haier | −5 % | −1.75 % | 2 | leg open |
 | 1698.HK Tencent Music | −5 % | −2.73 % | 2 | leg open |
 | 0700.HK Tencent | −5 % | −1.35 % | 1 | leg open |
-| 1913.HK Prada | −10 % | **+1.37 %** | 3 | leg open |
 
 > **"But those never came back to their entry" — they did.** Checked on 2026-07-31 against raw bars, with no dividend adjustment involved in any of the three: 1167.HK opened **7.51** on Apr 27 against a 7.22 entry; 9988.HK traded above 125.50 in **six** sessions, reaching 131.20 and closing 130.90 on Jun 2; 1585.HK printed a 12.58 high on May 12 and opened 12.69 on Jun 8. All three are far below entry *today* (4.67, 117.00, 10.73), which is the thing that makes them look like they never recovered. Each did recover to the entry, was bought back, and fell away again — that round trip is precisely what the buy-back rule is exposed to.
 
-Four improved, three got worse, and the three losers gave back more than the four winners gained. The pattern in the losers is the same each time: re-entry puts the position back into a market that is still falling, and the ratchet stops it again within days.
+Three improved (Haier, Tencent Music, Tencent, all still open), three got much worse, and Prada lands within 0.03 pp of its actual result after three round trips. The pattern in the losers is the same each time: re-entry puts the position back into a market that is still falling, and the ratchet stops it again within days.
 
-> **Caveat that changes the reading: four of the seven buy-back legs are still open.** Haier, Tencent Music, Tencent and Prada are marked at live prices, not realised. The 1.28 pp verdict leans on those marks and can move. What is settled is the three closed cases, all worse.
+> **Caveat: four of the seven buy-back legs are still open.** Haier, Tencent Music, Tencent and Prada are marked at live prices, not realised. The 2.41 pp verdict leans on those marks and can move. What is settled is the three closed cases, all worse.
 
-**Cross-check**: `scripts/check-buyback-model.py` replicates the whole model from Yahoo independently of the JS. Its "never stopped" picks reproduce the live table exactly, which is what validates the entry-finding and dividend handling. It averages only the picks it models (11) and so prints −0.78 %; the page averages all 12, carrying Midea's actual +6.91 % on both lines, and `(−0.78 × 11 + 6.91) / 12 = −0.13`. Same model, different denominator, on purpose — the two curves must cover the same portfolio to be comparable.
+**Cross-check**: `scripts/check-buyback-model.py` replicates the whole model from Yahoo independently of the JS and must print the same portfolio figure. Its "never stopped" picks reproduce the live table exactly, which is what validates the entry-finding and dividend handling.
 
 **Calendar**: the benchmark's own bars are the x-axis (2800.HK trades every HK session from the Apr-10 entry). Each pick holds a pointer into its own series and contributes its last value at or before the current session, so a pick that misses a bar carries forward instead of dropping out of the mean.
 

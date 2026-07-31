@@ -15,19 +15,21 @@ Part of the [Trading852 wiki](index.md).
 
 ### July 31, 2026 · Scorecard chart: third line, buying stopped positions back at the entry
 
-Dany's question: a pick gets stopped, the price later returns to where it was first bought, you buy it back and ride — what would that have done? Now a blue third line on the chart, modelled in `fetchOne` as `reSeries`.
+Dany's question: a pick gets stopped, the price later returns to where it was first bought, you buy it back and ride — what would that have done? Blue third line on the chart, modelled in `fetchOne` as `reSeries`.
 
-Each leg is the published rule unchanged: the same trailing ratchet, legs compounding, repeating without limit (Prada: three buy-backs). Re-entry is a buy-stop at the **original** entry price — triggered the next time a session's high reaches it, filled at `max(entry, open)` — and each leg is then measured from what it actually cost.
+**Rules, settled after Dany challenged the line three times — each challenge found something:**
 
-**It would have been worse: +1.15 % actual against −0.31 %, 1.46 pp given up.** Four of the seven stopped picks improved, three got worse, and the three losers gave back more than the four winners gained — 1585.HK Yadea goes from −5 % to −23.05 % across two buy-backs, 9988 and 1167 from 0 % to −10 %. Prada is the counter-example, −10 % to +1.37 % over three round trips. The losing pattern repeats: re-entry puts the position back into a market still falling, and the ratchet stops it again within days.
+1. **Trigger confirmed, not changed.** Re-entry fires the next time the price reaches the original entry. 1585.HK was the test case: after the Apr 23 stop the first session whose high reaches 12.58 is May 12, at exactly 12.58. Verified against three independent feeds — Yahoo, FinMC_3's `cache_unadjusted`, and eastmoney — plus `cache_adjusted`, where the entry is 11.930 and May 12's high is 11.930. It came back.
+2. **Fill price — real bug.** The model filled every re-entry at the entry price, including sessions that gapped above it and never traded back down. 9988.HK opened 128.20 on May 22 against a 125.50 entry with a 126.00 low: that fill was a price never available. Now it fills at the entry whenever the session's low comes back through it, and at the open otherwise.
+3. **Dividends while out of the market — the bigger bug.** A dividend was credited to the buy-back chain even when it went ex during a period the model held nothing. 1913.HK: HKD 1.5025 ex on May 6, between the Apr 30 stop and the May 7 buy-back. That inflated every later bar of the pick, lifted the Jul 29 low of 38.00 (below the 38.92 entry) to a 39.50 that never came back, and turned a −9.97 % chain into +3.51 %. Dividends now accrue to a leg only while that leg holds the shares, and the re-entry test compares raw prices.
+
+**Answer: it would have been worse — +1.15 % actual against −1.26 %, 2.41 pp given up.** Three picks improve (Haier, Tencent Music, Tencent, all still open), three get much worse — 1585 Yadea −5 % → −23.05 %, 9988 and 1167 from 0 % to −10 % — and Prada lands within 0.03 pp of its actual result after three round trips. The losing pattern repeats: re-entry puts the position back into a market still falling and the ratchet stops it again within days.
 
 **Four of the seven buy-back legs are still open**, so the verdict leans on live marks. The three closed cases are all worse; that part is settled.
 
-Two corrections came out of Dany challenging the line. First, the trigger was confirmed, not changed: 1585.HK's two buy-backs are right, the first session whose high reaches 12.58 after the Apr 23 stop is May 12 at exactly 12.58. Second, a real bug — re-entry was filling at the entry price even when the session **gapped open above it and never traded back down**. 9988.HK opened 128.20 on May 22 against a 125.50 entry, low 126.00: that fill was a price never available. Re-entry is a buy-stop, so it now fills at `max(entry, open)` and each leg is measured from what it actually cost. Portfolio −0.13 % → −0.31 %.
+Also settled: the April 10 picks enter at **April 10's own close**, not the next session's. The entry loop compares HK bar timestamps (01:30 UTC) against midnight UTC of the issue date, so the issue day qualifies as "strictly after". Surfaced while checking Yadea (12.58 vs Apr 13's 12.84) and confirmed by Dany as the intended behaviour, which makes it the rule rather than the documented-but-unimplemented one.
 
-Also checked, because Dany believed those names never recovered: 1167.HK opened 7.51 on Apr 27 (entry 7.22), 9988.HK traded above 125.50 in six sessions reaching 131.20, 1585.HK printed 12.58 on May 12. All three are far below entry *today*, which is what makes them look like they never came back. Each recovered, was bought back, and fell away again.
-
-Cross-checked against `scripts/check-buyback-model.py`, an independent Python replication — its untouched picks reproduce the live table exactly. It averages only the picks it models while the page averages all 12, carrying Midea's actual +6.91 % on both lines. Deliberate: the two curves have to cover the same portfolio to be compared.
+Cross-checked throughout against `scripts/check-buyback-model.py`, an independent Python replication that must print the same portfolio figure; its untouched picks reproduce the live table exactly.
 
 ### July 31, 2026 · Article ticker links to its scorecard row, and the mobile table stops breaking the page
 
