@@ -83,7 +83,11 @@ A line chart above the table, from the April 10 issue to today: the portfolio in
 
 Answers one question Dany asked on 2026-07-31: a position gets stopped out, the price later climbs back to where it was first bought, you buy it back and ride it — what would that have done to the portfolio?
 
-**Model** (`fetchOne`, `reSeries`): each leg is the published rule unchanged — the same 3-tier trailing ratchet, anchored again at the **original** entry price, because that is the level being bought back. Re-entry triggers on a session whose intraday high (dividend-adjusted) reaches that entry, and is assumed to fill there. Legs compound. Repeats without limit: Prada went through three buy-backs. The first leg honours `scorecard-stops.json` so the line starts from the same history the table shows; later legs scan live.
+**Model** (`fetchOne`, `reSeries`): each leg is the published rule unchanged — the same 3-tier trailing ratchet, anchored again at the **original** entry price, because that is the level being bought back. Re-entry fires **the next time the price reaches that entry** — intraday high, dividend-adjusted — and fills there, i.e. a resting limit buy at the entry price. Legs compound. Repeats without limit: Prada went through three buy-backs. The first leg honours `scorecard-stops.json` so the line starts from the same history the table shows; later legs scan live.
+
+> **The trigger was questioned and confirmed on 2026-07-31.** Dany found the line implausible; the check was 1585.HK, whose two buy-backs drive the worst single result. Both are correct under the rule: after the Apr 23 stop, the first session whose high reaches 12.58 is **May 12 (high exactly 12.58)**, and the second is Jun 8, which opens at 12.69 — above the level — and falls back through it, so a resting limit buy at 12.58 fills on the way down. Dany's ruling: *"on devrait re-rentrer en position la prochaine fois que le prix monte à 12.58."*
+>
+> A milder **close-confirmation** variant was computed and rejected: requiring a close at or above the entry skips both 1585 buy-backs entirely (no session ever closed back at 12.58) and skips 1167 as well, scoring the portfolio **+0.83 %** instead of −0.13 %. It is not free — re-entering at a close above the entry re-anchors the stop higher, which turns 1913.HK Prada from +3.51 % into −9.32 %. Different question, kept out of the shipped line.
 
 **Not modelled**: a pick closed by a decision to sell rather than by a stop (0300.HK Midea) carries its actual result on both lines. Same for the benchmark.
 
@@ -91,7 +95,7 @@ Answers one question Dany asked on 2026-07-31: a position gets stopped out, the 
 
 | Ticker | Actual | With buy-backs | Buy-backs | Note |
 |---|---|---|---|---|
-| 1585.HK Yadea | −5 % | **−23.05 %** | 2 | stopped again both times |
+| 1585.HK Yadea | −5 % | **−23.05 %** | 2 | May 12 buy @12.58 → stop May 28; Jun 8 buy @12.58 → stop Jun 9 |
 | 9988.HK Alibaba | 0 % | **−10.00 %** | 1 | |
 | 1167.HK Jacobio | 0 % | **−10.00 %** | 1 | back in Apr 27, stopped May 5 |
 | 6690.HK Haier | −5 % | −1.75 % | 2 | leg open |

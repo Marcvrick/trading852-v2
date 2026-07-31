@@ -233,14 +233,23 @@
         }
 
         // ── Buy-back variant ────────────────────────────────────────────────
-        // "Stopped out, then the price comes back to where we first bought, so
+        // "Stopped out, then the price climbs back to where we first bought, so
         // we buy again and ride." Each leg is the published rule unchanged: the
-        // same 3-tier trailing ratchet, anchored again at the ORIGINAL entry
-        // price, because that is the level being bought back. Legs compound.
+        // same 3-tier trailing ratchet, re-anchored at whatever the buy-back
+        // actually cost. Legs compound.
         //
-        // Re-entry triggers on a bar whose intraday HIGH reaches the original
-        // entry, and fills AT that entry price — the level was traded, so the
-        // fill is assumable, but it is an assumption and a real fill would slip.
+        // Re-entry fires the next time the price reaches the original entry —
+        // intraday HIGH, not the close — and fills there. That is a resting
+        // limit buy at the entry price, so a session that gaps open above it and
+        // falls back through still fills: 1585.HK on Jun 8 (open 12.69, high
+        // 12.70, low 11.38, close 11.56) buys at 12.58 on the way down and is
+        // stopped two sessions later. Confirmed as the intended rule by Dany on
+        // 2026-07-31, over a close-confirmation variant that would have skipped
+        // both 1585 buy-backs (no session ever closed back at 12.58) and scored
+        // the portfolio +0.83% instead of -0.13%. Kept because "the next time
+        // the price rises to 12.58" is the rule being asked about; the milder
+        // variant is a different question.
+        //
         // Not modelled for a pick closed by sale or trimmed: the buy-back rule
         // is about being stopped out, not about a discretionary exit.
         var reSeries = [], reEntries = 0;
