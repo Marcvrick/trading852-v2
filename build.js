@@ -220,6 +220,7 @@ function getAllArticles() {
     const eyebrow = (config.articleSection || 'Analysis').trim();
     articles.push({
       href, slug, title: config.ogTitle, eyebrow, date: config.pubDate,
+      modDate: config.modDate || '',
       description: config.description || '',
       contextLine: config.contextLine || config.description || '', // fallback to description if no contextLine
     });
@@ -271,6 +272,23 @@ function generateRecentAnalysesHTML() {
   return html;
 }
 
+// An "Updated" tag on a list line means two things at once: the analysis was
+// genuinely revisited (modDate well clear of pubDate, so a launch-week correction
+// does not qualify), and it happened recently enough to still be news. Without the
+// freshness window the tag would sit on 8 of 12 lines forever and stop meaning
+// anything. Both windows are in days; tune them here.
+const UPDATE_MIN_GAP_DAYS = 7;
+const UPDATE_FRESH_DAYS = 30;
+function isRecentUpdate(a, now = Date.now()) {
+  if (!a.modDate || !a.date) return false;
+  const DAY = 86400000;
+  const mod = Date.parse(a.modDate + 'T00:00:00Z');
+  const pub = Date.parse(a.date + 'T00:00:00Z');
+  if (Number.isNaN(mod) || Number.isNaN(pub)) return false;
+  if (mod - pub < UPDATE_MIN_GAP_DAYS * DAY) return false;
+  return now - mod <= UPDATE_FRESH_DAYS * DAY;
+}
+
 // ── "Our Analyses" list auto-generation ─────────────────────────────────────
 // Generate the full numbered list of all articles for the "Our Analyses" section.
 // Skip the first 3 articles (featured + 2 small cards from Recent Analyses).
@@ -293,6 +311,7 @@ function generateOurAnalysesHTML() {
                 <hr class="our-work-hr our-work-hr--before">
                 <span class="work-index">${num}</span>
                 <span class="field-name--field_snippet">${a.eyebrow} · ${a.title}</span>
+                ${isRecentUpdate(a) ? `<span class="updated-tag">Updated ${formatDate(a.modDate)}</span>` : ''}
                 <span class="our-work__read-more">Read the analysis &rarr;</span>
                 <hr class="our-work-hr our-work-hr--after">
               </a>
@@ -546,4 +565,6 @@ function build() {
   validateInternalLinks();
 }
 
-build();
+if (require.main === module) build();
+
+module.exports = { isRecentUpdate };

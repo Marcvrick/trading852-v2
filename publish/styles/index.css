@@ -291,7 +291,8 @@ a.our-work__link {
   padding: 0.5rem 1.25rem 0.5rem 0;
 }
 
-.verdict-tag {
+.verdict-tag,
+.updated-tag {
   flex: 0 0 auto;
   font-family: var(--ff-sans);
   font-size: 0.625rem;
@@ -307,7 +308,16 @@ a.our-work__link {
 }
 
 a.our-work__link:hover .verdict-tag,
-a.our-work__link:focus .verdict-tag {
+a.our-work__link:focus .verdict-tag,
+a.our-work__link:hover .updated-tag,
+a.our-work__link:focus .updated-tag {
+  color: rgba(255,255,255,0.75);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* The tag is the whole point of the line on mobile too, so unlike .verdict-tag
+   it is not hidden below 48rem — it wraps under the title instead. */
+.updated-tag {
   color: rgba(255,255,255,0.75);
   border-color: rgba(255,255,255,0.4);
 }
@@ -425,6 +435,9 @@ a.our-work__link:focus .verdict-tag {
   .node-mode-recent_update--small { flex: 0 0 auto; min-height: 15rem; }
   .work-index, .verdict-tag { display: none; }
   .our-work__link .field-name--field_snippet { padding-right: 0.5rem; }
+  /* The title column is already narrow here (read-more holds a fixed 9rem), so an
+     inline pill would squeeze it to one word per line. Give the tag its own row. */
+  .updated-tag { flex: 0 0 100%; margin: 0 0 0.75rem; width: fit-content; }
   .block--our-work { padding-left: 0; }
   .block--our-work .block-title { display: none; }
   .block--our-firm { padding-right: 0; }
