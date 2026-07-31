@@ -412,6 +412,36 @@ function linkifyHeroTicker(page, tickers) {
     });
 }
 
+// Ticker mentions in the prose link to the scorecard row too, not only the hero
+// pill. Only the FIRST mention of each ticker in a page is linked: an article
+// names its own ticker a dozen times and linking all of them is noise.
+//
+// Everything that is not prose is stepped over — tags, HTML comments (the CONFIG
+// and JSON-LD blocks), <script>/<style>/<title>, headings, and any existing
+// <a>…</a>. That last one is what keeps this from nesting an anchor inside the
+// hero pill, which linkifyHeroTicker has already turned into a link.
+const NON_PROSE = /<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>|<title\b[\s\S]*?<\/title>|<a\b[\s\S]*?<\/a>|<h[1-6]\b[\s\S]*?<\/h[1-6]>|<[^>]+>/gi;
+
+function linkifyBodyTickers(page, tickers) {
+  const seen = new Set();
+  const linkFirst = (text) => {
+    if (!text || text.indexOf('.HK') === -1) return text;
+    return text.replace(/\b\d{3,4}\.HK\b/g, (t) => {
+      if (seen.has(t) || !tickers.has(t)) return t;
+      seen.add(t);
+      return '<a class="ticker-link" href="/scorecard#' + tickerAnchor(t) +
+             '" title="' + t + ' on the scorecard">' + t + '</a>';
+    });
+  };
+  let out = '', last = 0, m;
+  NON_PROSE.lastIndex = 0;
+  while ((m = NON_PROSE.exec(page)) !== null) {
+    out += linkFirst(page.slice(last, m.index)) + m[0];
+    last = m.index + m[0].length;
+  }
+  return out + linkFirst(page.slice(last));
+}
+
 // ── Validate internal linking ─────────────────────────────────────────────────
 // Warn if any published article has zero internal links to other articles.
 function validateInternalLinks() {
@@ -560,7 +590,10 @@ function build() {
         page = page.replace('{{RECENT_ANALYSES}}', generateRecentAnalysesHTML());
         page = page.replace('{{OUR_ANALYSES}}', generateOurAnalysesHTML());
       }
+      // Hero first: it turns the pill into an <a>, which the prose pass then
+      // steps over instead of linking the same ticker twice in the same breath.
       page = linkifyHeroTicker(page, scorecardTickers);
+      page = linkifyBodyTickers(page, scorecardTickers);
       fs.writeFileSync(outPath, page);
       built++;
     } else {

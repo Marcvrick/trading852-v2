@@ -63,6 +63,10 @@ The `meta-ticker` pill in an article hero links to that ticker's row: `/scorecar
 
 **Highlight**: `sc-row-target` paints via `background-image`, not `background-color`, so it layers over the stopped / reduced / benchmark tints instead of replacing them, plus a blue inset bar on the first cell.
 
+**Prose mentions too** (`linkifyBodyTickers` in `build.js`): the **first** mention of a tracked ticker in an article's running text becomes a link to the same row. First only — an article names its own ticker up to a dozen times and linking all of them is noise. The pass steps over tags, HTML comments (the CONFIG and JSON-LD blocks), `<script>` / `<style>` / `<title>`, headings, and any existing `<a>…</a>`, which is what stops it nesting an anchor inside the hero pill `linkifyHeroTicker` just created. Order matters: hero first, prose second.
+
+A ticker with no scorecard row is left as plain text, so an article can name a peer freely — 9973-chery mentions 0175.HK and 1211.HK, neither of which is tracked, and both stay unlinked. Cross-references between tracked names do link: 0700-tencent carries one to 9988.HK. Current state: 13 prose links across the 12 stock articles. `scripts/test-ticker-links.py` checks the count per article, that no link lands in a script or comment, that no anchors nest, and that every JSON-LD block still parses.
+
 ## Portfolio vs HSI chart
 
 A line chart above the table, from the April 10 issue to today: the portfolio in solid green against 2800.HK dashed grey, both as % return. Built in `renderChart` / `buildPortfolioSeries` (`scorecard.js`), drawn with the Chart.js 4.4.1 already vendored at `publish/static/chart.umd.js` for the SPY 747 article. No new dependency, no build step: the series is computed client-side from the OHLC each pick already fetches.

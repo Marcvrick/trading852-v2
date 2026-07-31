@@ -10,6 +10,7 @@
 #   python3 scripts/test-ticker-links.py http://localhost:3000
 from playwright.sync_api import sync_playwright
 import pathlib
+import json
 import sys
 import re
 
@@ -17,12 +18,32 @@ BASE = sys.argv[1] if len(sys.argv) > 1 else 'http://localhost:3000'
 DIST = pathlib.Path(__file__).resolve().parent.parent / 'dist' / 'analyses'
 
 anchors = {}
+prose = {}
 for f in sorted(DIST.glob('*.html')):
-    m = re.search(r'class="meta-ticker" href="/scorecard#([^"]+)"', f.read_text())
+    html = f.read_text()
+    m = re.search(r'class="meta-ticker" href="/scorecard#([^"]+)"', html)
     if m:
         anchors[f.stem] = m.group(1)
+    hits = re.findall(r'class="ticker-link" href="/scorecard#([^"]+)"', html)
+    if hits:
+        prose[f.stem] = hits
+    # The prose pass must not reach inside JSON-LD or the CONFIG comment, and
+    # must never nest an anchor inside the hero pill it just created.
+    for block in re.findall(r'<script[\s\S]*?</script>|<!--[\s\S]*?-->', html):
+        assert 'ticker-link' not in block, \
+            'FAIL: %s has a ticker link inside a script or comment block' % f.name
+    assert not re.search(r'<a\b[^>]*>\s*<a\b', html), 'FAIL: %s has nested anchors' % f.name
+    for block in re.findall(r'<script type="application/ld\+json">([\s\S]*?)</script>', html):
+        json.loads(block)  # raises if the rewrite corrupted the structured data
 assert anchors, 'FAIL: no linkified hero tickers found in dist/analyses (run node build.js first)'
 print('hero links:', len(anchors))
+print('prose links:', sum(len(v) for v in prose.values()), 'across', len(prose), 'articles')
+
+# Every stock article must carry its own ticker in the prose, linked exactly once.
+for slug, a in anchors.items():
+    assert slug in prose, 'FAIL: %s has no prose ticker link' % slug
+    assert prose[slug].count(a) == 1, \
+        'FAIL: %s links its own ticker %d times in prose, expected once' % (slug, prose[slug].count(a))
 
 with sync_playwright() as p:
     b = p.chromium.launch()
@@ -35,6 +56,9 @@ with sync_playwright() as p:
 
     missing = {slug: a for slug, a in anchors.items() if a not in rows}
     assert not missing, 'FAIL: hero links with no scorecard row: %s' % missing
+    dead = {slug: [a for a in hits if a not in rows] for slug, hits in prose.items()}
+    dead = {k: v for k, v in dead.items() if v}
+    assert not dead, 'FAIL: prose links with no scorecard row: %s' % dead
 
     # Exercise one end to end: the hash must select the row and mark it.
     # Fresh page, not a second goto on the open one: same-URL-plus-hash is a

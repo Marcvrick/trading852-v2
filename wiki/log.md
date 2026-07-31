@@ -15,6 +15,8 @@ Part of the [Trading852 wiki](index.md).
 
 ### July 31, 2026 · Article ticker links to its scorecard row, and the mobile table stops breaking the page
 
+**Prose ticker links.** Extended the same deep link to the ticker as it appears in the running text, on every article, not just the hero pill. First mention only — 9973-chery says 9973.HK twelve times. 13 links across the 12 stock articles (0700-tencent also cross-links 9988.HK). Untracked peers stay plain text: Chery names 0175.HK and 1211.HK, neither is on the scorecard, neither got a link. The rewrite steps over tags, comments, scripts, headings and existing anchors, so JSON-LD still parses and no anchor nests inside the hero pill.
+
 **Ticker deep link.** The hero `meta-ticker` pill now links to `/scorecard#t-<ticker>`. Done in `build.js`, not per article, and only for tickers the scorecard has a row for — all 12 stock articles picked it up on the next build, sector hubs correctly got nothing. `scorecard.js` writes the matching `<tr id>` and `focusHashRow()` performs the jump after render, since the table does not exist when the browser tries the hash itself. Bound to `hashchange` too: a second anchor followed from the scorecard is a same-document navigation, so the script would otherwise never run again — a gap the first version of the test accidentally exposed by re-using an open page.
 
 The anchor rule is written twice (`tickerAnchor` in each file), so `scripts/test-ticker-links.py` asserts every hero link resolves to a real row instead of assuming the two stay in step.

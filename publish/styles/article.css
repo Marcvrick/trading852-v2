@@ -48,6 +48,15 @@
   border-radius: 2px;
 }
 
+/* First mention of a tracked ticker in the prose, linked to its scorecard row by
+   build.js. Matches the underline the hand-written in-body links already use. */
+a.ticker-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
 /* build.js turns the hero ticker into a link to its scorecard row whenever that
    row exists, so the pill has to read as clickable without changing shape. */
 a.meta-ticker { text-decoration: none; transition: background 0.2s, border-color 0.2s; }
