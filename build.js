@@ -387,7 +387,7 @@ function generateScorecardData() {
     const forcedStop = SCORECARD_STOPS[ticker];
     picks.push({ t: ticker, company, eyebrow, slug, issueDate, ...(reduced ? { reduced } : {}), ...(forcedStop ? { forcedStop } : {}) });
   }
-  picks.sort((a, b) => (a.issueDate < b.issueDate ? -1 : a.issueDate > b.issueDate ? 1 : (a.t < b.t ? -1 : 1)));
+  picks.sort((a, b) => (a.issueDate > b.issueDate ? -1 : a.issueDate < b.issueDate ? 1 : (a.t > b.t ? -1 : 1))); // newest pick first, oldest last
   return picks.concat([SCORECARD_BENCHMARK]);
 }
 
