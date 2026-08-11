@@ -223,6 +223,8 @@ function getAllArticles() {
       modDate: config.modDate || '',
       description: config.description || '',
       contextLine: config.contextLine || config.description || '', // fallback to description if no contextLine
+      section: config.articleSection || null, // raw tag, unlike eyebrow this is null (not 'Analysis') when unset
+      updateBannerLabel: config.updateBannerLabel || '', // optional short label for the homepage update banner
     });
   }
   articles.sort((a, b) => (b.date < a.date ? -1 : b.date > a.date ? 1 : 0));
@@ -318,6 +320,51 @@ function generateOurAnalysesHTML() {
             </div>`;
   }
   return html;
+}
+
+// ── Homepage update banner ───────────────────────────────────────────────────
+// A small dismissible tab, centered under the header, announcing the single
+// freshest genuine update (same isRecentUpdate() signal as the "Updated" list
+// tag above — one source of truth, no separate data file to keep in sync).
+// Reruns automatically on every `node build.js`: bump an article's modDate as
+// already required by the update workflow, rebuild, and the banner picks it
+// up on its own. No per-update manual step beyond that.
+function generateUpdateBannerHTML() {
+  const updated = getAllArticles().filter(a => isRecentUpdate(a));
+  if (updated.length === 0) return '';
+  updated.sort((a, b) => Date.parse(b.modDate) - Date.parse(a.modDate));
+  const a = updated[0];
+  const label = a.updateBannerLabel || a.title;
+  const key = `${a.slug}-${a.modDate}`;
+  return `
+  <div class="update-banner-wrap" aria-live="polite">
+    <div class="update-banner" id="update-banner" data-key="${key}">
+      <a href="${a.href}" class="update-banner__link">
+        <span class="update-banner__label">Updated</span>
+        <span class="update-banner__title">${label}</span>
+        <span class="update-banner__arrow" aria-hidden="true">&rarr;</span>
+      </a>
+      <button class="update-banner__close" id="update-banner-close" type="button" aria-label="Dismiss">&times;</button>
+    </div>
+  </div>
+  <script>
+  (function () {
+    "use strict";
+    var el = document.getElementById('update-banner');
+    if (!el) return;
+    var STORE_KEY = 't852_update_dismissed';
+    var id = el.getAttribute('data-key');
+    if (localStorage.getItem(STORE_KEY) === id) { el.parentElement.remove(); return; }
+    setTimeout(function () { el.classList.add('is-shown'); }, 500);
+    var closeBtn = document.getElementById('update-banner-close');
+    closeBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      localStorage.setItem(STORE_KEY, id);
+      el.classList.remove('is-shown');
+      setTimeout(function () { el.parentElement.remove(); }, 400);
+    });
+  })();
+  </script>`;
 }
 
 // ── Scorecard auto-generation ────────────────────────────────────────────────
@@ -466,6 +513,56 @@ function validateInternalLinks() {
   }
 }
 
+// ── Validate sector hub links ──────────────────────────────────────────────────
+// A sector hub's "Published analyses" card list + JSONLD ItemList are hand-written,
+// not generated from CONFIG.articleSection, so a new article can ship without ever
+// being added to its own hub (happened 2026-08: Galaxy, 361 Degrees, Chery Auto all
+// shipped without their hub being touched). This can't be auto-generated instead —
+// the ca-summary blurbs are bespoke editorial copy, not a description reformat —
+// so the guard is a build-time check: every article whose articleSection maps to a
+// known hub must appear as an href in that hub's source file, or the build fails.
+// Articles with no articleSection (macro one-offs like SPY, HSI trendline) are
+// exempt: their hub placement, if any, is an editorial choice with no single tag
+// to check against.
+const SECTION_HUB_SLUG = {
+  'Special Situations':     'special-situations',
+  'Luxury':                 'luxury',
+  'Biotech':                'biotech',
+  'Technology':             'technology',
+  'Consumer Discretionary': 'consumer-discretionary',
+  'Electric Vehicles':      'electric-vehicles',
+  'Macro':                  'market-thesis',
+  'Market Thesis':          'market-thesis',
+};
+
+function validateSectorHubLinks(articles) {
+  const dir = path.join(SRC, 'analyses');
+  const errors = [];
+  for (const a of articles) {
+    if (!a.section) continue;
+    const hubSlug = SECTION_HUB_SLUG[a.section];
+    if (!hubSlug) {
+      errors.push(`${a.slug}: articleSection "${a.section}" has no entry in SECTION_HUB_SLUG (build.js) — add one, or the hub link can never be checked`);
+      continue;
+    }
+    const hubPath = path.join(dir, `${hubSlug}.html`);
+    if (!fs.existsSync(hubPath)) {
+      errors.push(`${a.slug}: hub file publish/analyses/${hubSlug}.html does not exist`);
+      continue;
+    }
+    const hubRaw = fs.readFileSync(hubPath, 'utf8');
+    if (!hubRaw.includes(`href="/analyses/${a.slug}"`)) {
+      errors.push(`${a.slug} (articleSection: "${a.section}") is not linked from publish/analyses/${hubSlug}.html — add its <a class="category-article-card"> block and JSONLD ListItem`);
+    }
+  }
+  if (errors.length > 0) {
+    console.error('\nSector hub link check FAILED:');
+    errors.forEach(e => console.error(`  ✗ ${e}`));
+    console.error('\nBuild stopped. Every article must be linked from the hub matching its CONFIG.articleSection before it ships.\n');
+    process.exit(1);
+  }
+}
+
 // ── sitemap.xml + feed.xml auto-generation ────────────────────────────────────
 // Both were hand-maintained and drifted (3 articles missing from the sitemap,
 // 7 from the feed). Generated from disk on every build instead.
@@ -562,6 +659,10 @@ ${items}
 
 // ── Main ───────────────────────────────────────────────────────────────────────
 function build() {
+  // Fail before touching dist/, not after: a bad hub link is a content bug, not
+  // a build-output bug, so the previous good dist/ should survive a failed build.
+  validateSectorHubLinks(getAllArticles());
+
   fs.rmSync(DIST, { recursive: true, force: true });
   fs.mkdirSync(DIST, { recursive: true });
 
@@ -591,6 +692,7 @@ function build() {
       if (rel === 'index.html') {
         page = page.replace('{{RECENT_ANALYSES}}', generateRecentAnalysesHTML());
         page = page.replace('{{OUR_ANALYSES}}', generateOurAnalysesHTML());
+        page = page.replace('{{UPDATE_BANNER}}', generateUpdateBannerHTML());
       }
       // Hero first: it turns the pill into an <a>, which the prose pass then
       // steps over instead of linking the same ticker twice in the same breath.
