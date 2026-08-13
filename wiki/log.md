@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-31
+updated: 2026-08-13
 ---
 
 # Trading852 v2, Changelog
@@ -12,6 +12,35 @@ updated: 2026-07-31
 Part of the [Trading852 wiki](index.md).
 
 ## Changelog
+
+### August 13, 2026 · Motion pass: five instant state changes bridged, first reduced-motion block (commit `71dd9c0`)
+
+Swept the whole site for places that change state with no transition, rejected most of them, shipped five. The rejects matter as much as the ships: the update banner already enters and leaves along the same axis, the regime gauges swap stale baked numbers for live ones and must stay invisible doing it, the scorecard chart and the homepage card grid are read, not watched. Nothing decorative was added.
+
+- **Async arrival.** `renderStrip` / `renderTable` in [scorecard.js](../assets/scorecard.js) replace their placeholder in one `innerHTML` assignment; a `reveal()` helper now adds `.async-in` then `.is-loaded` (double `requestAnimationFrame`) for a 200ms opacity + 6px rise. Both classes come from JS, never the markup, so a dead script leaves the block visible rather than stuck at `opacity: 0`. `#scorecard-summary` got `min-height: 2.5rem` in [scorecard.css](../publish/styles/scorecard.css): it was empty until the fetch resolved and pushed the hero down on arrival, which is a layout shift no animation fixes.
+- **Mobile menu.** [base.css](../publish/styles/base.css) toggled `display: none` → `flex`. Now `display` stays `flex` and `visibility` does the hiding, with the visibility flip delayed 180ms on close so the opacity + `translateY(-0.5rem)` fade can finish. `display` cannot be transitioned; `visibility` can be delayed. No JS change, `.is-open` still drives it.
+- **SPY card.** `.spy-in-zone` lands after the live fetch. The link background already faded (0.5s, inherited from `.recent-update__link`) but `#spy-zone-card`'s `border-color` snapped, so half the state change glided and half jumped. One line in [index.css](../publish/styles/index.css).
+- **Scorecard row highlight.** `.sc-row-target` was a `background-image` gradient layer, deliberately not a `background-color`, so it reads on top of the stopped / reduced / benchmark tints. A gradient cannot cross-fade from `none`, and on `hashchange` the highlight has to leave one row and reach another while the page is still smooth-scrolling. Moved into `.sc-table tbody td::after` with `opacity` toggled and `pointer-events: none`; `td` got `position: relative`. Consequence to know: the overlay now paints *above* the cell text at 7% alpha instead of below it.
+- **Press feedback.** `.nav-toggle` gets `transform: scale(0.92)` on `:active`, 140ms. It is the only tap target on the site.
+- **Reduced motion.** The site had no `prefers-reduced-motion` rule at all. Added at the end of `base.css` (the one sheet every layout loads): displacement dropped, durations collapsed to 0.01ms so `transitionend` still fires, opacity cross-fades kept. Gentler, not absent.
+
+All motion reuses the `cubic-bezier(0.2, 0.8, 0.2, 1)` already in the file for the update banner rather than introducing a second curve.
+
+**Verification limit worth recording.** End states were checked live against the built `dist/` (classes applied, opacities settled, `min-height` reserved, overlay at 1 on the target row and 0 elsewhere, ticker link still winning the hit-test under the overlay). The *smoothness* was not verified: the in-app browser pane freezes its animation clock whenever it is hidden, so mid-transition samples come back pinned to the start value and read as a broken transition. Do not diagnose a transition bug from that pane without a visible window.
+
+### August 12, 2026 · Sitemap lastmod tracks pubDate, not modDate (found while pushing the 0027-galaxy update)
+
+While pushing an update-notice to `0027-galaxy.html` (H1 2026 interim vs the July thesis, then a same-day correction on the EBITDA base-effect), `modDate` was bumped in CONFIG and confirmed working for the homepage "Updated" banner/pill (`isRecentUpdate()`) and the article's own `article:modified_time` / JSON-LD `dateModified`. But `dist/static/sitemap.xml`'s `<lastmod>` for that URL stayed pinned to the original `pubDate` (Jul 13) after both pushes — `getAllAnalysisPages()` in `build.js` (~line 604) reads `config.pubDate` only, never `config.modDate`, when building the sitemap page list. Not fixed here (out of scope for the publish task in progress); worth a one-line change (`config.modDate || config.pubDate`) next time someone is in that function, since a stale sitemap lastmod on an updated article is a minor, silent SEO signal miss.
+
+### August 9, 2026 · Sector hubs missing 4 articles, fixed + hard build gate added
+
+While auditing the homepage for content-idea research, found `consumer-discretionary.html` and `electric-vehicles.html` hadn't been touched since their articles shipped: Galaxy Entertainment (Jul 13), 361 Degrees (Jun 29), and Chery Auto (Jul 27) were all live and tagged with the right `articleSection`, but absent from their hub's card list and JSONLD `ItemList`. The electric-vehicles hub didn't even link its own flagship Chery Auto piece.
+
+Added the missing cards + JSONLD entries to both hubs. Then wrote a build-time check (`validateSectorHubLinks()` in `build.js`, see [build-pipeline.md](build-pipeline.md#sector-hub-link-check-hard-gate-added-2026-08-09)) that fails the build if any article's hub is missing its link — it caught a second, older instance immediately on first run: `usd-strength-hk-transmission` (Jul 10) was also missing from `market-thesis.html`, fixed the same way. `market-thesis.html`'s JSONLD was separately stale beyond just that one miss (only declared 1 of 5 visible cards) — rebuilt to declare all 6.
+
+### August 9, 2026 · GSC audit + www duplicate fixed
+
+Pulled the 4 GSC Page Indexing exports Dany downloaded (Chart, Critical issues, Metadata, Non-critical issues) and cross-checked live against the site. Full writeup: [GSC audit](seo/gsc-audit-2026-08-09.md). Found `www.trading852.com` served every page directly (200) instead of redirecting to the apex domain — a real duplicate-content gap, unrelated to the 17 not-indexed pages GSC was flagging (those traced cleanly to 2 known redirects + 13 "discovered not indexed" + 1 "crawled not indexed", the last two need URL-level export from the GSC UI to diagnose further). Added a host-matched redirect rule to `vercel.json`, committed (`757bd99`), pushed to `main`.
 
 ### July 31, 2026 · Buy-back line built, corrected three times, then withheld from the page
 

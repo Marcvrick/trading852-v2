@@ -4,7 +4,7 @@ tags: [trading852, wiki, articles]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-15
+updated: 2026-08-12
 ---
 
 # Trading852 v2, Articles
@@ -19,6 +19,12 @@ Part of the [Trading852 wiki](index.md).
 | [publish/drafts/6160-beone.html](../publish/drafts/6160-beone.html) | 6160.HK | Beat AbbVie's Imbruvica in a Head-to-Head Trial. First Annual Profit on US$5.3B in Revenue. Net Margin: 5.4%. | HKD ~132 (EV/FCF ~24×, forward P/E ~21×) |
 
 Drafts live at [publish/drafts/](../publish/drafts/). They are built into `dist/drafts/` but **not linked from the homepage, feed, or sitemap**. Do not promote a draft until the trigger fires.
+
+## In DRAFT/, awaiting review
+
+| File | Type | Title | Note |
+|---|---|---|---|
+| [DRAFT/hong-kong-foreign-investors-last-count-2020.html](../DRAFT/hong-kong-foreign-investors-last-count-2020.html) | Market Thesis | HK$121 Billion a Day From the Mainland. The Last Foreign-Investor Count Was 2020. | Written 2026-08-12 from [Idea- themes/Foreign investors in hkex.md](../Idea-%20themes/Foreign%20investors%20in%20hkex.md). Three inline SVG charts. Every figure re-sourced from the HKEX Cash Market Transaction Survey PDFs (2016, 2019, 2020), the HKEX Stock Connect 2025 Review and the SFC Asset and Wealth Management Activities Survey 2024. Chart generator sits beside it at [DRAFT/hong-kong-foreign-investors-charts.py](../DRAFT/hong-kong-foreign-investors-charts.py), with the per-series source in comments and asserts that reconcile the stacked segments against the published overseas totals. No ticker and no price anchor, so the scorecard ignores it |
 
 ---
 

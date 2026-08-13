@@ -4,7 +4,7 @@ tags: [trading852, wiki, editorial, writing]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-31
+updated: 2026-08-12
 ---
 
 # Trading852 v2, Editorial Workflow
@@ -15,6 +15,7 @@ Part of the [Trading852 wiki](index.md).
 
 The full, canonical style guide is [style-guide.md](style-guide.md): voice, the 7 sections, pre-flight tests, pitfalls. Voice parameters: [VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md). This page keeps the workflow and the absolute guardrails; it does not re-copy the guide.
 
+- **Read [VOIX-Marc.md](../../../Voix%20Marc/VOIX-Marc.md) before the first sentence, not after.** The style guide sets the structure; VOIX-Marc sets the voice, and the two are not interchangeable. Four rules live only there and are the ones a draft loses first: every load-bearing number gets a human-scale referent in the next sentence, no belief attributed to an unnamed crowd (everyone, nobody, the consensus), no "it is not X, it is Y" reversal, no abstract category where a plain word exists. Verified 2026-08-12 on the foreign-investors draft: the article passed every style-guide gate and still broke all four.
 - **DRAFT first.** Articles are drafted into `DRAFT/` and never published to `publish/analyses/` without review. `DRAFT/` (not yet reviewed) and `publish/drafts/` (reviewed, awaiting a price trigger) are two different states, never interchangeable.
 - **No em dash** (em dash or double hyphen) anywhere: articles, metadata, titles, changelog. Use a period, a colon, or restructure. The middle dot is the only title separator.
 - **7-section escalator:** Hook, Company/Context, Discount, Catalyst, Valuation, Risks, Decision.

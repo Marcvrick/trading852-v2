@@ -124,6 +124,14 @@ The script:
 
 No npm install, no node_modules, no watcher. Pure `fs` + `path`.
 
+### Sector hub link check (hard gate, added 2026-08-09)
+
+Runs first, before `dist/` is even touched. For every article with a `CONFIG.articleSection`, it checks that the hub file mapped to that section (`SECTION_HUB_SLUG` in `build.js`) actually contains an `href="/analyses/{slug}"` link. **Any miss exits the build with code 1** — no partial deploy, previous `dist/` untouched.
+
+**Why a hard gate and not a warning:** the "Published analyses" card list on each sector hub is hand-written (bespoke `ca-summary` copy per article, not derivable from the meta description), so it can't be auto-generated the way the sitemap/feed/homepage lists are. Nothing forced anyone to touch it when a new article shipped. Three articles (Galaxy, 361 Degrees, Chery Auto — all published Jun–Jul 2026) sat unlinked from their hub for 2–6 weeks before this was noticed; a fourth (`usd-strength-hk-transmission`) was caught by this same check the first time it ran. `validateInternalLinks()` already existed as a precedent for a build-time linking check, but only warns — that pattern had already failed to prevent this exact class of drift, so this one fails the build instead.
+
+**When adding a new article:** add its `<a class="category-article-card">` block + matching JSONLD `ListItem` to the hub file for its `articleSection` in the same commit. The build will refuse to run otherwise, and the error names the missing article and the hub file to fix.
+
 ---
 
 
