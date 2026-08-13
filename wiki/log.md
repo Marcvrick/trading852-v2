@@ -13,6 +13,18 @@ Part of the [Trading852 wiki](index.md).
 
 ## Changelog
 
+### August 13, 2026 · Published `#20` hong-kong-foreign-investors-last-count-2020 (commit `eacb7b1`)
+
+The Market Thesis piece written Aug 12 on the HKEX Cash Market Transaction Survey. Live at [/analyses/hong-kong-foreign-investors-last-count-2020](https://trading852.com/analyses/hong-kong-foreign-investors-last-count-2020), featured card on the homepage, in the sitemap and the feed. Three inline SVG charts, no external images, so nothing needed to go into `publish/analyses/images/`.
+
+Three things the publish run surfaced, worth carrying forward:
+
+- **The sector-hub gate earned its keep on its first new article.** `node build.js` refused to build until the piece was linked from `market-thesis.html`. Added the card plus a JSONLD `ListItem` at position 1, renumbered the rest, `numberOfItems` 6 to 7. Without that gate this would have shipped live and linked from nowhere but the homepage card, which is exactly the failure the Aug 9 check was written for.
+- **The draft had no `article-footer-section`.** Every other analysis carries the disclaimer plus back link; this one did not, and neither does `hang-seng-gdp-paradox`. Added in the `usd-strength` wording (the macro variant, not the stock one). Nothing in the build checks for it, so it is a second hand-maintained invariant sitting next to the hub links.
+- **The catalog gap recurred.** Chery Auto had been live since July 27 and was missing from [articles.md](articles.md); found only because assigning `#20` required knowing what `#19` was. Same failure as the July 15 Galaxy and Tencent gap, same cause: the table is hand-maintained and no build step reads it.
+
+The `/publish-852` skill's Step 4 is now stale: it says `feed.xml` and `sitemap.xml` must be edited by hand, but `build.js` generates both (sitemap went 31 to 32 URLs, feed 19 to 20, untouched by hand).
+
 ### August 13, 2026 · Motion pass: five instant state changes bridged, first reduced-motion block (commit `71dd9c0`)
 
 Swept the whole site for places that change state with no transition, rejected most of them, shipped five. The rejects matter as much as the ships: the update banner already enters and leaves along the same axis, the regime gauges swap stale baked numbers for live ones and must stay invisible doing it, the scorecard chart and the homepage card grid are read, not watched. Nothing decorative was added.

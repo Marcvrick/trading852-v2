@@ -4,7 +4,7 @@ tags: [trading852, wiki, articles]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-12
+updated: 2026-08-13
 ---
 
 # Trading852 v2, Articles
@@ -22,21 +22,23 @@ Drafts live at [publish/drafts/](../publish/drafts/). They are built into `dist/
 
 ## In DRAFT/, awaiting review
 
-| File | Type | Title | Note |
-|---|---|---|---|
-| [DRAFT/hong-kong-foreign-investors-last-count-2020.html](../DRAFT/hong-kong-foreign-investors-last-count-2020.html) | Market Thesis | HK$121 Billion a Day From the Mainland. The Last Foreign-Investor Count Was 2020. | Written 2026-08-12 from [Idea- themes/Foreign investors in hkex.md](../Idea-%20themes/Foreign%20investors%20in%20hkex.md). Three inline SVG charts. Every figure re-sourced from the HKEX Cash Market Transaction Survey PDFs (2016, 2019, 2020), the HKEX Stock Connect 2025 Review and the SFC Asset and Wealth Management Activities Survey 2024. Chart generator sits beside it at [DRAFT/hong-kong-foreign-investors-charts.py](../DRAFT/hong-kong-foreign-investors-charts.py), with the per-series source in comments and asserts that reconcile the stacked segments against the published overseas totals. No ticker and no price anchor, so the scorecard ignores it |
+None. `hong-kong-foreign-investors-last-count-2020` was published 2026-08-13 and now sits at `#20` below. Its chart generator stays in `DRAFT/` at [hong-kong-foreign-investors-charts.py](../DRAFT/hong-kong-foreign-investors-charts.py): the charts ship as inline SVG inside the article, so the script and its PNG output are working files, not site assets.
 
 ---
 
 
 ## Published articles
 
-**Issue numbers (`#`)** are stable IDs, assigned oldest-first: `#01` = inaugural (2026-04-11); same-date ties break by alphabetical slug. The next published article takes `#19`. The `#` is this catalog's ID only, it is never written into a published filename, because the filename is the live URL slug.
+**Issue numbers (`#`)** are stable IDs, assigned oldest-first: `#01` = inaugural (2026-04-11); same-date ties break by alphabetical slug. The next published article takes `#21`. The `#` is this catalog's ID only, it is never written into a published filename, because the filename is the live URL slug.
 
-> **Catalog gap closed 2026-07-15.** Galaxy and Tencent had been live since July 13 and 14 but were absent from this table; they are now `#17` and `#18`. `#18` briefly collided with `DRAFT/#18-0086-sun-hung-kai.html`, but the `DRAFT/` folder was emptied the same day (stale work, tickers dropped from coverage), so the collision resolved itself and no renumbering is needed. `#20` was never used.
+> **Catalog gap closed 2026-07-15.** Galaxy and Tencent had been live since July 13 and 14 but were absent from this table; they are now `#17` and `#18`. `#18` briefly collided with `DRAFT/#18-0086-sun-hung-kai.html`, but the `DRAFT/` folder was emptied the same day (stale work, tickers dropped from coverage), so the collision resolved itself and no renumbering is needed. `#20` was unused until 2026-08-13.
+
+> **Same gap, again, closed 2026-08-13.** Chery Auto had been live since July 27 and was absent from this table; it is now `#19`. Found while adding `#20`, not by a check. The catalog is hand-maintained and nothing in the build enforces it, so a published article can sit unlisted for weeks. The sector-hub link gate added on Aug 9 catches the equivalent gap on the site itself; this table has no equivalent.
 
 | # | File | Ticker | Title | Date |
 |---|---|---|---|---|
+| #20 | [publish/analyses/hong-kong-foreign-investors-last-count-2020.html](../publish/analyses/hong-kong-foreign-investors-last-count-2020.html) | - | HK$121 Billion a Day From the Mainland. The Last Foreign-Investor Count Was 2020. | 2026-08-12 |
+| #19 | [publish/analyses/9973-chery.html](../publish/analyses/9973-chery.html) | 9973.HK | Net Cash Is 60% of the Market Cap. Chery Auto Trades at 2x. Geely at 6x. BYD at 20x. | 2026-07-27 |
 | #18 | [publish/analyses/0700-tencent.html](../publish/analyses/0700-tencent.html) | 0700.HK | Tencent Is Spending Billions on AI and Still Getting Richer. The RMB 708 Billion Portfolio Is a Free Option. | 2026-07-14 |
 | #17 | [publish/analyses/0027-galaxy.html](../publish/analyses/0027-galaxy.html) | 0027.HK | The Only Debt-Free Operator in Macau Is Priced Like the Most Levered | 2026-07-13 |
 | #16 | [publish/analyses/usd-strength-hk-transmission.html](../publish/analyses/usd-strength-hk-transmission.html) | - | The 1983 Peg Still Sets Hong Kong Stock Prices | 2026-07-10 |
