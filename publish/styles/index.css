@@ -319,7 +319,7 @@ a.our-work__link:focus .updated-tag {
 }
 
 /* The tag is the whole point of the line on mobile too, so unlike .verdict-tag
-   it is not hidden below 48rem — it wraps under the title instead. */
+   it is not hidden below 48rem. It wraps under the title instead. */
 .updated-tag {
   color: rgba(255,255,255,0.75);
   border-color: rgba(255,255,255,0.4);
