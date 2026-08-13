@@ -454,7 +454,13 @@ Then [b962271](https://github.com/Marcvrick/trading852-v2/commit/b962271): 15 of
 
 Outbound source links are not backlinks and will not move ranking. They matter for citability by answer engines, which check that a claim traces to a primary source. The site still has zero inbound links, which remains the actual reason Google is not spending crawl on it.
 
+Then [f575880](https://github.com/Marcvrick/trading852-v2/commit/f575880): the 7 hubs expanded from 234-566 words to 459-679. Existing intro prose untouched, 2 to 4 paragraphs of method added before "Published analyses" in each. No new figure, nothing that is not already established in a published article.
+
+**Loose end this leaves.** The hubs are now long enough to deserve a place in the sitemap, but the filter added in `954929d` keys on `CONFIG.pubDate`, and giving a hub a `pubDate` would also make `getAllArticles()` pick it up, which would push it into the homepage list and the RSS feed as though it were an article. So they stay out of the sitemap for a reason that no longer applies to their length. The clean fix is a separate `CONFIG.sitemapDate` field that `getAllAnalysisPages()` reads and `getAllArticles()` ignores. Not done.
+
 Open: pull the URL-level GSC export for "Redirect error" and "Crawled - currently not indexed", resubmit the sitemap, run URL Inspection on the 20 dated articles.
+
+Unrelated, found while checking: `TRADING/preview-trading852.command` points at the old `Trading852/` folder, not `Trading852-v2/dist/`. It previews the wrong site.
 
 ---
 [Wiki index](index.md)
