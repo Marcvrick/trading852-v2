@@ -350,8 +350,8 @@ ul.menu-list--footer {
 /* ── Reduced motion ───────────────────────────────────────────────────────────
    Gentler, not absent: displacement is dropped and durations collapse, but the
    opacity cross-fades stay so nothing teleports. Durations are near-zero rather
-   than 0s so transitionend still fires. Last in the cascade — base.css is the
-   one sheet every layout loads. */
+   than 0s so transitionend still fires. Last in the cascade, since base.css is
+   the one sheet every layout loads. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
