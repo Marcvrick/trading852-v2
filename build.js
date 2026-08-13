@@ -115,6 +115,9 @@ function buildHead(config, jsonld, cssFiles, content) {
     // The generated cover renders the headline as the image, so the headline is the alt text.
     '{{OG_IMAGE_ALT}}':       config.ogImageAlt    || ogTitle,
     '{{CSS_LINKS}}':          cssLinks,
+    // ponytail: one flag, set only for drafts/. Widen to a CONFIG field if a
+    // published page ever needs to be withheld from the index.
+    '{{ROBOTS}}':             config.noindex ? '  <meta name="robots" content="noindex, nofollow">' : '',
     '{{ARTICLE_META}}':       articleMeta,
     '{{JSONLD}}':             jsonldBlock,
     '{{BREADCRUMB_JSONLD}}':  breadcrumbBlock,
@@ -592,9 +595,11 @@ function rfc822(dateStr) {
   return `${days[d.getUTCDay()]}, ${day} ${months[parseInt(m) - 1]} ${y} 00:00:00 +0800`;
 }
 
-// Every .html under publish/analyses/, dated or not. Sector hubs and
-// market-thesis carry no CONFIG.pubDate, so getAllArticles() skips them —
-// they still belong in the sitemap.
+// Dated articles only. The sector hubs and market-thesis carry no CONFIG.pubDate;
+// they are 250-580 word link lists, and submitting them is what Search Console
+// reports back as "Discovered - currently not indexed". They stay crawlable
+// through the navbar and the article cross-links, so dropping them from the
+// sitemap costs no discovery. Give a hub real prose and a pubDate and it returns.
 function getAllAnalysisPages() {
   const dir = path.join(SRC, 'analyses');
   return fs.readdirSync(dir)
@@ -603,6 +608,7 @@ function getAllAnalysisPages() {
       const { config } = parseSource(fs.readFileSync(path.join(dir, f), 'utf8'));
       return { href: `/analyses/${f.replace(/\.html$/, '')}`, date: config.pubDate || null };
     })
+    .filter(p => p.date)
     .sort((a, b) => a.href.localeCompare(b.href));
 }
 
@@ -687,6 +693,15 @@ function build() {
       let source = fs.readFileSync(file, 'utf8');
       const { config, jsonld, content } = parseSource(source);
       config.ogImage = resolveOgImage(rel, config);
+      // Drafts ship to dist/ so they can be previewed on the live host, but they
+      // are not published: keep them out of Google. Their CONFIG canonical points
+      // at /analyses/{slug}, which 404s until the piece is actually published, so
+      // point it at itself instead.
+      const relPosix = rel.split(path.sep).join('/');
+      if (relPosix.startsWith('drafts/')) {
+        config.noindex   = true;
+        config.canonical = `${SITE_ORIGIN}/${relPosix.replace(/\.html$/, '')}`;
+      }
       let page = assemblePage(config, jsonld, content);
       // Substitute {{RECENT_ANALYSES}} and {{OUR_ANALYSES}} tokens on the homepage.
       if (rel === 'index.html') {

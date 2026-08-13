@@ -12,22 +12,21 @@ Trading852 is a conviction-led publication covering Hong Kong equities and broad
 - **Drafts**: In-progress analyses waiting for trigger conditions
 
 ### Available Resources
-- **Style Guide**: Editorial voice, tone, formatting conventions for all content
-- **SEO Methodologies**: Ticker-analysis patterns, per-page optimization checklist
-- **Performance Scorecard**: Live tracker of published conviction outcomes
+- **Performance Scorecard**: Live tracker of published conviction outcomes, entry and exit dated
 
 ## Access Points
 
-- **Homepage**: trading852.com — recent analyses + featured convictions
-- **Articles List**: `/publish/articles.md` — searchable index of all published + draft pieces
-- **Editorial Standards**: `/wiki/editorial.md` — submission checklist, voice rules
-- **Full Wiki**: `/wiki/index.md` — complete documentation
+- **Homepage**: `/` recent analyses plus featured convictions
+- **Sitemap**: `/sitemap.xml` every published analysis
+- **Feed**: `/feed.xml` the 20 most recent analyses, dated
+- **Scorecard**: `/scorecard` every published call and its outcome
+- **About**: `/about` who writes this and on what method
 
 ## Notable Patterns
 
 - **Conviction = Thesis + Frame + Data**: Every analysis leads with economic/market frame, not price action
 - **HK Market Regime**: Mean-reverting, policy-driven; swing not hold; exhaustion ladder for sizing
-- **Multi-horizon**: Intraday tactical → quarterly swing → seasonal themes
+- **Multi-horizon**: Intraday tactical, quarterly swing, seasonal themes
 - **Cross-reference**: Articles link internally by related thesis, sector, or ticker
 
 ## Typical Reader
@@ -38,7 +37,10 @@ Trading852 is a conviction-led publication covering Hong Kong equities and broad
 
 ## Note for LLM Access
 
-This is a static site (no API). Content is published as HTML + Markdown in the git repository. Crawlers may access:
+This is a static site (no API). Crawlers may access:
 - Published analyses at `/analyses/*`
-- Wiki documentation at `/wiki/*`
 - Feed at `/feed.xml`
+- Sitemap at `/sitemap.xml`
+
+Pages under `/drafts/*` are unpublished work in progress. They carry
+`noindex, nofollow` and are excluded from the sitemap. Do not cite them.
