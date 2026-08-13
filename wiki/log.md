@@ -441,5 +441,20 @@ This section supersedes all prior instructions on writing style. It is the sourc
 - **Scope check:** cross-referenced every other ticker article's `CONFIG.pubDate` against its actual first-commit date. Galaxy was the only mismatch — the rest either match their real publish day or were part of the June 24 bulk migration (dates come from the hardcoded `SCORECARD_OVERRIDES` entryDates, unaffected).
 - **General rule going forward:** if an article is authored/committed on a weekend but given a Monday byline date (editorial convention), always set `CONFIG.scorecardEntryDate` to the real weekend calendar date explicitly — do not rely on `pubDate` alone to carry both the display date and the scorecard weekend-detection.
 
+### Aug 13, 2026 · Indexing: drafts were public, sitemap carried the thin hubs
+
+Re-read the Aug 9 GSC exports against the repo instead of only against the live site. Three causes the [Aug 9 audit](seo/gsc-audit-2026-08-09.md) had written off as "not a technical fault", shipped in [954929d](https://github.com/Marcvrick/trading852-v2/commit/954929d):
+
+- **`/drafts/*` was crawlable.** `dist/drafts/` deploys, so `/drafts/0086-sun-hung-kai` and `/drafts/6160-beone` returned 200 with no `noindex`, and their `CONFIG.canonical` pointed at `/analyses/{slug}`, which 404s until publication. `build.js` now stamps `noindex, nofollow` and a self-referencing canonical on anything under `drafts/`. **Rule going forward:** a page that ships to `dist/` is public whether or not it is "published" editorially. Unpublished work needs an explicit `noindex`, not just absence from the sitemap.
+- **Sitemap now carries dated articles only**, 25 URLs, was 33. `getAllAnalysisPages()` filters on `CONFIG.pubDate`, which drops the 7 sector hubs (250 to 581 body words each). They stay crawlable via the navbar and article cross-links. Give a hub real prose and a `pubDate` and it comes back automatically.
+- **The www redirect of Aug 9 missed the root.** `"/:path*"` matched every subpath but not `/`, so `https://www.trading852.com/` still served the homepage at 200. Explicit `"source": "/"` rule added ahead of it. **Rule going forward:** after adding a host-level redirect, test `/` separately from a subpath; the two do not share a match.
+- `llms.txt` pointed at `/publish/articles.md` and `/wiki/index.md`, both 404. Replaced with paths that exist.
+
+Then [b962271](https://github.com/Marcvrick/trading852-v2/commit/b962271): 15 of 27 pages had no external link at all. 7 are hubs with nothing to cite; 6 (`gold-regime`, `hang-seng-gdp-paradox`, `hong-kong-discount-cheap-two-ways`, `hsi-35-year-trendline`, `rate-convexity`, `spy-747-level`) have no `sources-section` at all, only the generic disclaimer, so nothing can be linked until their real sources are named. The other 2 were linked: 9 anchors on `0027-galaxy` and `1361-361degrees`, HKEXnews issuer search plus the DICJ monthly stats page, matching the markup already used in `usd-strength-hk-transmission`.
+
+Outbound source links are not backlinks and will not move ranking. They matter for citability by answer engines, which check that a claim traces to a primary source. The site still has zero inbound links, which remains the actual reason Google is not spending crawl on it.
+
+Open: pull the URL-level GSC export for "Redirect error" and "Crawled - currently not indexed", resubmit the sitemap, run URL Inspection on the 20 dated articles.
+
 ---
 [Wiki index](index.md)
