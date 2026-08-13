@@ -113,7 +113,10 @@ a.recent-update__link {
 
 /* SPY market-top card: orange by default (watch state); turns red when SPY is
    within 1% of the ceiling (.spy-in-zone toggled by scorecard.js). */
-#spy-zone-card { border-color: rgba(255, 150, 60, 0.85); }
+/* .spy-in-zone lands after the live fetch: the link background already fades
+   (0.5s, inherited from .recent-update__link), so the border matches it instead
+   of snapping while the fill glides. */
+#spy-zone-card { border-color: rgba(255, 150, 60, 0.85); transition: border-color 0.5s; }
 #spy-zone-card a.recent-update__link,
 #spy-zone-card a.recent-update__link:hover,
 #spy-zone-card a.recent-update__link:focus { background: #9a4b12; }

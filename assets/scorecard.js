@@ -388,6 +388,19 @@
   }
   window.addEventListener("hashchange", focusHashRow);
 
+  // Bridge the moment a placeholder is replaced by fetched content. Both classes
+  // are added here rather than baked into the markup, so a dead script leaves the
+  // block plainly visible instead of stuck at opacity 0. Two frames: the first
+  // commits the pre-transition state, the second starts the transition.
+  function reveal(el) {
+    if (!el) return;
+    el.classList.remove("is-loaded");
+    el.classList.add("async-in");
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { el.classList.add("is-loaded"); });
+    });
+  }
+
   function fmtPrice(v) { return (v == null ? "n/a" : v.toFixed(2)); }
   function fmtPct(v) {
     if (v == null || !isFinite(v)) return "n/a";
@@ -417,6 +430,7 @@
     var valid = rows.filter(function (r) { return r.pct != null; });
     if (!valid.length) {
       el.innerHTML = '<a href="/scorecard" class="strip-link">Scorecard: prices unavailable</a>';
+      reveal(el);
       return;
     }
     var picks = valid.filter(function (r) { return !r.isBenchmark; });
@@ -437,6 +451,7 @@
         '<span class="strip-wl">' + wlText + '</span>' +
         '<span class="strip-cta">View scorecard →</span>' +
       '</a>';
+    reveal(el);
   }
 
   function renderTable(rows) {
@@ -459,6 +474,7 @@
         '<span>Average <strong class="' + (avg >= 0 ? "pos" : "neg") + '">' + fmtPct(avg) + '</strong></span>' +
         '<span>' + wins + ' winners · ' + losses + ' losers · ' + stoppedCount + ' stopped</span>' +
         '<span>As of ' + (mostRecent ? fmtDate(mostRecent) + ", 2026" : "n/a") + '</span>';
+      reveal(summary);
     }
 
     var html =
@@ -539,6 +555,7 @@
     }
     html += '</tbody></table>';
     el.innerHTML = html;
+    reveal(el);
   }
 
   // Portfolio curve = the headline average return, evaluated on every session

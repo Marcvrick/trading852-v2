@@ -233,6 +233,17 @@ ul.menu-list--footer {
   border: 0;
 }
 
+/* ── Async arrival ────────────────────────────────────────────────────────────
+   Live blocks (scorecard strip, table, summary) replace their placeholder in one
+   assignment. Both classes are added by JS after the swap, never baked into the
+   markup: with the script dead the content renders visible and unstyled. */
+.async-in { opacity: 0; transform: translateY(0.375rem); }
+.async-in.is-loaded {
+  opacity: 1;
+  transform: none;
+  transition: opacity 200ms ease-out, transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 /* ── Nav social icons ─────────────────────────────────────────────────────────── */
 .nav-social {
   display: flex;
@@ -282,15 +293,21 @@ ul.menu-list--footer {
   color: var(--dp-c-white);
   line-height: 1;
   margin-left: auto;
+  transition: transform 140ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+/* The only tap target on the site: confirm the press. */
+.nav-toggle:active { transform: scale(0.92); }
 .page-header--scrolls-light.is-scrolled .nav-toggle { color: var(--dp-c-black); }
 
 /* ── Responsive ───────────────────────────────────────────────────────────────── */
 @media (max-width: 48rem) {
   .nav-toggle { display: flex; align-items: center; justify-content: center; }
 
+  /* The panel drops out of the header, so it enters and leaves along that axis.
+     `display` stays `flex` and `visibility` does the hiding: display cannot be
+     transitioned, and visibility can be delayed until the fade has finished. */
   .menu-list--main {
-    display: none;
+    display: flex;
     position: fixed;
     top: 3rem; left: 0; right: 0;
     background: var(--dp-c-black);
@@ -299,8 +316,20 @@ ul.menu-list--footer {
     gap: 0;
     border-bottom: 1px solid rgba(255,255,255,0.12);
     z-index: 29;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition:
+      opacity 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      visibility 0s 180ms;
   }
-  .menu-list--main.is-open { display: flex; }
+  .menu-list--main.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s;
+  }
 
   .menu-list--main li { border-bottom: 1px solid rgba(255,255,255,0.14); }
   .menu-list--main li:last-child { border-bottom: none; }
@@ -310,4 +339,24 @@ ul.menu-list--footer {
     font-size: 1rem;
     background-image: none;
   }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────────
+   Gentler, not absent: displacement is dropped and durations collapse, but the
+   opacity cross-fades stay so nothing teleports. Durations are near-zero rather
+   than 0s so transitionend still fires. Last in the cascade — base.css is the
+   one sheet every layout loads. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .async-in { transform: none; }
+  .async-in.is-loaded { transition: opacity 120ms ease-out !important; }
+  /* Closed state is visibility + opacity, so dropping the slide costs nothing.
+     The delay has to go too, or the panel lingers invisible for 180ms. */
+  .menu-list--main { transform: none; transition-delay: 0s !important; }
+  .nav-toggle:active { transform: none; }
 }

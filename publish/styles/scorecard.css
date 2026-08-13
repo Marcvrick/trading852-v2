@@ -39,8 +39,11 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   line-height: 1.55;
 }
 
+/* Empty until the fetch resolves. The min-height holds its row so the arriving
+   numbers fade in instead of pushing the rest of the hero down. */
 #scorecard-summary {
   margin-top: 2.5rem;
+  min-height: 2.5rem;
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
@@ -89,6 +92,7 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
   padding: 1rem;
   border-bottom: 1px solid #ececef;
   vertical-align: middle;
+  position: relative; /* anchors the .sc-row-target overlay */
 }
 
 .sc-table tbody tr:hover { background: #fafafb; }
@@ -226,11 +230,23 @@ html, body { background: var(--dp-c-white); color: var(--dp-c-black); }
 }
 
 /* Row arrived at from an article's hero ticker (/scorecard#t-1913-hk). Painted
-   as a background-image layer, not background-color, so it reads on top of the
-   stopped / reduced / benchmark tints instead of replacing them. */
-.sc-table tr.sc-row-target td {
-  background-image: linear-gradient(rgba(71,96,255,0.07), rgba(71,96,255,0.07));
+   as an overlay, not background-color, so it reads on top of the stopped /
+   reduced / benchmark tints instead of replacing them. The overlay lives in a
+   pseudo element and only its opacity moves: on hashchange the highlight leaves
+   one row and reaches another while the page is still smooth-scrolling, and a
+   background-image cannot cross-fade from `none`. */
+.sc-table tbody td::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(71,96,255,0.07);
+  opacity: 0;
+  transition: opacity 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+.sc-table tr.sc-row-target td::after { opacity: 1; }
+
+.sc-table tbody td:first-child { transition: box-shadow 250ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 .sc-table tr.sc-row-target td:first-child { box-shadow: inset 3px 0 0 0 #4760ff; }
 
 .sc-loading {
