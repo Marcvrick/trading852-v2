@@ -536,6 +536,7 @@ const SECTION_HUB_SLUG = {
   'Electric Vehicles':      'electric-vehicles',
   'Macro':                  'market-thesis',
   'Market Thesis':          'market-thesis',
+  'HSI':                    'market-thesis',
 };
 
 function validateSectorHubLinks(articles) {
