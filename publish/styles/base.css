@@ -310,11 +310,17 @@ ul.menu-list--footer {
     display: flex;
     position: fixed;
     top: 3rem; left: 0; right: 0;
-    background: var(--dp-c-black);
+    /* The page behind is the same black, so a white hairline at 12% does not
+       separate them. The panel gets a faint blue wash (same 71,96,255 as the
+       homepage radials) and its edge fades into the page as a blue glow. */
+    background:
+      linear-gradient(180deg, rgba(71,96,255,0.10), rgba(71,96,255,0.03)),
+      var(--dp-c-black);
     padding: 0.5rem var(--gutter) 1rem;
     flex-direction: column;
     gap: 0;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 1px solid rgba(71,96,255,0.38);
+    box-shadow: 0 1rem 1.5rem -0.75rem rgba(71,96,255,0.30);
     z-index: 29;
     visibility: hidden;
     opacity: 0;
