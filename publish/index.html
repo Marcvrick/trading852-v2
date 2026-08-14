@@ -13,15 +13,46 @@
 <!-- JSONLD
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Trading852",
-    "url": "https://trading852.com",
-    "description": "Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.",
-    "author": {
-      "@type": "Person",
-      "name": "Marc",
-      "url": "https://trading852.com/about"
-    }
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://trading852.com/#website",
+        "name": "Trading852",
+        "alternateName": "Trading 852",
+        "url": "https://trading852.com",
+        "description": "Independent English-language research on HKEX-listed companies. Special situations, documented NAV discounts, identifiable catalysts.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://trading852.com/#organization" },
+        "author": {
+          "@type": "Person",
+          "name": "Marc",
+          "url": "https://trading852.com/about"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://trading852.com/#organization",
+        "name": "Trading852",
+        "alternateName": "Trading 852",
+        "url": "https://trading852.com",
+        "logo": "https://trading852.com/assets/apple-touch-icon.png",
+        "description": "Independent research on HKEX-listed companies.",
+        "sameAs": [
+          "https://www.instagram.com/trading.852",
+          "https://x.com/trading_852"
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://trading852.com/#sections",
+        "name": "Trading852 sections",
+        "itemListElement": [
+          { "@type": "SiteNavigationElement", "position": 1, "name": "Scorecard",       "url": "https://trading852.com/scorecard" },
+          { "@type": "SiteNavigationElement", "position": 2, "name": "Hang Seng Index", "url": "https://trading852.com/analyses/market-thesis" },
+          { "@type": "SiteNavigationElement", "position": 3, "name": "About",           "url": "https://trading852.com/about" }
+        ]
+      }
+    ]
   }
 -->
 
@@ -79,7 +110,7 @@
 
       <!-- Browse by sector -->
       <div class="block--sectors">
-        <div class="field-label field-label--field_notable_matters" style="font-family:var(--ff-sans);font-size:var(--fs-12);font-weight:700;letter-spacing:0.0625rem;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1rem;">Browse by sector</div>
+        <h2 class="field-label field-label--field_notable_matters" style="font-family:var(--ff-sans);font-size:var(--fs-12);font-weight:700;letter-spacing:0.0625rem;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1rem;">Browse by sector</h2>
         <div class="sector-grid">
           <a href="/analyses/special-situations" class="sector-link">Special Situations</a>
           <a href="/analyses/luxury" class="sector-link">Luxury</a>
@@ -87,7 +118,7 @@
           <a href="/analyses/technology" class="sector-link">Technology</a>
           <a href="/analyses/consumer-discretionary" class="sector-link">Consumer Discretionary</a>
           <a href="/analyses/electric-vehicles" class="sector-link">Electric Vehicles</a>
-          <a href="/analyses/market-thesis" class="sector-link">Market Thesis</a>
+          <a href="/analyses/market-thesis" class="sector-link">Hang Seng Index</a>
         </div>
       </div>
 

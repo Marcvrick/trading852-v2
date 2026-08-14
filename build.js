@@ -570,7 +570,14 @@ function validateSectorHubLinks(articles) {
 // ── sitemap.xml + feed.xml auto-generation ────────────────────────────────────
 // Both were hand-maintained and drifted (3 articles missing from the sitemap,
 // 7 from the feed). Generated from disk on every build instead.
-const STATIC_PAGES = ['/about', '/scorecard', '/disclaimer', '/legal-notice'];
+// The three branches that should hang under the homepage in a Google sitelink
+// block. Same URL, same anchor text, in the navbar and every footer — a node
+// reached under two labels or two URLs is two weak candidates instead of one
+// strong one (HSI was split across /analyses/market-thesis and
+// /analyses/hsi-35-year-trendline until 2026-08-14). Change one, change all four:
+// this list, navbar.html, footer-home.html, footer-analysis.html, footer-static.html.
+const TREE_PAGES   = ['/scorecard', '/analyses/market-thesis', '/about'];
+const STATIC_PAGES = ['/disclaimer', '/legal-notice'];
 
 // ── Social cover auto-wiring ──────────────────────────────────────────────────
 // scripts/make_og.py writes assets/og/{slug}.png. Use it for the article's
@@ -596,11 +603,18 @@ function rfc822(dateStr) {
   return `${days[d.getUTCDay()]}, ${day} ${months[parseInt(m) - 1]} ${y} 00:00:00 +0800`;
 }
 
-// Dated articles only. The sector hubs and market-thesis carry no CONFIG.pubDate;
-// they are 250-580 word link lists, and submitting them is what Search Console
-// reports back as "Discovered - currently not indexed". They stay crawlable
-// through the navbar and the article cross-links, so dropping them from the
-// sitemap costs no discovery. Give a hub real prose and a pubDate and it returns.
+// The sector hubs carry no CONFIG.pubDate, so they were dropped from the sitemap
+// back when they were 250-580 word link lists that GSC answered with "Discovered -
+// currently not indexed". They now run 630-1600 words of prose, and they are the
+// pages Google would draw sitelinks from — an unindexed page can never become one.
+// So they go back in, as their own undated group (2026-08-14). If GSC still refuses
+// them after a full recrawl cycle, the hub prose is the thing to fix, not this list.
+const HUB_PAGES = [...new Set(Object.values(SECTION_HUB_SLUG))]
+  .sort()
+  .map(slug => `/analyses/${slug}`)
+  .filter(href => !TREE_PAGES.includes(href));  // market-thesis is a tree branch, not a sector hub
+
+// Dated articles only — the hubs come in through HUB_PAGES above.
 function getAllAnalysisPages() {
   const dir = path.join(SRC, 'analyses');
   return fs.readdirSync(dir)
@@ -626,8 +640,10 @@ function generateSitemap(pages, newest) {
 
   const entries = [
     url('/', newest, 'weekly', '1.0'),
+    ...TREE_PAGES.map(p => url(p, newest, 'weekly', '0.9')),
     ...pages.map(p => url(p.href, p.date, 'monthly', '0.8')),
-    ...STATIC_PAGES.map(p => url(p, null, 'yearly', '0.5')),
+    ...HUB_PAGES.map(p => url(p, newest, 'monthly', '0.6')),
+    ...STATIC_PAGES.map(p => url(p, null, 'yearly', '0.3')),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -735,7 +751,7 @@ function build() {
   fs.mkdirSync(path.join(DIST, 'static'), { recursive: true });
   fs.writeFileSync(path.join(DIST, 'static', 'sitemap.xml'), generateSitemap(pages, articles[0].date));
   fs.writeFileSync(path.join(DIST, 'feed.xml'), generateFeed(articles));
-  console.log(`Sitemap: ${pages.length + STATIC_PAGES.length + 1} URLs · Feed: ${Math.min(articles.length, FEED_MAX_ITEMS)} items`);
+  console.log(`Sitemap: ${pages.length + TREE_PAGES.length + HUB_PAGES.length + STATIC_PAGES.length + 1} URLs · Feed: ${Math.min(articles.length, FEED_MAX_ITEMS)} items`);
 
   console.log(`Built ${built} HTML pages, copied ${copied} files → dist/`);
 

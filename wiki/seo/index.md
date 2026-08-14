@@ -4,7 +4,7 @@ tags: [trading852, wiki, seo, hub]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-09
+updated: 2026-08-14
 ---
 
 # Trading852 v2, SEO
@@ -22,6 +22,7 @@ Part of the [Trading852 wiki](../index.md). Everything SEO lives in this folder.
 - [Architecture audit (2026-05-07)](architecture-audit-2026-05-07.md): schema, sitemap, hreflang review.
 - [GSC audit (2026-08-09)](gsc-audit-2026-08-09.md): live indexing report, redirect/not-indexed diagnosis, www-duplicate gap, action plan.
 - [Content ideas (2026-08-09)](content-ideas-2026-08-09.md): frontend audit, stale-sector-hub finding, and prioritized new content backed by the existing keyword-gap research.
+- [Sitelinks (2026-08-14)](sitelinks-2026-08-14.md): why the brand query returns loose pages instead of a sitelink block; hubs back in the sitemap, Organization `@graph`, what is left in GSC.
 
 ## What is mandatory vs reference
 
