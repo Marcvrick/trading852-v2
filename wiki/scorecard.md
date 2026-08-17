@@ -178,14 +178,16 @@ A position taken **again** in a ticker that already has a row is a separate trad
 **Data source**: `scorecard-reentries.json` at the repo root, one object per re-entry:
 
 ```json
-{ "reentries": [ { "t": "9988.HK", "anchor": "t-9988-hk-2", "company": "Alibaba", "eyebrow": "Technology · Re-entry", "slug": "9988-alibaba", "issueDate": "2026-08-17" } ] }
+{ "reentries": [ { "t": "9988.HK", "anchor": "t-9988-hk-2", "reentry": true, "company": "Alibaba", "eyebrow": "Technology · Re-entry", "slug": "9988-alibaba", "issueDate": "2026-08-17", "entryPrice": 123.00 } ] }
 ```
 
 `build.js` reads it once at module load (missing or invalid file = no re-entry rows) and appends each entry to `picks` as a full pick, so it sorts into the table by `issueDate` like any other and counts once in the average, in the winners/losers tally and in the portfolio curve.
 
 **The original row is not touched.** It keeps its `forcedStop` and stays frozen at its locked %. A re-entry deliberately carries **no** `forcedStop` and **no** `reduced`: `scorecard.js` scans its trailing stop live from its own entry bar, which is correct while that entry is recent and well inside the `range=1y` fetch window. Record it in `scorecard-stops.json` only once its stop actually fires — and note that ledger is keyed by ticker, so freezing a re-entry's stop requires re-keying the ledger on the anchor first.
 
-**Entry price** follows the standard rule, no override: first close strictly after `issueDate`, so an `issueDate` of the current session takes that session's close. The same weekend rule as any pick applies.
+**Entry price is stated, not derived.** An article pick has no fill to record, so its entry is inferred from the publication date (first close strictly after `issueDate`). A re-entry is a real trade at a real price, so `entryPrice` holds what it actually cost and `fetchOne` measures the row against that. The bar found by the normal entry loop still supplies `entryIdx` and `entryDate` — the stop scan, the dividend cut-off and the chart series all start from that session — only the price is replaced. Omit `entryPrice` to fall back to the derived rule.
+
+**The row states its own entry date** (`entered Aug 17`, under the entry price). Article picks are dated by their byline; a re-entry has no article of its own, so without the line nothing on the page says when the position was taken. Driven by the `reentry` flag, so no other row's display changes.
 
 > **`anchor` is mandatory and must be unique.** Both rows carry the same ticker, so `tickerAnchor()` would give them the same `<tr id>`, and the deep link plus `focusHashRow` would silently land on whichever rendered first. `generateScorecardData()` throws on a duplicate anchor rather than shipping the collision; `scorecard.js` renders `rowAnchor(r) = r.anchor || tickerAnchor(r.t)`.
 

@@ -15,7 +15,9 @@ Part of the [Trading852 wiki](index.md).
 
 ### August 17, 2026 · Second position on 9988.HK, and the re-entry row it needed
 
-Alibaba re-entered at 123 while the original April 10 line stays on the board, stopped at breakeven on May 21. The scorecard could not hold both: picks are auto-derived from articles and keyed by ticker, so `9988-alibaba` can only ever produce one row.
+Alibaba re-entered at 123.00 while the original April 10 line stays on the board, stopped at breakeven on May 21. The scorecard could not hold both: picks are auto-derived from articles and keyed by ticker, so `9988-alibaba` can only ever produce one row.
+
+**A re-entry needs its own price and its own date, and the first pass had neither.** Both were left to the article machinery: the entry was derived from the entry session's close (123.10, off by 0.10 from the actual fill) and the row showed no date at all, because an article pick is dated by its byline and a re-entry has no article. Fixed with `entryPrice` (stated fill, replaces the derived close; `entryIdx` / `entryDate` still come from the bar, so the stop scan and series are unaffected) and a `reentry` flag driving an `entered <date>` sub-line. Worth generalizing: this layer describes a *trade*, and inferring a trade's terms from a publication date works only for the pick the publication created.
 
 Three files, all documented in [scorecard.md](scorecard.md#re-entry-rows):
 

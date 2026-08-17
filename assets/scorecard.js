@@ -89,6 +89,13 @@
         }
         if (entry == null) throw new Error("no_entry_bar");
 
+        // A re-entry is a real fill at a real price, not a position derived from a
+        // publication date, so scorecard-reentries.json may state what it cost.
+        // The bar found above still supplies entryIdx / entryDate — the stop scan,
+        // the dividend cut-off and the series all start from that session — only
+        // the price the trade is measured against is replaced.
+        if (rec.entryPrice != null) entry = rec.entryPrice;
+
         // Dividends that go ex strictly AFTER the entry bar. The one-off ex-div
         // price drop is adjusted out of both the stop scan and the headline %, so
         // it is not counted as a loss against the pick.
@@ -542,7 +549,10 @@
           '<td class="sc-ticker">' + (r.noLink ? r.t : '<a href="/analyses/' + r.slug + '">' + r.t + '</a>') + badge + '</td>' +
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) +
-            (r.entryIsOpen ? '<div class="sc-stop-date">open ' + fmtDate(r.entryDate) + '</div>' : '') +
+            (r.entryIsOpen ? '<div class="sc-stop-date">open ' + fmtDate(r.entryDate) + '</div>'
+              // A re-entry has no article byline to date it, so the row states when
+              // the position was taken. Article picks read their date off the piece.
+              : r.reentry ? '<div class="sc-stop-date">entered ' + fmtDate(r.entryDate) + '</div>' : '') +
             (r.stopped && r.currentPrice != null ? '<div class="sc-now ' + (r.currentPrice >= r.entry ? 'sc-now-pos' : 'sc-now-neg') + '">now: ' + fmtPrice(r.currentPrice) + ' / ' + fmtPct((r.currentPrice - r.entry) / r.entry * 100) + '</div>' : '') +
           '</td>' +
           '<td class="num">' + lastCell + '</td>' +
