@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-13
+updated: 2026-08-17
 ---
 
 # Trading852 v2, Changelog
@@ -12,6 +12,33 @@ updated: 2026-08-13
 Part of the [Trading852 wiki](index.md).
 
 ## Changelog
+
+### August 17, 2026 · Second position on 9988.HK, and the re-entry row it needed
+
+Alibaba re-entered at 123 while the original April 10 line stays on the board, stopped at breakeven on May 21. The scorecard could not hold both: picks are auto-derived from articles and keyed by ticker, so `9988-alibaba` can only ever produce one row.
+
+Three files, all documented in [scorecard.md](scorecard.md#re-entry-rows):
+
+- **`scorecard-reentries.json`** at the root, a third hand-maintained ledger next to stops and exits. `build.js` appends each entry as a full pick, so it sorts by `issueDate`, counts once in the average, and gets its trailing stop scanned live from its own entry.
+- **The anchor is the part that would break silently.** Two rows on the same ticker resolve to the same `<tr id>` through `tickerAnchor()`, and the hero deep link plus `focusHashRow` would land on whichever rendered first with nothing to signal it. Each re-entry ships its own `anchor`; `generateScorecardData()` throws on a collision instead of building, and `scorecard.js` reads `rowAnchor(r)`.
+- **The article's links still point at the original row.** `linkifyHeroTicker` derives the anchor from the ticker alone and has no per-row knowledge. Left as is: that is the position the article opened.
+
+The re-entry deliberately carries no `forcedStop`. Adding one later means re-keying `scorecard-stops.json` on the anchor rather than the ticker, since a second key for `9988.HK` cannot exist there today.
+
+Checks after the change: `test-ticker-links.py` (12 hero links, 14 unique row ids), `test-chart-parity.py` (chart endpoint = table average over 88 sessions), `test-stop-guard.py`. The duplicate-anchor throw was verified by deleting the `anchor` field and seeing the build refuse.
+
+### August 14, 2026 · New HK weekly dashboard generator
+
+First working build of the Friday-close weekly readout: [scripts/weekly_dashboard.py](../scripts/weekly_dashboard.py) plus [scripts/weekly_dashboard.css](../scripts/weekly_dashboard.css), output to `DRAFT/weekly-dashboard.html`, documented in [weekly-dashboard.md](weekly-dashboard.md). Kept out of `publish/` so `build.js` cannot ship it by accident.
+
+Three things worth carrying forward:
+
+- **The daily collection forward-fills weekends and holidays, volume included.** Left in, those rows inflate weekly volume and the 20-session liquidity average and quietly change which names clear the screen. The loader now drops weekend dates and bars identical to the previous one on all five OHLCV values. The universe moved by 13 names once removed.
+- **Three traps in the FinRatios index, all in its own legend.** A flag glued to the score (`5.4 🅰`) broke a naive `float()` on 334 of 1448 rows; 🅰 marks akshare-sourced figures that must not be quoted unchecked (274 rows); ⚠️ marks an overlay artefact that does not compare across the board (64 rows); and the Verdict column is the finExpert verdict, not the report rating, with `⏳Nj` meaning it predates the report on the same line. All four are parsed, printed with their flag, and pinned by assertions in `--check`.
+- **A 122-day marker is a stale verdict, not a missing report.** 2099 China Gold read as never re-scored after this week's earnings; the report was in fact rebuilt August 14 on the H1 numbers and only the expert verdict was old. That produced the coverage-gap section: 45 names re-scored this week with an out-of-date verdict, 17 with none at all, each with a TradingView list to feed the finExpert queue. The count is recomputed on every build because `INDEX.md` is rebuilt on its own schedule; it read 47 before an index rebuild the next evening.
+- **The FinRatios backlog for the week is zero.** Cross-checked against `Daily FinReports.md`: 51 names reported August 10 to 14, all 51 carry a report dated the same week. The gap is entirely on the finExpert side. A first pass claimed one missing name because the ticker pattern also matched the year inside a `Q2 + H1 2026 |` cell, and 2026 happens to be a real HK ticker.
+
+Still unwired: fan geometry and the adjusted price cache, both behind the `Read(//Users/mc/Documents/*)` deny rule that closes the FinMC_3 tree. Prices on the page are unadjusted screener data until that is resolved.
 
 ### August 13, 2026 · Published `#20` hong-kong-foreign-investors-last-count-2020 (commit `eacb7b1`)
 

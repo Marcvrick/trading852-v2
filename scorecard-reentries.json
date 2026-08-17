@@ -1,0 +1,13 @@
+{
+  "_comment": "Hand-maintained re-entry rows for the scorecard: a position taken AGAIN in a ticker that already has a row (the first trade closed, stopped or sold). Scorecard picks are auto-derived from articles and keyed by ticker, so one article can only ever produce one row; a re-entry is a separate trade and gets its own row here. Each entry needs its own `anchor` (unique DOM id — the article hero keeps deep-linking to the ORIGINAL row) and carries NO forcedStop / reduced: its trailing stop is scanned live from its own entry date. Read by build.js -> appended to scorecard-recos.json. Entry price follows the normal rule: first close strictly after issueDate. See wiki/scorecard.md 'Re-entry rows'.",
+  "reentries": [
+    {
+      "t": "9988.HK",
+      "anchor": "t-9988-hk-2",
+      "company": "Alibaba",
+      "eyebrow": "Technology · Re-entry",
+      "slug": "9988-alibaba",
+      "issueDate": "2026-08-17"
+    }
+  ]
+}

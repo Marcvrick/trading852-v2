@@ -371,6 +371,11 @@
   // build.js has the identical rule in its own tickerAnchor — keep them in step.
   function tickerAnchor(t) { return "t-" + String(t).toLowerCase().replace(/\./g, "-"); }
 
+  // A re-entry row carries a second position in a ticker that already has a row, so
+  // it ships its own `anchor` from scorecard-reentries.json (build.js enforces that
+  // the two are distinct). Article hero links keep resolving to the original row.
+  function rowAnchor(r) { return r.anchor || tickerAnchor(r.t); }
+
   // The table only exists after an async fetch, so the browser's own jump to the
   // hash has already run and found nothing. Redo it once the row is on the page.
   // Also bound to hashchange: arriving from an article is a full load, but a
@@ -533,7 +538,7 @@
         : fmtPrice(r.last);
       if (r.isBenchmark && r.pct != null) benchmarkPct = r.pct;
       html +=
-        '<tr id="' + tickerAnchor(r.t) + '" class="' + rowCls + '">' +
+        '<tr id="' + rowAnchor(r) + '" class="' + rowCls + '">' +
           '<td class="sc-ticker">' + (r.noLink ? r.t : '<a href="/analyses/' + r.slug + '">' + r.t + '</a>') + badge + '</td>' +
           '<td class="sc-company"><div class="sc-eyebrow">' + r.eyebrow + '</div>' + r.company + '</td>' +
           '<td class="num">' + fmtPrice(r.entry) +

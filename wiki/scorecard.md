@@ -4,7 +4,7 @@ tags: [trading852, wiki, scorecard]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-07-31
+updated: 2026-08-17
 ---
 
 # Trading852 v2, Scorecard
@@ -170,6 +170,26 @@ Worked example (0300.HK, entry 89.70, 2/3 trimmed @94.30): realized leg = 0.667 
 **v1 simplification**: the realized leg is capital return only. Dividends that went ex-div on the sold shares before the trim are not credited to the realized leg (the live leg keeps its ex-div adjustment). Immaterial for short-hold trims; revisit if a Reduced pick carries a large interim dividend.
 
 **Rendering**: a `Reduced NN% @price · date` badge on the ticker and a `%`-cell sub-line (`NN% banked · MM% live`) always render. The muted-green row tint (`sc-row-reduced`) is reserved for a **fully closed** position (`fracPct >= 100`, i.e. every exit fraction summed to 100%): a partial trim (like 0300.HK Midea at 67%) is still an open position and stays plain white like any other active pick, badge and sub-line only. CSS in `publish/styles/scorecard.css`.
+
+## Re-entry rows
+
+A position taken **again** in a ticker that already has a row is a separate trade with its own entry, its own stop and its own result. The auto-generation cannot express it: picks are derived from articles and keyed by ticker, so one article produces exactly one row. Re-entries are the second hand-maintained layer, next to `scorecard-exits.json`.
+
+**Data source**: `scorecard-reentries.json` at the repo root, one object per re-entry:
+
+```json
+{ "reentries": [ { "t": "9988.HK", "anchor": "t-9988-hk-2", "company": "Alibaba", "eyebrow": "Technology · Re-entry", "slug": "9988-alibaba", "issueDate": "2026-08-17" } ] }
+```
+
+`build.js` reads it once at module load (missing or invalid file = no re-entry rows) and appends each entry to `picks` as a full pick, so it sorts into the table by `issueDate` like any other and counts once in the average, in the winners/losers tally and in the portfolio curve.
+
+**The original row is not touched.** It keeps its `forcedStop` and stays frozen at its locked %. A re-entry deliberately carries **no** `forcedStop` and **no** `reduced`: `scorecard.js` scans its trailing stop live from its own entry bar, which is correct while that entry is recent and well inside the `range=1y` fetch window. Record it in `scorecard-stops.json` only once its stop actually fires — and note that ledger is keyed by ticker, so freezing a re-entry's stop requires re-keying the ledger on the anchor first.
+
+**Entry price** follows the standard rule, no override: first close strictly after `issueDate`, so an `issueDate` of the current session takes that session's close. The same weekend rule as any pick applies.
+
+> **`anchor` is mandatory and must be unique.** Both rows carry the same ticker, so `tickerAnchor()` would give them the same `<tr id>`, and the deep link plus `focusHashRow` would silently land on whichever rendered first. `generateScorecardData()` throws on a duplicate anchor rather than shipping the collision; `scorecard.js` renders `rowAnchor(r) = r.anchor || tickerAnchor(r.t)`.
+
+**Where the article link lands**: `linkifyHeroTicker` and `linkifyBodyTickers` derive the anchor from the ticker alone, so every link in the article still resolves to the **original** row, not the re-entry. That is the position the article opened. A reader following the pill lands on the stopped row, with the re-entry visible higher in the same table.
 
 ## Permanent stop ledger
 

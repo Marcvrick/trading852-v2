@@ -412,6 +412,18 @@ let SCORECARD_STOPS = {};
 try {
   SCORECARD_STOPS = JSON.parse(fs.readFileSync(path.join(ROOT, 'scorecard-stops.json'), 'utf8'));
 } catch (e) { /* missing or invalid file = no forced stop on any pick */ }
+
+// Re-entry rows. Hand-maintained at ROOT/scorecard-reentries.json. Picks are derived
+// from articles and keyed by ticker, so one article can only ever produce one row —
+// but a position taken again after the first one closed is a separate trade with its
+// own entry, stop and result. Each re-entry is appended as its own pick with its own
+// `anchor` (unique <tr id>; the article hero keeps deep-linking to the original row)
+// and no forcedStop / reduced, so its trailing stop is scanned live from its entry.
+// See wiki/scorecard.md -> "Re-entry rows".
+let SCORECARD_REENTRIES = [];
+try {
+  SCORECARD_REENTRIES = JSON.parse(fs.readFileSync(path.join(ROOT, 'scorecard-reentries.json'), 'utf8')).reentries || [];
+} catch (e) { /* missing or invalid file = no re-entry rows */ }
 function cleanCompanyName(s) {
   if (!s) return '';
   return s.replace(/\s*(Group Holdings? Ltd\.?|Holdings? Ltd\.?|International Ltd\.?|Co\.,?\s*Ltd\.?|S\.p\.A\.|Inc\.?|,?\s*Ltd\.?)\s*$/i, '').trim() || s;
@@ -436,6 +448,16 @@ function generateScorecardData() {
     const reduced = SCORECARD_EXITS[ticker];
     const forcedStop = SCORECARD_STOPS[ticker];
     picks.push({ t: ticker, company, eyebrow, slug, issueDate, ...(reduced ? { reduced } : {}), ...(forcedStop ? { forcedStop } : {}) });
+  }
+  picks.push(...SCORECARD_REENTRIES);
+  // Two rows sharing an anchor would collide as duplicate <tr id>: the deep link and
+  // focusHashRow would both land on whichever came first, silently. Only re-entries
+  // can cause this (article picks are one per ticker), so fail the build instead.
+  const anchors = new Set();
+  for (const p of picks) {
+    const a = p.anchor || tickerAnchor(p.t);
+    if (anchors.has(a)) throw new Error('scorecard: duplicate row anchor "' + a + '" — give the re-entry its own "anchor" in scorecard-reentries.json');
+    anchors.add(a);
   }
   picks.sort((a, b) => (a.issueDate > b.issueDate ? -1 : a.issueDate < b.issueDate ? 1 : (a.t > b.t ? -1 : 1))); // newest pick first, oldest last
   return picks.concat([SCORECARD_BENCHMARK]);
