@@ -162,7 +162,10 @@ a.meta-ticker:focus-visible {
   color: var(--dp-c-black);
 }
 
-/* Update notice */
+/* Update notice — a <details>/<summary> disclosure when 2+ stack on one
+   article (build.js's collapsifyUpdateNotices). The newest ships open, older
+   ones start as a collapsed strip so a returning reader hits the new content
+   first instead of scrolling past every prior update to find it. */
 .update-notice {
   grid-column: 2;
   border-left: 3px solid #b45309;
@@ -176,6 +179,29 @@ a.meta-ticker:focus-visible {
   gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
+/* Only <summary> elements (2+ stacked updates) get the clickable chevron — a
+   lone <div class="update-notice__header"> (single-update articles) is
+   untouched, still the plain flex row above. */
+summary.update-notice__header {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+summary.update-notice__header::-webkit-details-marker { display: none; }
+summary.update-notice__header::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: auto;
+  border-right: 2px solid #b45309;
+  border-bottom: 2px solid #b45309;
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+  flex: 0 0 auto;
+}
+details.update-notice[open] > summary.update-notice__header::after { transform: rotate(-135deg); }
+details.update-notice:not([open]) > summary.update-notice__header { margin-bottom: 0; }
+details.update-notice:not([open]) > summary.update-notice__header:hover .update-notice__label { color: #92400e; }
 .update-notice__label {
   font-size: var(--fs-12);
   font-weight: 700;

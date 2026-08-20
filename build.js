@@ -471,6 +471,54 @@ function tickerAnchor(ticker) {
   return 't-' + ticker.toLowerCase().replace(/\./g, '-');
 }
 
+// An article with several stacked "Update" blocks (9988-alibaba has 4) makes
+// the newest one, the thing a returning reader actually wants, scroll past
+// three others to reach. Turns each `.update-notice` into a native
+// <details>/<summary> disclosure: collapsed strip with a chevron, click to
+// expand, no JS. The FIRST block in the DOM ships open (source files stack
+// newest-first by convention, see 9988-alibaba.html), every later one starts
+// collapsed. A no-op on any article with 0 or 1 update block.
+//
+// Depth-tracked rather than a single regex because a block can hold its own
+// nested <div> (9988-alibaba's May-14 block wraps a data table in
+// `.data-table-wrap`) — a match up to the next bare `</div>` would close the
+// disclosure early and orphan the rest of the block outside it.
+function collapsifyUpdateNotices(page) {
+  const openTag = '<div class="update-notice">';
+  // A single update has nothing to collapse behind — leave it a plain div, no
+  // chevron implying there is more to expand when there isn't.
+  if (page.split(openTag).length - 1 < 2) return page;
+  const tagRe = /<div\b[^>]*>|<\/div>/g;
+  let result = '';
+  let cursor = 0;
+  let index = 0;
+  let start = page.indexOf(openTag);
+  while (start !== -1) {
+    result += page.slice(cursor, start);
+    tagRe.lastIndex = start;
+    let depth = 0, end = -1, m;
+    while ((m = tagRe.exec(page))) {
+      if (m[0] === '</div>') { depth--; if (depth === 0) { end = m.index + m[0].length; break; } }
+      else { depth++; }
+    }
+    if (end === -1) { result += page.slice(start); cursor = page.length; break; } // unbalanced, leave as-is
+    let block = page.slice(start, end);
+    block = block.replace(/^<div class="update-notice">/,
+      `<details class="update-notice"${index === 0 ? ' open' : ''}>`);
+    block = block.replace(/<\/div>\s*$/, '</details>');
+    block = block.replace(
+      /<div class="update-notice__header">([\s\S]*?)<\/div>/,
+      '<summary class="update-notice__header">$1</summary>'
+    );
+    result += block;
+    cursor = end;
+    index++;
+    start = page.indexOf(openTag, cursor);
+  }
+  result += page.slice(cursor);
+  return result;
+}
+
 // Only linkify a ticker the scorecard actually carries a row for. An article
 // without a verdict (or a sector hub) has no row, and would otherwise get a
 // link that lands on the scorecard and highlights nothing.
@@ -748,6 +796,7 @@ function build() {
         config.canonical = `${SITE_ORIGIN}/${relPosix.replace(/\.html$/, '')}`;
       }
       let page = assemblePage(config, jsonld, content);
+      page = collapsifyUpdateNotices(page);
       // Substitute {{RECENT_ANALYSES}} and {{OUR_ANALYSES}} tokens on the homepage.
       if (rel === 'index.html') {
         page = page.replace('{{RECENT_ANALYSES}}', generateRecentAnalysesHTML());
