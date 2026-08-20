@@ -643,7 +643,13 @@ function getAllAnalysisPages() {
     .filter(f => f.endsWith('.html'))
     .map(f => {
       const { config } = parseSource(fs.readFileSync(path.join(dir, f), 'utf8'));
-      return { href: `/analyses/${f.replace(/\.html$/, '')}`, date: config.pubDate || null };
+      // Sitemap <lastmod> must reflect the LATEST edit, not the original publish
+      // date, or Google never learns an updated article changed. This ignored
+      // modDate entirely — every article that ever got an update block still
+      // pointed crawlers at its pubDate (found via 9973-chery and 9988-alibaba,
+      // both modDate 2026-08-20, both sitemapped at their stale pubDate).
+      const date = (config.modDate && config.modDate > config.pubDate) ? config.modDate : config.pubDate;
+      return { href: `/analyses/${f.replace(/\.html$/, '')}`, date: date || null };
     })
     .filter(p => p.date)
     .sort((a, b) => a.href.localeCompare(b.href));
