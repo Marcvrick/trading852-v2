@@ -4,12 +4,12 @@ tags: [trading852, wiki, editorial, writing]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-12
+updated: 2026-08-20
 ---
 
 # Trading852 v2, Editorial Workflow
 
-Part of the [Trading852 wiki](index.md).
+Part of the [Trading852 wiki](TRADING/Trading852-v2/wiki/index.md).
 
 ## Hard rules (digest)
 
@@ -42,20 +42,20 @@ Open the local style guide at [style-guide.md](style-guide.md) and the voice gui
 - **No superlatifs**, no conditional mou, no disclaimers
 - **Numbers always precise**: `HKD 2 354 millions`, `+14 %`, never "environ"
 - **Title formula**: `[Subject]: [Concrete arithmetic fact that surprises]`
-- **Target length**: 1 000–1 400 words (ideal ~1 200)
+- **Target length**: 1 000-1 400 words (ideal ~1 200)
 - **Marc's voice**: accessible, direct, "montrer sans dire"
 
 ### Step 3: Article structure
 
 | # | Section | Words |
 |---|---|---|
-| 1 | Hook (no header) | 80–120 |
-| 2 | What the company/market does | 120–180 |
-| 3 | Why the discount exists | 100–150 |
-| 4 | Catalyst / main signal | 200–280 |
-| 5 | Valuation (with table) | 150–200 |
-| 6 | Risks (2 max, named in bold) | 180–250 |
-| 7 | Decision (with scenario table) | 180–250 |
+| 1 | Hook (no header) | 80-120 |
+| 2 | What the company/market does | 120-180 |
+| 3 | Why the discount exists | 100-150 |
+| 4 | Catalyst / main signal | 200-280 |
+| 5 | Valuation (with table) | 150-200 |
+| 6 | Risks (2 max, named in bold) | 180-250 |
+| 7 | Decision (with scenario table) | 180-250 |
 
 ### Step 4: Create the source file
 
@@ -94,58 +94,55 @@ Two sections in [publish/index.html](../publish/index.html):
 - [ ] All existing items renumbered down by one
 - [ ] Item count in Identified Situations = (total published articles) − 3
 
-### Step 6: Update feed.xml + sitemap.xml
+### Step 6: sitemap.xml + feed.xml: automatic, do not hand-edit
 
-[publish/feed.xml](../publish/feed.xml): add a new `<item>` at the top, update `<lastBuildDate>`.
+**Superseded 2026-08-20.** Both files used to be hand-maintained and drifted (3 articles missing
+from the sitemap, 7 from the feed), `build.js` now regenerates both from disk on every build
+(`generateSitemap` / `generateFeed`, see [build-pipeline.md](build-pipeline.md)). There is nothing
+to edit here. `publish/feed.xml` and `publish/static/sitemap.xml` as files no longer exist; the
+live ones are build output at `dist/feed.xml` / `dist/static/sitemap.xml`, gitignored like the
+rest of `dist/`.
 
-```xml
-<item>
-  <title>TITLE</title>
-  <link>https://trading852.com/analyses/SLUG</link>
-  <guid>https://trading852.com/analyses/SLUG</guid>
-  <pubDate>Day, DD Mon YYYY 00:00:00 +0800</pubDate>
-  <description>EXCERPT (1-2 sentences)</description>
-</item>
-```
+**What this means for a refresh:** set `modDate` (CONFIG) and `dateModified` (JSON-LD) to the
+refresh date, same as always. `build.js` reads `modDate` off every article and uses it for the
+sitemap `<lastmod>` whenever it postdates `pubDate`, no separate step, no separate file to touch.
+(Bug fixed the same day this section was rewritten: `getAllAnalysisPages()` was reading `pubDate`
+only, so every already-updated article sat on a sitemap date from its original publish, not its
+last edit, Google had no signal any of them had changed. Confirm after building:
+`grep -A1 SLUG dist/static/sitemap.xml` should show today's date, not the original `pubDate`.)
 
-[publish/static/sitemap.xml](../publish/static/sitemap.xml): add `<url>` entry, update homepage `<lastmod>`.
+The feed's homepage "Updated" banner is also automatic (`generateUpdateBannerHTML`, one article
+shown at a time, the single most recently `modDate`-stamped one, for `UPDATE_FRESH_DAYS` = 30 days
+after `UPDATE_MIN_GAP_DAYS` = 7 days from its `pubDate`). Nothing to add by hand there either.
 
-```xml
-<url>
-  <loc>https://trading852.com/analyses/SLUG</loc>
-  <lastmod>YYYY-MM-DD</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
-```
+**Article update items in feed.xml** are one per article (the article's own `pubDate`), not one
+per update, the old "add an UPDATE: item, collapse the previous one" instruction described a
+manual per-update feed entry that no longer has a manual step to perform.
 
-> **Refresh rule.** When updating an existing article (SEO restructure, factual correction, post-earnings update), bump that article's `<lastmod>` AND the homepage `<lastmod>` to the refresh date. The same date should appear in JSON-LD `dateModified` (see SEO pattern). Sitemap and JSON-LD freshness signals must agree, or Google trusts neither.
+### Step 6b: the "Update" block inside the article: stack it, never shorten it
 
-**Article update items in feed.xml** (post-earnings, factual corrections, thesis changes):
+**Superseded 2026-08-20**, same day as Step 6. The old instruction said: keep the newest update's
+full text, but truncate every PRIOR update down to a one-line summary plus a "see update above"
+note. Checked before writing this: no article on the live site was ever actually edited down this
+way, every update block that existed (9988-alibaba's April through June, 1913-prada's two) is
+still full length. The instruction was dead on arrival, just never removed. This is what removes
+it and replaces it with what actually happens now.
 
-Add a new `UPDATE:` item at the top with a unique `guid` (`#update-YYYYMMDD`). When a second update follows for the same article, **collapse the previous update item**, shorten its `<description>` to one line summary, before inserting the new one above it. This keeps the feed readable as updates accumulate.
+**Do not shorten old updates.** `build.js`'s `collapsifyUpdateNotices` (see
+[build-pipeline.md](build-pipeline.md)) turns every `.update-notice` block into a native
+`<details>/<summary>` disclosure automatically, the moment an article has 2 or more of them. The
+newest ships open (full text, no click needed); every older one collapses to a clickable date
+strip, one line tall, chevron on the right, and expands to its **full original text** on click.
+Nothing is shortened, nothing is thrown away. A single-update article is untouched (stays a plain
+`<div>`, no chevron implying there's more to expand when there isn't).
 
-```xml
-<!-- New update: full description -->
-<item>
-  <title>UPDATE: Company (TICKER.HK) Q2 2026: one-line hook</title>
-  <link>https://trading852.com/analyses/SLUG</link>
-  <guid>https://trading852.com/analyses/SLUG#update-YYYYMMDD</guid>
-  <pubDate>Day, DD Mon YYYY 00:00:00 +0800</pubDate>
-  <description>Full detail: key numbers, scenario check, next catalyst.</description>
-</item>
-
-<!-- Previous update: collapsed to one line -->
-<item>
-  <title>UPDATE: Company (TICKER.HK) Q1 2026: one-line hook</title>
-  <link>https://trading852.com/analyses/SLUG</link>
-  <guid>https://trading852.com/analyses/SLUG#update-YYYYMMDD</guid>
-  <pubDate>Day, DD Mon YYYY 00:00:00 +0800</pubDate>
-  <description>Q1 2026: Revenue +X%, net profit +Y%. Base case met. [Collapsed, see Q2 update above.]</description>
-</item>
-```
-
-Same rule applies to the **update notice block inside the article**: the most recent update sits at the top; prior updates are collapsed to a single `<p>` with date + one-line summary, then a "see update above" note.
+**What this means for you, writing an update:** write the new `<div class="update-notice">…</div>`
+block exactly as before, same markup, same voice, full length, no self-editing for space, and
+insert it **above** the previous one (newest-first stacking, already the convention). Do not touch
+any earlier block's text. Do not add a "see update above" note. The collapsing is presentation
+only, applied at build time, and needs nothing from the author. Worked example:
+[9988-alibaba.html](../publish/analyses/9988-alibaba.html), 4 stacked updates, only the August 20
+one open by default.
 
 ### Step 7: Build, verify locally, commit
 
@@ -221,11 +218,10 @@ Vercel rebuilds and deploys on push.
 - [ ] First paragraph of `What X Does` establishes ticker + HKEX listing
 - [ ] At least one inline link to a sector hub (`/analyses/{sector}`)
 - [ ] Image (if any) dropped in `publish/analyses/images/` with relative `<img src="images/...">`
-- [ ] Homepage updated: new article in featured card, old cards shifted, evicted card prepended as item 04 in Identified Situations, all items renumbered, item count = (total published) − 3
-- [ ] feed.xml: new `<item>` + `<lastBuildDate>` updated
-- [ ] sitemap.xml: new `<url>` + homepage `<lastmod>` updated. **Refresh of an existing article** = bump that article's `<lastmod>` AND the homepage `<lastmod>` AND JSON-LD `dateModified` to the refresh date
+- [ ] Homepage card, feed.xml, sitemap.xml: **all automatic**, generated from CONFIG on every build (see Step 6). Nothing to hand-edit. Just set `pubDate` (new article) or `modDate` (refresh) + JSON-LD `dateModified` to match, and confirm after building: `grep SLUG dist/index.html` (card present), `grep -A1 SLUG dist/static/sitemap.xml` (today's date on a refresh)
+- [ ] **Refresh of an existing article, article body:** new `<div class="update-notice">` block inserted above the previous one, full length, nothing shortened (see Step 6b, the page collapses older ones automatically, do not hand-truncate them)
 - [ ] Scorecard: **automatic** (no action) for stock articles with `meta-ticker` + `meta-verdict` in the hero. Set CONFIG `scorecardName` only if a shorter display name is wanted
-- [ ] Ticker → scorecard links: **automatic, but verify.** Write every ticker as plain text (`9973.HK`), hero as `<span class="meta-ticker">9973.HK</span>`; `build.js` links the pill and every body mention to `/scorecard#t-<ticker>`. Never hand-write `<a href="/scorecard#…">` — the prose pass skips existing anchors, so a manual link opts that mention out of the automation. Verify with the preview server up: `python3 scripts/test-ticker-links.py http://localhost:3000`
+- [ ] Ticker → scorecard links: **automatic, but verify.** Write every ticker as plain text (`9973.HK`), hero as `<span class="meta-ticker">9973.HK</span>`; `build.js` links the pill and every body mention to `/scorecard#t-<ticker>`. Never hand-write `<a href="/scorecard#…">`, the prose pass skips existing anchors, so a manual link opts that mention out of the automation. Verify with the preview server up: `python3 scripts/test-ticker-links.py http://localhost:3000`
 - [ ] No em dash anywhere (`grep -rn ", \|, " publish/ assets/` returns nothing)
 - [ ] `node build.js` runs clean
 - [ ] Spot-checked `dist/analyses/<slug>.html` in a browser
@@ -236,4 +232,4 @@ Vercel rebuilds and deploys on push.
 
 
 ---
-[Wiki index](index.md)
+[Wiki index](TRADING/Trading852-v2/wiki/index.md)

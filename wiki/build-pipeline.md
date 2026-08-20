@@ -4,12 +4,12 @@ tags: [trading852, wiki, build, static-site]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-06-27
+updated: 2026-08-20
 ---
 
 # Trading852 v2, Build Pipeline
 
-Part of the [Trading852 wiki](index.md).
+Part of the [Trading852 wiki](TRADING/Trading852-v2/wiki/index.md).
 
 ## What changed vs v1
 
@@ -74,7 +74,6 @@ Trading852-v2/
 │   │   └── scorecard.css          layout: scorecard
 │   │
 │   ├── index.html              ← Homepage (layout: index)
-│   ├── feed.xml                ← RSS feed (copied as-is)
 │   ├── favicon.ico             ← Root favicon (copied to dist/favicon.ico, required by Google + GSC, not just /assets/)
 │   │
 │   ├── analyses/               ← Published articles (layout: article)
@@ -88,8 +87,11 @@ Trading852-v2/
 │       ├── scorecard.html         → trading852.com/scorecard
 │       ├── disclaimer.html        → trading852.com/disclaimer
 │       ├── legal-notice.html      → trading852.com/legal-notice
-│       ├── robots.txt             → trading852.com/robots.txt
-│       └── sitemap.xml            → trading852.com/sitemap.xml
+│       └── robots.txt             → trading852.com/robots.txt
+│
+│   (feed.xml and static/sitemap.xml are build OUTPUT only, generated fresh
+│    into dist/ on every build, see "sitemap.xml + feed.xml" below. Neither
+│    exists as a source file under publish/ anymore.)
 │
 ├── TO DO/                      ← Pending engineering tasks (not served, not built)
 │   └── per-article-og-images.md   Spec for unique OG images per article (highest social CTR move)
@@ -126,11 +128,53 @@ No npm install, no node_modules, no watcher. Pure `fs` + `path`.
 
 ### Sector hub link check (hard gate, added 2026-08-09)
 
-Runs first, before `dist/` is even touched. For every article with a `CONFIG.articleSection`, it checks that the hub file mapped to that section (`SECTION_HUB_SLUG` in `build.js`) actually contains an `href="/analyses/{slug}"` link. **Any miss exits the build with code 1** — no partial deploy, previous `dist/` untouched.
+Runs first, before `dist/` is even touched. For every article with a `CONFIG.articleSection`, it checks that the hub file mapped to that section (`SECTION_HUB_SLUG` in `build.js`) actually contains an `href="/analyses/{slug}"` link. **Any miss exits the build with code 1**, no partial deploy, previous `dist/` untouched.
 
-**Why a hard gate and not a warning:** the "Published analyses" card list on each sector hub is hand-written (bespoke `ca-summary` copy per article, not derivable from the meta description), so it can't be auto-generated the way the sitemap/feed/homepage lists are. Nothing forced anyone to touch it when a new article shipped. Three articles (Galaxy, 361 Degrees, Chery Auto — all published Jun–Jul 2026) sat unlinked from their hub for 2–6 weeks before this was noticed; a fourth (`usd-strength-hk-transmission`) was caught by this same check the first time it ran. `validateInternalLinks()` already existed as a precedent for a build-time linking check, but only warns — that pattern had already failed to prevent this exact class of drift, so this one fails the build instead.
+**Why a hard gate and not a warning:** the "Published analyses" card list on each sector hub is hand-written (bespoke `ca-summary` copy per article, not derivable from the meta description), so it can't be auto-generated the way the sitemap/feed/homepage lists are. Nothing forced anyone to touch it when a new article shipped. Three articles (Galaxy, 361 Degrees, Chery Auto, all published Jun-Jul 2026) sat unlinked from their hub for 2-6 weeks before this was noticed; a fourth (`usd-strength-hk-transmission`) was caught by this same check the first time it ran. `validateInternalLinks()` already existed as a precedent for a build-time linking check, but only warns, that pattern had already failed to prevent this exact class of drift, so this one fails the build instead.
 
 **When adding a new article:** add its `<a class="category-article-card">` block + matching JSONLD `ListItem` to the hub file for its `articleSection` in the same commit. The build will refuse to run otherwise, and the error names the missing article and the hub file to fix.
+
+### Update-notice accordion (added 2026-08-20)
+
+An article that gets updated more than once (9988-alibaba has 4 update blocks, 1913-prada has 2)
+forced a reader to scroll past every prior update, in full, to reach the article body below them.
+The wiki's prior instruction was to hand-shorten old updates to a one-liner instead, but no article
+was ever actually edited down that way (checked: no `.update-notice` block on the live site matches
+the truncated-summary pattern), so in practice the scroll was the only thing that had ever
+happened. See `wiki/editorial.md` Step 6b for the full before/after.
+
+`collapsifyUpdateNotices(page)` runs on every assembled page (right after `assemblePage()`, before
+the homepage token substitution) and, only when a page carries 2+ `<div class="update-notice">`
+blocks, converts each one into a native `<details>/<summary>` disclosure: the first block in the
+DOM (newest, by the established newest-first stacking convention) ships `open`; every later one
+collapses to a one-line clickable strip (date + chevron), full text preserved, expands on click.
+Zero JavaScript, zero dependency, works with CSS and HTML alone. A single-update article is
+untouched, still a plain `<div>`, the function counts blocks first and returns the page unchanged
+if there are fewer than 2, so there is never a chevron implying more content than exists.
+
+**Why depth-tracked, not a single regex:** an update block can carry its own nested `<div>` (the
+9988-alibaba May-14 block wraps a data table in `.data-table-wrap`). A naive match up to the next
+bare `</div>` closes the disclosure at that inner div and strands the rest of the block outside it.
+The function walks `<div ...>` / `</div>` tokens counting depth from each `update-notice` opening
+tag, so it finds the true matching close regardless of what's nested inside.
+
+**Styling:** `publish/styles/article.css`, `.update-notice` section, chevron is a CSS-only rotated
+border corner (`::after`, `border-right`/`border-bottom`, `rotate(45deg)` closed →
+`rotate(-135deg)` open), native `::-webkit-details-marker` suppressed so only the custom chevron
+shows.
+
+**Authoring:** nothing changes. Write `<div class="update-notice">…</div>` exactly as before,
+insert above the previous block. The transform is presentation-only, applied at build time.
+
+### Sitemap `<lastmod>` uses the latest of pubDate/modDate (fixed 2026-08-20)
+
+`getAllAnalysisPages()` (feeds `generateSitemap`) read `config.pubDate` only. Every article that
+had ever received an update block still sitemapped at its *original* publish date, found via
+9973-chery and 9988-alibaba, both edited the same day (`modDate: 2026-08-20`) and both still
+showing their original `pubDate` (July 27 and April 14) in the sitemap. Google had no freshness
+signal that either page had changed. Now: `date = (config.modDate && config.modDate > config.pubDate) ? config.modDate : config.pubDate`.
+No article-author action needed, `modDate` was already being set correctly per Step 6 of
+`wiki/editorial.md`, the sitemap generator just wasn't reading it.
 
 ---
 
@@ -284,4 +328,4 @@ All footers use a flex row (`justify-content:space-between`): tagline on the lef
 
 
 ---
-[Wiki index](index.md)
+[Wiki index](TRADING/Trading852-v2/wiki/index.md)

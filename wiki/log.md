@@ -4,16 +4,37 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-17
+updated: 2026-08-20
 ---
 
 # Trading852 v2, Changelog
 
-Part of the [Trading852 wiki](index.md).
+Part of the [Trading852 wiki](TRADING/Trading852-v2/wiki/index.md).
 
 ## Changelog
 
-### August 17, 2026 · Second position on 9988.HK, and the re-entry row it needed
+### August 20, 2026 · Stacked update blocks collapse into an accordion; two stale-sitemap bugs found and fixed the same day
+
+Requested after the 9988-alibaba August-20 update went in as its fourth stacked block: reading the
+article meant scrolling past three older ones, in full, to reach it. `collapsifyUpdateNotices()`
+in `build.js` now turns any article's 2+ `.update-notice` blocks into native `<details>/<summary>`
+disclosures, newest open, older ones collapsed to a one-line date strip, full text preserved and
+expandable on click, zero JS. A single-update article is untouched. Live on 9988-alibaba (4 blocks)
+and 1913-prada (2). Wiki updated so this is the standing convention, not a one-off: `editorial.md`
+Step 6b replaces the old "shorten prior updates to one line" instruction (the accordion supersedes
+it, nothing needs manual truncation anymore), and `build-pipeline.md` documents the mechanism.
+
+**Two adjacent bugs found and fixed in the same session, both about `modDate` never actually
+reaching the sitemap.** `getAllAnalysisPages()` sitemapped every article at its `pubDate` only,
+`modDate` was read and stored elsewhere but never consulted here, so an already-updated article
+(9973-chery, 9988-alibaba, both edited the same day) still showed its *original* publish date in
+`<lastmod>`. Google had no signal either page had changed. Fixed: sitemap date is now whichever of
+`pubDate`/`modDate` is later. Caught only because the fix was being verified by hand on two
+specific articles, not by anything that checks this generally, worth a `/gap-audit` pass on the
+rest of the CONFIG→sitemap pipeline at some point. `editorial.md` Step 6 also had the same
+staleness in the other direction, instructions to hand-edit `feed.xml`/`sitemap.xml`, files that
+no longer exist as source, both auto-generated from disk since an earlier migration this section
+was never updated for.
 
 Alibaba re-entered at 123.00 while the original April 10 line stays on the board, stopped at breakeven on May 21. The scorecard could not hold both: picks are auto-derived from articles and keyed by ticker, so `9988-alibaba` can only ever produce one row.
 
@@ -72,27 +93,27 @@ All motion reuses the `cubic-bezier(0.2, 0.8, 0.2, 1)` already in the file for t
 
 ### August 12, 2026 · Sitemap lastmod tracks pubDate, not modDate (found while pushing the 0027-galaxy update)
 
-While pushing an update-notice to `0027-galaxy.html` (H1 2026 interim vs the July thesis, then a same-day correction on the EBITDA base-effect), `modDate` was bumped in CONFIG and confirmed working for the homepage "Updated" banner/pill (`isRecentUpdate()`) and the article's own `article:modified_time` / JSON-LD `dateModified`. But `dist/static/sitemap.xml`'s `<lastmod>` for that URL stayed pinned to the original `pubDate` (Jul 13) after both pushes — `getAllAnalysisPages()` in `build.js` (~line 604) reads `config.pubDate` only, never `config.modDate`, when building the sitemap page list. Not fixed here (out of scope for the publish task in progress); worth a one-line change (`config.modDate || config.pubDate`) next time someone is in that function, since a stale sitemap lastmod on an updated article is a minor, silent SEO signal miss.
+While pushing an update-notice to `0027-galaxy.html` (H1 2026 interim vs the July thesis, then a same-day correction on the EBITDA base-effect), `modDate` was bumped in CONFIG and confirmed working for the homepage "Updated" banner/pill (`isRecentUpdate()`) and the article's own `article:modified_time` / JSON-LD `dateModified`. But `dist/static/sitemap.xml`'s `<lastmod>` for that URL stayed pinned to the original `pubDate` (Jul 13) after both pushes, `getAllAnalysisPages()` in `build.js` (~line 604) reads `config.pubDate` only, never `config.modDate`, when building the sitemap page list. Not fixed here (out of scope for the publish task in progress); worth a one-line change (`config.modDate || config.pubDate`) next time someone is in that function, since a stale sitemap lastmod on an updated article is a minor, silent SEO signal miss.
 
 ### August 9, 2026 · Sector hubs missing 4 articles, fixed + hard build gate added
 
 While auditing the homepage for content-idea research, found `consumer-discretionary.html` and `electric-vehicles.html` hadn't been touched since their articles shipped: Galaxy Entertainment (Jul 13), 361 Degrees (Jun 29), and Chery Auto (Jul 27) were all live and tagged with the right `articleSection`, but absent from their hub's card list and JSONLD `ItemList`. The electric-vehicles hub didn't even link its own flagship Chery Auto piece.
 
-Added the missing cards + JSONLD entries to both hubs. Then wrote a build-time check (`validateSectorHubLinks()` in `build.js`, see [build-pipeline.md](build-pipeline.md#sector-hub-link-check-hard-gate-added-2026-08-09)) that fails the build if any article's hub is missing its link — it caught a second, older instance immediately on first run: `usd-strength-hk-transmission` (Jul 10) was also missing from `market-thesis.html`, fixed the same way. `market-thesis.html`'s JSONLD was separately stale beyond just that one miss (only declared 1 of 5 visible cards) — rebuilt to declare all 6.
+Added the missing cards + JSONLD entries to both hubs. Then wrote a build-time check (`validateSectorHubLinks()` in `build.js`, see [build-pipeline.md](build-pipeline.md#sector-hub-link-check-hard-gate-added-2026-08-09)) that fails the build if any article's hub is missing its link, it caught a second, older instance immediately on first run: `usd-strength-hk-transmission` (Jul 10) was also missing from `market-thesis.html`, fixed the same way. `market-thesis.html`'s JSONLD was separately stale beyond just that one miss (only declared 1 of 5 visible cards), rebuilt to declare all 6.
 
 ### August 9, 2026 · GSC audit + www duplicate fixed
 
-Pulled the 4 GSC Page Indexing exports Dany downloaded (Chart, Critical issues, Metadata, Non-critical issues) and cross-checked live against the site. Full writeup: [GSC audit](seo/gsc-audit-2026-08-09.md). Found `www.trading852.com` served every page directly (200) instead of redirecting to the apex domain — a real duplicate-content gap, unrelated to the 17 not-indexed pages GSC was flagging (those traced cleanly to 2 known redirects + 13 "discovered not indexed" + 1 "crawled not indexed", the last two need URL-level export from the GSC UI to diagnose further). Added a host-matched redirect rule to `vercel.json`, committed (`757bd99`), pushed to `main`.
+Pulled the 4 GSC Page Indexing exports Dany downloaded (Chart, Critical issues, Metadata, Non-critical issues) and cross-checked live against the site. Full writeup: [GSC audit](seo/gsc-audit-2026-08-09.md). Found `www.trading852.com` served every page directly (200) instead of redirecting to the apex domain, a real duplicate-content gap, unrelated to the 17 not-indexed pages GSC was flagging (those traced cleanly to 2 known redirects + 13 "discovered not indexed" + 1 "crawled not indexed", the last two need URL-level export from the GSC UI to diagnose further). Added a host-matched redirect rule to `vercel.json`, committed (`757bd99`), pushed to `main`.
 
 ### July 31, 2026 · Buy-back line built, corrected three times, then withheld from the page
 
-Dany's question: a pick gets stopped, the price later returns to where it was first bought, you buy it back and ride — what would that have done? Built as a blue third line on the scorecard chart (`reSeries` in `fetchOne`), then **pulled from the public page the same afternoon**. It is still computed; only the chart dataset, its key entry and the methodology paragraph are removed. Restore the three together.
+Dany's question: a pick gets stopped, the price later returns to where it was first bought, you buy it back and ride, what would that have done? Built as a blue third line on the scorecard chart (`reSeries` in `fetchOne`), then **pulled from the public page the same afternoon**. It is still computed; only the chart dataset, its key entry and the methodology paragraph are removed. Restore the three together.
 
-**Why it was pulled:** the modelled result moved three times under Dany while he was reading it — **−0.13 % → −0.31 % → −1.26 %** — each move a real bug I had shipped, each found because he refused the number rather than because a test caught it. That is the failure worth recording. Every one of these would have been caught by tracing a single pick's cash flows by hand before drawing the line:
+**Why it was pulled:** the modelled result moved three times under Dany while he was reading it, **−0.13 % → −0.31 % → −1.26 %**, each move a real bug I had shipped, each found because he refused the number rather than because a test caught it. That is the failure worth recording. Every one of these would have been caught by tracing a single pick's cash flows by hand before drawing the line:
 
-1. **Fill on a gap.** Re-entry filled at the entry price even when the session gapped above it and never traded back down — 9988.HK opened 128.20 on May 22 against a 125.50 entry with a 126.00 low, a price never available. Now: fill at the entry when the session's low comes back through it, at the open otherwise.
+1. **Fill on a gap.** Re-entry filled at the entry price even when the session gapped above it and never traded back down, 9988.HK opened 128.20 on May 22 against a 125.50 entry with a 126.00 low, a price never available. Now: fill at the entry when the session's low comes back through it, at the open otherwise.
 2. **Dividends while out of the market.** A dividend was credited to the chain even when it went ex during a period the model held nothing. 1913.HK, HKD 1.5025 ex on May 6, between the Apr 30 stop and the May 7 buy-back. It inflated every later bar, lifted the Jul 29 low of 38.00 to a phantom 39.50, and turned a −9.97 % chain into +3.51 %.
-3. **Cross-check priced a different session.** `check-buyback-model.py` walked the daily close array while the page reads `meta.regularMarketPrice`, which leads it by one bar — the same trap as the SPY 747 counter bug. Made them agree by reading `meta` in both.
+3. **Cross-check priced a different session.** `check-buyback-model.py` walked the daily close array while the page reads `meta.regularMarketPrice`, which leads it by one bar, the same trap as the SPY 747 counter bug. Made them agree by reading `meta` in both.
 
 **The trigger itself was challenged and confirmed, not changed.** 1585.HK did return to 12.58 on May 12, verified against Yahoo, FinMC_3's `cache_unadjusted` and eastmoney independently, and on `cache_adjusted` too (entry 11.930, May 12 high 11.930). Recorded in [scorecard.md](scorecard.md) so it is not re-argued.
 
@@ -102,23 +123,23 @@ Also settled along the way: the April 10 picks enter at **April 10's own close**
 
 ### July 31, 2026 · Article ticker links to its scorecard row, and the mobile table stops breaking the page
 
-**Prose ticker links, and the first-mention miss.** Extended the deep link to the ticker as it appears in the running text, on every article. The first version linked only the *first* mention per ticker, on the reasoning that repeating it would be noise. Dany reported not seeing any link on the live Chery page, and he was right: that single link had landed in the hero standfirst, where `color: inherit` resolves to `rgba(255,255,255,0.55)` on the dark hero — invisible — while every body section he actually read carried none. The noise estimate was also wrong: it counted raw file occurrences including CONFIG and JSON-LD, so 9973-chery looked like twelve mentions when the body has seven.
+**Prose ticker links, and the first-mention miss.** Extended the deep link to the ticker as it appears in the running text, on every article. The first version linked only the *first* mention per ticker, on the reasoning that repeating it would be noise. Dany reported not seeing any link on the live Chery page, and he was right: that single link had landed in the hero standfirst, where `color: inherit` resolves to `rgba(255,255,255,0.55)` on the dark hero, invisible, while every body section he actually read carried none. The noise estimate was also wrong: it counted raw file occurrences including CONFIG and JSON-LD, so 9973-chery looked like twelve mentions when the body has seven.
 
-Now every body mention is linked and the standfirst is excluded outright: it is unreadable there and the linked pill sits directly above it. 31 body links across the 12 stock articles. Untracked peers stay plain text — Chery names 0175.HK and 1211.HK, neither on the scorecard, neither linked.
+Now every body mention is linked and the standfirst is excluded outright: it is unreadable there and the linked pill sits directly above it. 31 body links across the 12 stock articles. Untracked peers stay plain text, Chery names 0175.HK and 1211.HK, neither on the scorecard, neither linked.
 
 The test now asserts the thing that actually failed: **no tracked ticker may be left unlinked in any article body.** Counting links would have passed the broken version.
 
 Written up as a standing procedure in [CLAUDE.md](../CLAUDE.md) § "Every ticker links to its scorecard row" and the [editorial.md](editorial.md) pre-publish checklist, since the rule only holds for future articles if the build keeps doing it and nobody hand-writes the anchors.
 
-**Ticker deep link.** The hero `meta-ticker` pill now links to `/scorecard#t-<ticker>`. Done in `build.js`, not per article, and only for tickers the scorecard has a row for — all 12 stock articles picked it up on the next build, sector hubs correctly got nothing. `scorecard.js` writes the matching `<tr id>` and `focusHashRow()` performs the jump after render, since the table does not exist when the browser tries the hash itself. Bound to `hashchange` too: a second anchor followed from the scorecard is a same-document navigation, so the script would otherwise never run again — a gap the first version of the test accidentally exposed by re-using an open page.
+**Ticker deep link.** The hero `meta-ticker` pill now links to `/scorecard#t-<ticker>`. Done in `build.js`, not per article, and only for tickers the scorecard has a row for, all 12 stock articles picked it up on the next build, sector hubs correctly got nothing. `scorecard.js` writes the matching `<tr id>` and `focusHashRow()` performs the jump after render, since the table does not exist when the browser tries the hash itself. Bound to `hashchange` too: a second anchor followed from the scorecard is a same-document navigation, so the script would otherwise never run again, a gap the first version of the test accidentally exposed by re-using an open page.
 
 The anchor rule is written twice (`tickerAnchor` in each file), so `scripts/test-ticker-links.py` asserts every hero link resolves to a real row instead of assuming the two stay in step.
 
-**Mobile table overflow.** The table's min-content width was 406px against a 390px viewport, so the whole scorecard page scrolled sideways on a phone. Below 640px: cell padding 0.5rem → 0.3rem, badges stacked under the ticker instead of widening that column, table font one step down. It now measures 342px at 390px — an exact fit, and no mid-word hyphenation was needed. `#scorecard-table` also carries `overflow-x: auto` as the standing guarantee, which is what 320/360px screens fall back on.
+**Mobile table overflow.** The table's min-content width was 406px against a 390px viewport, so the whole scorecard page scrolled sideways on a phone. Below 640px: cell padding 0.5rem → 0.3rem, badges stacked under the ticker instead of widening that column, table font one step down. It now measures 342px at 390px, an exact fit, and no mid-word hyphenation was needed. `#scorecard-table` also carries `overflow-x: auto` as the standing guarantee, which is what 320/360px screens fall back on.
 
 ### July 31, 2026 · Scorecard: Portfolio vs HSI chart, and the exit fill in the Last column
 
-**Chart.** New line chart above the table, April 10 to today, portfolio against 2800.HK. `fetchOne` now also returns a per-bar `series`; `buildPortfolioSeries` averages across every pick entered by each date, and `renderChart` draws it with the Chart.js already vendored for the SPY 747 article. Endpoint equals the table's average by construction — `scripts/test-chart-parity.py` asserts exactly that, since a drift between the two paths is the only way this chart can lie.
+**Chart.** New line chart above the table, April 10 to today, portfolio against 2800.HK. `fetchOne` now also returns a per-bar `series`; `buildPortfolioSeries` averages across every pick entered by each date, and `renderChart` draws it with the Chart.js already vendored for the SPY 747 article. Endpoint equals the table's average by construction, `scripts/test-chart-parity.py` asserts exactly that, since a drift between the two paths is the only way this chart can lie.
 
 Reading as of today: the portfolio held the June drawdown far better than the index (HSI reached about −11 %, the portfolio about −4 %), then the HSI's July recovery overtook it. Portfolio **+1.15 %** vs HSI **+1.64 %**, i.e. **−0.50 pp**, matching the existing "Portfolio vs HSI" table row.
 
@@ -128,7 +149,7 @@ Caveat carried into the page methodology and [scorecard.md](scorecard.md): a pic
 
 ### July 31, 2026 · Scorecard: fully exited picks exempt from the stop scan
 
-0300.HK Midea became the first fully closed pick this morning, which exposed a latent labelling bug. Its peak of 99.75 had armed the breakeven stop tier at the 89.70 entry, so a later drop back through 89.70 would have stamped `Stopped · stop hit <date>` on a position already sold in full at 99.10. `pct` was never at risk (`remFrac` = 0 freezes it at the banked +6.91 %) — only the badge would have lied.
+0300.HK Midea became the first fully closed pick this morning, which exposed a latent labelling bug. Its peak of 99.75 had armed the breakeven stop tier at the 89.70 entry, so a later drop back through 89.70 would have stamped `Stopped · stop hit <date>` on a position already sold in full at 99.10. `pct` was never at risk (`remFrac` = 0 freezes it at the banked +6.91 %), only the badge would have lied.
 
 `fetchOne` now skips the live stop scan when the exit fractions sum to 100 %, the same exemption the benchmark gets and for the same reason: there is no open trade. Regression check reproduces the bug on the pre-fix code and passes after: `python3 scripts/test-stop-guard.py http://localhost:3000`.
 
@@ -136,16 +157,16 @@ Two display gaps left open on a closed row, both cosmetic: the Last column still
 
 ### July 31, 2026 · Homepage: "Updated" tag on recently revisited analyses
 
-A refreshed article was indistinguishable from an untouched one in the "Our Analyses" list. Lines now carry an `Updated <date>` pill, driven by the `modDate` already present in each article's CONFIG — no new field to maintain.
+A refreshed article was indistinguishable from an untouched one in the "Our Analyses" list. Lines now carry an `Updated <date>` pill, driven by the `modDate` already present in each article's CONFIG, no new field to maintain.
 
 Two windows, both in [build.js](../build.js) as `UPDATE_MIN_GAP_DAYS` / `UPDATE_FRESH_DAYS`:
 
 - **modDate ≥ 7 days after pubDate.** A next-day correction is not an update. This is what keeps 0700-tencent (mod = pub + 1) untagged.
 - **modDate ≤ 30 days old** at build time. Without it the tag would sit on 8 of the 12 articles permanently and stop being a signal. Note this is evaluated *at build time*, so a long gap between deploys leaves a stale tag up.
 
-Today that tags 1913-prada alone. Reuses the orphaned `.verdict-tag` pill style rather than adding a new one. Unlike `.verdict-tag` it is **not** hidden below 48rem — it takes its own row there, because the title column is already narrow (`.our-work__read-more` holds a fixed 9rem) and an inline pill squeezed the title to one word per line. Self-check: `node scripts/test-update-tag.js`.
+Today that tags 1913-prada alone. Reuses the orphaned `.verdict-tag` pill style rather than adding a new one. Unlike `.verdict-tag` it is **not** hidden below 48rem, it takes its own row there, because the title column is already narrow (`.our-work__read-more` holds a fixed 9rem) and an inline pill squeezed the title to one word per line. Self-check: `node scripts/test-update-tag.js`.
 
-### July 31, 2026 · 0300.HK Midea fully exited — first closed position on the scorecard
+### July 31, 2026 · 0300.HK Midea fully exited: first closed position on the scorecard
 
 Dany sold the remaining third at **99.10**, closing the position. Second entry appended to `scorecard-exits.json`:
 
@@ -156,9 +177,9 @@ Dany sold the remaining third at **99.10**, closing the position. Second entry a
 
 Entry 89.70, blended row `pct` = **+6.91 %**, now frozen (`remFrac` = 0, so the live leg no longer contributes). Fractions sum to exactly 1.000 → `fracPct` = 100 → the row takes the muted-green `sc-row-reduced` tint and reads `100 % banked · 0 % live`.
 
-**Display note, first multi-exit pick:** `reducedInfo()` in [scorecard.js](../assets/scorecard.js) only fills `fill`/`date` when `exits.length === 1`, so the ticker badge reads a bare `Reduced 100%` with no price or date — the per-leg detail lives in `scorecard-exits.json` and this log, not on the page. Left as is; change only if a closed row should carry its final fill.
+**Display note, first multi-exit pick:** `reducedInfo()` in [scorecard.js](../assets/scorecard.js) only fills `fill`/`date` when `exits.length === 1`, so the ticker badge reads a bare `Reduced 100%` with no price or date, the per-leg detail lives in `scorecard-exits.json` and this log, not on the page. Left as is; change only if a closed row should carry its final fill.
 
-### July 23, 2026 · Scorecard: Prada silently un-stopped — rolling-window bug, 4 positions had wrong stop data
+### July 23, 2026 · Scorecard: Prada silently un-stopped: rolling-window bug, 4 positions had wrong stop data
 
 Dany noticed 1913.HK Prada had flipped from Stopped back to an active +10.92% position with no manual action on his side. Investigation traced it to `scorecard.js`'s live trailing-stop scan, which fetched only a rolling `range=3mo` window from Yahoo. All of the April 10 inaugural-issue picks (0113 Dickson, 1913 Prada, 1167 Jacobio, 1585 Yadea, 9988 Alibaba) share that entry date; by mid-July the 3-month window had rolled past it, so the entry-finding loop silently substituted a much later bar as a fake "entry" once the true one aged out. That erases the peak-price history needed to arm the tighter stop tiers, and can invent a wrong stop date/level or erase a real stop entirely.
 
@@ -167,7 +188,7 @@ Dany noticed 1913.HK Prada had flipped from Stopped back to an active +10.92% po
 | Ticker | Was showing (corrupted) | True value |
 |---|---|---|
 | 1913.HK Prada | not stopped, +10.92% | **STOPPED Apr 30 at −10%** |
-| 1167.HK Jacobio | stopped May 5, −10% | **STOPPED Apr 24 at 0% (breakeven)** — it had first spiked to +14.68% peak, arming the breakeven tier, before round-tripping back to entry |
+| 1167.HK Jacobio | stopped May 5, −10% | **STOPPED Apr 24 at 0% (breakeven)**, it had first spiked to +14.68% peak, arming the breakeven tier, before round-tripping back to entry |
 | 1585.HK Yadea | stopped Jun 8, −5% | **STOPPED Apr 23**, −5% |
 | 9988.HK Alibaba | stopped May 18, 0% | **STOPPED May 21**, 0% |
 
@@ -175,23 +196,23 @@ Jacobio's public locked return had been overstated as a −10% loss when the tru
 
 **Fix, two parts:**
 1. **`scorecard-stops.json`** (new, repo root): permanent stop ledger, keyed by ticker, `{ stopDate, stopLevel, lockedPct }`, computed once from full history and frozen. `build.js` attaches it as `forcedStop`; `scorecard.js` skips the live scan entirely for a ticker carrying `forcedStop` and uses the recorded values, so a price recovery (or the window rolling further) can never again erase or corrupt a real stop. All 6 currently-stopped tickers (the 4 above plus Haier and Tencent Music) are now locked in.
-2. **Fetch range widened `3mo` → `1y`** in `scorecard.js`, buying headroom before a *currently active* pick's own entry date rolls out of view and its % return silently corrupts the same way. Not a permanent fix alone (a pick older than a year hits the same wall) — the permanent ledger is the structural fix.
+2. **Fetch range widened `3mo` → `1y`** in `scorecard.js`, buying headroom before a *currently active* pick's own entry date rolls out of view and its % return silently corrupts the same way. Not a permanent fix alone (a pick older than a year hits the same wall), the permanent ledger is the structural fix.
 
 Wiki: [scorecard.md](scorecard.md) new "Permanent stop ledger" section.
 
 ### July 23, 2026 · Scorecard: Reduced row tint reserved for a fully closed position
 
-Dany flagged that 0300.HK Midea's row carried the green `sc-row-reduced` background tint at only 67% trimmed — the position is still two-thirds open, so a colored row read as more settled than it is. Fix in `assets/scorecard.js` (`renderTable`): the tint now only applies when `reducedInfo(r).fracPct >= 100` (every exit fraction summed to a full close). A partial trim still shows the `Reduced NN% @price · date` badge and the `NN% banked · MM% live` sub-line, just on a plain white row like any other active pick. Wiki: [scorecard.md](scorecard.md) Rendering line updated.
+Dany flagged that 0300.HK Midea's row carried the green `sc-row-reduced` background tint at only 67% trimmed, the position is still two-thirds open, so a colored row read as more settled than it is. Fix in `assets/scorecard.js` (`renderTable`): the tint now only applies when `reducedInfo(r).fracPct >= 100` (every exit fraction summed to a full close). A partial trim still shows the `Reduced NN% @price · date` badge and the `NN% banked · MM% live` sub-line, just on a plain white row like any other active pick. Wiki: [scorecard.md](scorecard.md) Rendering line updated.
 
-### July 21, 2026 · Scorecard hero — article count dropped
+### July 21, 2026 · Scorecard hero: article count dropped
 
 Removed the "Eleven articles." count from the scorecard hero title, plus the now-dead JS that populated it (the `WORDS` array + `sc-article-count` updater in `scorecard.js`). The hero now reads: "The Hang Seng as benchmark. Entry at first close after publication. Live performance." No orphan code.
 
-### July 20, 2026 · Scorecard "Reduced" state — partial exits lock banked gains
+### July 20, 2026 · Scorecard "Reduced" state: partial exits lock banked gains
 
 New per-pick state for the public scorecard: when a published pick is trimmed at a target, the realized portion is frozen into the row's `%` so a round-trip cannot give it back. Protects the portfolio's lead over the 2800.HK benchmark in a drawdown.
 
-- First record: **0300.HK (Midea)**, 2/3 trimmed @94.30 on Jul 20 at the published Base target floor (HKD 95–100).
+- First record: **0300.HK (Midea)**, 2/3 trimmed @94.30 on Jul 20 at the published Base target floor (HKD 95-100).
 - Data: `scorecard-exits.json` at the repo root, keyed by ticker, hand-maintained (one `exits[]` entry per trim). Read by `build.js`, attached as `reduced` on the pick. Positions themselves stay auto-generated.
 - Blend (`scorecard.js`): realized leg frozen at fill + live leg at current price (or `lockedPct` if the remainder stopped). For 0300: **+3.42% banked** regardless of what the live third does.
 - Render: green `sc-row-reduced` tint, `Reduced NN% @price · date` badge, `NN% banked · MM% live` sub-line. Mirrors the Stopped state.
@@ -216,7 +237,7 @@ Dany deleted the six `DRAFT/` files: the work had gone stale and the tickers lef
 
 ### July 15, 2026 · Knowledge layer created + 11 cross-article contradictions found
 
-**New sub-hub** [wiki/knowledge/](knowledge/index.md), seven pages. The claims and valuation numbers of all 18 published articles, held as entries rather than prose. Built because nothing in the repo stored them: [articles.md](articles.md) holds titles, [log.md](log.md) narrates changes, the scorecard holds identity plus entry date, and every number otherwise existed exactly once, inside one HTML file, invisible to the next article.
+**New sub-hub** [wiki/knowledge/](knowledge/index.md), seven pages. The claims and valuation numbers of all 18 published articles, held as entries rather than prose. Built because nothing in the repo stored them: [articles.md](articles.md) holds titles, [log.md](TRADING/Trading852-v2/wiki/log.md) narrates changes, the scorecard holds identity plus entry date, and every number otherwise existed exactly once, inside one HTML file, invisible to the next article.
 
 Pages: [index](knowledge/index.md) (the rules), [frames](knowledge/frames.md) (about 40 reusable analytical patterns), [macro-hsi](knowledge/macro-hsi.md), [financials-rates](knowledge/financials-rates.md), [gold](knowledge/gold.md), [peer-multiples](knowledge/peer-multiples.md) (every published peer set), [levels](knowledge/levels.md), [open-questions](knowledge/open-questions.md).
 
@@ -231,7 +252,7 @@ Pages: [index](knowledge/index.md) (the rules), [frames](knowledge/frames.md) (a
 
 Also: Alibaba's net cash "rose" from US$40B to US$36B; Hermes at 30x and 40x on one page; gold's drawdown at 23% five times and 26% once; "SPY 1.3% from $747" meaning both above and below on the same page.
 
-**Wired in.** [CLAUDE.md](../CLAUDE.md) read-before-writing item 4; [editorial.md](editorial.md) pre-publish checklist gets a check gate (after the live fetch) and a same-commit write-back gate, on the homepage-card pattern; [wiki/index.md](index.md) and [README](../README.md) navigation. CLAUDE.md's second checklist now defers to editorial.md, which is authoritative: the two had diverged.
+**Wired in.** [CLAUDE.md](../CLAUDE.md) read-before-writing item 4; [editorial.md](editorial.md) pre-publish checklist gets a check gate (after the live fetch) and a same-commit write-back gate, on the homepage-card pattern; [wiki/index.md](TRADING/Trading852-v2/wiki/index.md) and [README](../README.md) navigation. CLAUDE.md's second checklist now defers to editorial.md, which is authoritative: the two had diverged.
 
 **Catalog fixed.** [articles.md](articles.md) was missing two published articles, [0027-galaxy](../publish/analyses/0027-galaxy.html) (Jul 13) and [0700-tencent](../publish/analyses/0700-tencent.html) (Jul 14), now `#17` and `#18`. This collides with `DRAFT/#18-0086-sun-hung-kai.html`: published articles hold the stable IDs, so the draft block needs renumbering to `#19` onward. Not done, it renames six files.
 
@@ -241,10 +262,10 @@ Also: Alibaba's net cash "rose" from US$40B to US$36B; Hermes at 30x and 40x on 
 
 **Rules confirmed and hardened this session:**
 
-- **v1 repo (`Marcvrick/trading852.com`) is archived and retired.** Never commit to it. Always use `Trading852-v2` / `Marcvrick/trading852-v2`. The v1 push attempt (403 error) confirmed this — v1 is read-only.
+- **v1 repo (`Marcvrick/trading852.com`) is archived and retired.** Never commit to it. Always use `Trading852-v2` / `Marcvrick/trading852-v2`. The v1 push attempt (403 error) confirmed this, v1 is read-only.
 - **contextLine: one line, ~50 chars max.** Two sentences overflow the featured card and get truncated with "…". The rule: one crisp insight, no period-space-sentence chaining. Test: paste into a ~50-char ruler; if it wraps, shorten. Examples that work: `"Economic growth is not shareholder returns"`, `"42% of market cap in net cash. Yield at 7.7%."` Examples that don't: `"Net cash covers 42% of market cap. The yield is 7.7% while you wait."` (two full sentences → truncated in card).
 - **contextLine must not repeat the ogTitle concept.** If ogTitle leads with EV/EBIT, contextLine must not mention EV/EBIT. Use a different frame: balance sheet, yield, market perception, macro angle.
-- **Article nav chain follows pubDate order.** When publishing a new article, the `← Previous` link must point to the article with the most recent pubDate before this one — not the thematically closest article. Check `wiki/articles.md` published list (sorted newest-first) to identify the correct predecessor. Update the predecessor's nav to add `Next →` pointing to the new article.
+- **Article nav chain follows pubDate order.** When publishing a new article, the `← Previous` link must point to the article with the most recent pubDate before this one, not the thematically closest article. Check `wiki/articles.md` published list (sorted newest-first) to identify the correct predecessor. Update the predecessor's nav to add `Next →` pointing to the new article.
 - **`title` field (HTML `<title>` tag):** keep to ~50-60 chars, pattern `"Company (TICKER.HK) Stock Analysis: [short tension]"`. The `ogTitle` carries the full Trading852 tension formula; `title` is for SEO.
 
 ### June 28, 2026 · Gold regime tracker + Macro article
@@ -253,7 +274,7 @@ Also: Alibaba's net cash "rose" from US$40B to US$36B; Hermes at 30x and 40x on 
 - **New live tracker**, companion to the convexity gauge, same two-layer architecture: composite `[-1,+1]` from `^TNX` (real-rate proxy, inverted, 0.30), `DX-Y.NYB` (DXY, inverted, 0.30), `GC=F` (gold trend, the tape, 0.40). Bake [scripts/update-gold-regime.py](../scripts/update-gold-regime.py) + client refresh [assets/gold-regime.js](../assets/gold-regime.js); markers `<!-- GOLD:START/END -->`; [build.js](../build.js) attaches the script on `class="gold-gauge"`.
 - **CSS reuse**: [article.css](../publish/styles/article.css) regime-gauge base + colour modifiers generalised to `.convexity-gauge, .gold-gauge`; both share the `.cvx-*` element classes (no duplication).
 - **First bake**: NEGATIVE -0.32 (gold -6.4%/3mo, dollar firming, yields flat). Sparkline crosses green-to-red around early May. Spec: [Gold regime tracker](gold-regime.md).
-- **Wiki**: new [gold-regime.md](gold-regime.md); pointers in [index.md](index.md), [ops.md](ops.md). Build: 28 pages, 0 warnings.
+- **Wiki**: new [gold-regime.md](gold-regime.md); pointers in [index.md](TRADING/Trading852-v2/wiki/index.md), [ops.md](ops.md). Build: 28 pages, 0 warnings.
 
 ### June 28, 2026 · Rate convexity tracker + Macro article
 
@@ -261,7 +282,7 @@ Also: Alibaba's net cash "rose" from US$40B to US$36B; Hermes at 30x and 40x on 
 - **New live tracker**: composite regime gauge in `[-1, +1]` from three free, no-key Yahoo series, `^IRX` (short rate), `^TNX - ^IRX` (curve slope), `^HSNF / ^HSI` (HK financials relative strength, weighted 0.50). Regime: `>= +0.25` positive / `<= -0.25` negative / else transition. Same two-layer pattern as the HSI tile: build-time bake ([scripts/update-convexity.py](../scripts/update-convexity.py)) + client-side refresh ([assets/convexity.js](../assets/convexity.js)) via the yahoo-proxy worker, identical math and viewBox 720x160 geometry so the two never disagree.
 - **Wiring**: [build.js](../build.js) auto-attaches `convexity.js` on any page carrying `class="convexity-gauge"`. Widget CSS appended to [article.css](../publish/styles/article.css). CSP unchanged: `connect-src` in [vercel.json](../vercel.json) already whitelists the yahoo-proxy worker.
 - **First bake**: POSITIVE +0.47, financials outperforming +12.5% over 3mo overruled a flat short-rate signal (the empirical relative-strength term is weighted highest for exactly this reason). Snapshot also written to [scripts/convexity-snapshot.json](../scripts/convexity-snapshot.json).
-- **Wiki**: new page [convexity-tracker.md](convexity-tracker.md); pointers added to [index.md](index.md) and [ops.md](ops.md). Build: 27 pages, 0 internal-link / orphan warnings; article cross-links to `hsi-35-year-trendline` and `market-thesis`.
+- **Wiki**: new page [convexity-tracker.md](convexity-tracker.md); pointers added to [index.md](TRADING/Trading852-v2/wiki/index.md) and [ops.md](ops.md). Build: 27 pages, 0 internal-link / orphan warnings; article cross-links to `hsi-35-year-trendline` and `market-thesis`.
 
 ### June 27, 2026 · HSI tile: live client-side widget (was a frozen build-time snapshot)
 
@@ -400,7 +421,7 @@ This section supersedes all prior instructions on writing style. It is the sourc
 
 ### Apr 29, 2026: Link `instructions/` from README
 
-- Top of README now lists the editorial + SEO references in `instructions/` (style guide + 5 SEO docs). (Moved into [wiki/](index.md) on Jun 24, 2026.)
+- Top of README now lists the editorial + SEO references in `instructions/` (style guide + 5 SEO docs). (Moved into [wiki/](TRADING/Trading852-v2/wiki/index.md) on Jun 24, 2026.)
 - Folder structure block updated to show `instructions/` and its `seo/` subfolder.
 - Step 2 of the editorial workflow now points to the local `style-guide.md` instead of the v1 path.
 
@@ -456,7 +477,7 @@ This section supersedes all prior instructions on writing style. It is the sourc
 - Triggered by the `hsi-35-year-trendline` broken image (image folder was never migrated from v1 to v2 because the convention was undocumented).
 
 
-### Jul 10, 2026: PENDING — usd-strength-hk-transmission DRAFT needs Aggregate Balance refresh on Jul 14
+### Jul 10, 2026: PENDING: usd-strength-hk-transmission DRAFT needs Aggregate Balance refresh on Jul 14
 
 - `DRAFT/usd-strength-hk-transmission.html` cites the Aggregate Balance at roughly HK$54 billion (HK$53,997M), the latest confirmed HKMA figure as of end-May 2026. HKMA's next Currency Board Account release, covering June 2026, is due **July 14, 2026** and was not yet published as of this entry.
 - **Action when it lands:** re-check the figure at the HKMA press release under `news-and-media/press-releases/2026/07/` (Currency Board Account / Aggregate Balance), update the "Why Hong Kong's banks tighten when the Fed does" section of the draft with the confirmed June number, and reconfirm HIBOR direction still matches the article's thesis before this article is moved to `publish/analyses/`.
@@ -466,9 +487,9 @@ This section supersedes all prior instructions on writing style. It is the sourc
 ### Jul 14, 2026 · Galaxy (0027.HK) scorecard entry-date bug fixed
 
 - **Bug found:** Galaxy Entertainment's Scorecard entry showed HK$31.00 instead of the weekend-pub rule's Monday-open price. Root cause: [0027-galaxy.html](../publish/analyses/0027-galaxy.html)'s `CONFIG.pubDate` is `"2026-07-13"` (the Monday byline date), but the article was actually committed/published Sunday `2026-07-12 22:32 +0200`. `generateScorecardData()` in [build.js](../build.js) falls back to `config.pubDate` for `issueDate` when no override is set, so `scorecard.js`'s `isWeekendPub` check (`getUTCDay()` on the pubDate) saw a Monday and skipped the weekend branch, landing on Monday's own close (31.00) instead of Monday's open (31.60).
-- **Fix:** added `"scorecardEntryDate": "2026-07-12"` to the article's `CONFIG` block — the existing override field `generateScorecardData()` already checks before falling back to `pubDate` (`config.scorecardEntryDate || ov.entryDate || config.pubDate`). `pubDate`/byline stay Monday for display; only the scorecard entry-date calc now sees the true Sunday publish day. Rebuilt, verified `scorecard-recos.json` issueDate → `2026-07-12`, pushed, confirmed live: Entry now reads `31.60 · open Jul 13`.
-- **Scope check:** cross-referenced every other ticker article's `CONFIG.pubDate` against its actual first-commit date. Galaxy was the only mismatch — the rest either match their real publish day or were part of the June 24 bulk migration (dates come from the hardcoded `SCORECARD_OVERRIDES` entryDates, unaffected).
-- **General rule going forward:** if an article is authored/committed on a weekend but given a Monday byline date (editorial convention), always set `CONFIG.scorecardEntryDate` to the real weekend calendar date explicitly — do not rely on `pubDate` alone to carry both the display date and the scorecard weekend-detection.
+- **Fix:** added `"scorecardEntryDate": "2026-07-12"` to the article's `CONFIG` block, the existing override field `generateScorecardData()` already checks before falling back to `pubDate` (`config.scorecardEntryDate || ov.entryDate || config.pubDate`). `pubDate`/byline stay Monday for display; only the scorecard entry-date calc now sees the true Sunday publish day. Rebuilt, verified `scorecard-recos.json` issueDate → `2026-07-12`, pushed, confirmed live: Entry now reads `31.60 · open Jul 13`.
+- **Scope check:** cross-referenced every other ticker article's `CONFIG.pubDate` against its actual first-commit date. Galaxy was the only mismatch, the rest either match their real publish day or were part of the June 24 bulk migration (dates come from the hardcoded `SCORECARD_OVERRIDES` entryDates, unaffected).
+- **General rule going forward:** if an article is authored/committed on a weekend but given a Monday byline date (editorial convention), always set `CONFIG.scorecardEntryDate` to the real weekend calendar date explicitly, do not rely on `pubDate` alone to carry both the display date and the scorecard weekend-detection.
 
 ### Aug 13, 2026 · Indexing: drafts were public, sitemap carried the thin hubs
 
@@ -492,4 +513,4 @@ Open: pull the URL-level GSC export for "Redirect error" and "Crawled - currentl
 Unrelated, found while checking: `TRADING/preview-trading852.command` points at the old `Trading852/` folder, not `Trading852-v2/dist/`. It previews the wrong site.
 
 ---
-[Wiki index](index.md)
+[Wiki index](TRADING/Trading852-v2/wiki/index.md)
