@@ -235,10 +235,17 @@ function getAllArticles() {
 }
 
 function formatDate(dateStr) {
-  return dateStr.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, d) => {
+  return dateStr.slice(0, 10).replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, d) => {
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
   });
+}
+
+// modDate/pubDate are usually a bare YYYY-MM-DD, but same-day double-updates need
+// an ISO time suffix (e.g. "2026-08-20T17:11:00Z") to break the tie correctly —
+// see isRecentUpdate/generateUpdateBannerHTML below.
+function parseConfigDate(dateStr) {
+  return Date.parse(/T/.test(dateStr) ? dateStr : dateStr + 'T00:00:00Z');
 }
 
 // ── Recent analyses auto-generation ──────────────────────────────────────────
@@ -287,8 +294,8 @@ const UPDATE_FRESH_DAYS = 30;
 function isRecentUpdate(a, now = Date.now()) {
   if (!a.modDate || !a.date) return false;
   const DAY = 86400000;
-  const mod = Date.parse(a.modDate + 'T00:00:00Z');
-  const pub = Date.parse(a.date + 'T00:00:00Z');
+  const mod = parseConfigDate(a.modDate);
+  const pub = parseConfigDate(a.date);
   if (Number.isNaN(mod) || Number.isNaN(pub)) return false;
   if (mod - pub < UPDATE_MIN_GAP_DAYS * DAY) return false;
   return now - mod <= UPDATE_FRESH_DAYS * DAY;
@@ -335,7 +342,7 @@ function generateOurAnalysesHTML() {
 function generateUpdateBannerHTML() {
   const updated = getAllArticles().filter(a => isRecentUpdate(a));
   if (updated.length === 0) return '';
-  updated.sort((a, b) => Date.parse(b.modDate) - Date.parse(a.modDate));
+  updated.sort((a, b) => parseConfigDate(b.modDate) - parseConfigDate(a.modDate));
   const a = updated[0];
   const label = a.updateBannerLabel || a.title;
   const key = `${a.slug}-${a.modDate}`;
