@@ -4,7 +4,7 @@ tags: [trading852, wiki, editorial, writing]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-20
+updated: 2026-08-25
 ---
 
 # Trading852 v2, Editorial Workflow
@@ -143,6 +143,39 @@ any earlier block's text. Do not add a "see update above" note. The collapsing i
 only, applied at build time, and needs nothing from the author. Worked example:
 [9988-alibaba.html](../publish/analyses/9988-alibaba.html), 4 stacked updates, only the August 20
 one open by default.
+
+### Step 6c: the "Update" block · protocole de hiérarchie (obligatoire)
+
+**Ajouté 2026-08-25, sur le 1167 Jacobio.** Le premier jet livrait huit paragraphes de faits
+filés, tous de même poids, dans l'ordre où ils sortaient du filing. Dany: *"tu me sors une liste
+de points mais c'est pas très clair qu'est-ce qui est clé"*. Le défaut n'était pas les chiffres,
+c'était l'absence de rang. Un update qui ne classe pas oblige le lecteur à faire le tri, ce qui
+est précisément le travail qu'il vient chercher.
+
+**Tout update block se range en trois étages, dans cet ordre, sans exception.**
+
+| Étage | Contenu | Volume |
+|---|---|---|
+| **1. Critique** | Le fait qui change la lecture de l'article d'origine. Le test: *qu'est-ce que le lecteur comprendrait de travers s'il ne lisait que le titre du communiqué ?* Écrire ça, et rien d'autre, en tête. | 1 à 2 paragraphes |
+| **2. Secondaire** | Ce qui déplace un chiffre de l'article sans toucher la thèse: corrections de snapshot, rachats, runway, nouveaux essais, changements de base comptable. Compressé, jamais un paragraphe par fait. | 1 paragraphe |
+| **3. Bottom line** | Réconciliation explicite avec ce qui a été publié: quelle affirmation tient, laquelle casse, laquelle reste ouverte, et quel dépôt la tranchera. Se termine sur la date du prochain filing qui bouge le chiffre porteur. | 1 paragraphe |
+
+**Règles dures qui découlent du classement:**
+
+- **L'étage 1 ouvre sur le contraste, pas sur le bulletin de notes.** ❌ *"Le chiffre que j'avais
+  nommé revient à RMB 14,5 millions"* (bulletin). ✅ *"Profit de RMB 600,6 millions. RMB 716,3
+  millions viennent d'un seul encaissement sur une ligne"* (contraste). Le score vient après le
+  fait, jamais à sa place.
+- **Un fait secondaire ne prend jamais son propre paragraphe.** Cinq corrections tiennent en un
+  paragraphe. Si l'une mérite un paragraphe entier, elle appartient à l'étage 1 et il faut la
+  remonter.
+- **Le bottom line cite l'article, pas le filing.** C'est le seul endroit où l'update dit
+  explicitement *tient / casse / ouvert* face aux scénarios publiés. Sans lui, le lecteur qui
+  revient six mois plus tard ne sait pas ce qui reste valide au-dessus.
+- **Cible 400 à 550 mots.** Au-delà, l'étage 2 n'a pas été compressé. Vérifier avant tout autre
+  arbitrage: c'est presque toujours là que le gras se trouve.
+- Le reste des conventions d'update block (empilement newest-first, ne jamais raccourcir un bloc
+  ancien, collapsing automatique au build) reste inchangé, voir Step 6b ci-dessus.
 
 ### Step 7: Build, verify locally, commit
 
