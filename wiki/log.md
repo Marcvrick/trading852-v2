@@ -4,7 +4,7 @@ tags: [trading852, wiki, log, changelog]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-20
+updated: 2026-08-25
 ---
 
 # Trading852 v2, Changelog
@@ -12,6 +12,40 @@ updated: 2026-08-20
 Part of the [Trading852 wiki](TRADING/Trading852-v2/wiki/index.md).
 
 ## Changelog
+
+### August 25, 2026 . Giant wordmark reveals on scroll
+
+The homepage wordmark (between Recent Analyses and the scorecard strip) now wipes up from under
+the clipping edge of `.giant-logo__inner` the first time it enters the viewport: `translateY(100%)`
+to `0` over 700ms plus a 450ms opacity fade, both on `cubic-bezier(0.2, 0.8, 0.2, 1)` (the curve
+already used across `base.css`), after a 400ms delay. One-shot, never replayed.
+
+The delay and the observer's `rootMargin: '0px 0px -20% 0px'` both exist for the same reason: on a
+tall viewport the wordmark is already on screen at first paint, so a zero-delay reveal fired and
+finished before anyone looked at it. The 20% bottom inset makes the block cross into the upper
+four fifths of the viewport before arming, and the 400ms delay keeps the load case visible too.
+
+The hidden start state lives on `.block-giant-logo.is-armed`, and only the IntersectionObserver in
+`_partials/scroll-script.html` adds that class. Without JS or without `IntersectionObserver` the
+wordmark renders exactly as before rather than staying invisible. The site-wide
+`prefers-reduced-motion` block in `base.css` collapses the durations, so it appears without motion.
+
+Moving the wordmark into the footer was tried first and reverted.
+
+### August 21, 2026 . Update banner documented, and ported to the day trading scanner
+
+The homepage update banner had no wiki page, only passing mentions in this changelog. It now has
+one in [build-pipeline.md](TRADING/Trading852-v2/wiki/build-pipeline.md) (Site plumbing): how
+`generateUpdateBannerHTML()` picks the article via the shared `isRecentUpdate()` signal, the
+`{{UPDATE_BANNER}}` token in `publish/index.html`, `CONFIG.updateBannerLabel`, and the
+`t852_update_dismissed` localStorage key.
+
+Writing it up was prompted by porting the component out. The FinMC_3 day trading scanner now uses
+the same tab for its order-block breakout alert: same geometry, same 0.5 s glissade, same
+dismiss-by-key, with `sessionStorage` instead of `localStorage` and the set of breaking-out
+tickers instead of `slug-modDate`. A copy, not a shared module, the two sit in different stacks,
+so a restyle here will not follow. Noted in both wikis for that reason.
+
 
 ### August 20, 2026 · Stacked update blocks collapse into an accordion; two stale-sitemap bugs found and fixed the same day
 

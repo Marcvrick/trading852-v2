@@ -216,6 +216,22 @@ a.recent-update__link:focus .card-key-number { color: rgba(0,0,0,0.22); }
   display: block;
 }
 
+/* Wipe-up reveal, once, when the wordmark scrolls into view. The hidden state
+   is armed by scroll-script.html, never by the stylesheet, so a page without JS
+   (or without IntersectionObserver) shows the wordmark as before. */
+.block-giant-logo.is-armed .giant-logo__text {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.block-giant-logo.is-revealed .giant-logo__text {
+  transform: translateY(0);
+  opacity: 1;
+  transition:
+    transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 400ms,
+    opacity 450ms cubic-bezier(0.2, 0.8, 0.2, 1) 400ms;
+}
+
 /* ── Our Analyses: numbered rows ──────────────────────────────────────────────── */
 .block--our-work {
   position: relative;

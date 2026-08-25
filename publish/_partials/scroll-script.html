@@ -21,5 +21,17 @@
           }
         });
       }
+
+      var logo = document.querySelector('.block-giant-logo');
+      if (logo && 'IntersectionObserver' in window) {
+        logo.classList.add('is-armed');
+        var io = new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting) {
+            logo.classList.add('is-revealed');
+            io.disconnect();
+          }
+        }, { rootMargin: '0px 0px -20% 0px' });
+        io.observe(logo);
+      }
     })();
   </script>
