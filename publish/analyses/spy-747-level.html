@@ -170,13 +170,13 @@
           var since = last - peak;                       // trading sessions since the high
           var tStart = Math.max(0, peak - TRAIL_N), tSum = 0, tN = 0, j;
           for (j = tStart; j < peak; j++) { if (vols[j] != null) { tSum += vols[j]; tN++; } }
-          var trail = tN? tSum / tN: null;
+          var trail = tN ? tSum / tN : null;
           var pEnd = Math.min(last, peak + POST_PEAK_N), pSum = 0, pN = 0, k;
           for (k = peak + 1; k <= pEnd; k++) { if (vols[k] != null) { pSum += vols[k]; pN++; } }
-          var post = pN? pSum / pN: null;
+          var post = pN ? pSum / pN : null;
           return {
             peakClose: pc, peakDate: new Date(ts[peak] * 1000), since: since,
-            sessions: pN, ratio: (trail && post)? post / trail: null,
+            sessions: pN, ratio: (trail && post) ? post / trail : null,
             complete: since >= POST_PEAK_N
           };
         }
@@ -188,7 +188,7 @@
         function renderHH(a) {
           if (!a) return;
           var rEl = document.getElementById("spy-vol-ratio");
-          set("spy-days-since-high", a.since + (a.since === 1? " day": " days"));
+          set("spy-days-since-high", a.since + (a.since === 1 ? " day" : " days"));
           if (a.since === 0) {
             set("spy-vol-ratio", "·"); if (rEl) rEl.style.color = "rgba(255,255,255,0.6)";
             set("spy-vol-ratio-sub", "post-peak volume vs 12-mo avg");
@@ -225,14 +225,14 @@
           set("spy-update-date", "UPDATE · " + (MON[d.getUTCMonth()] + " " + d.getUTCDate() + ", " + d.getUTCFullYear()).toUpperCase());
           set("spy-price", "$" + price.toFixed(2));
           set("spy-price-sub", "SPY · " + fD(d));
-          set("spy-vs-level", (pctLvl >= 0? "+": "") + pctLvl.toFixed(1) + "%");
-          var lv = document.getElementById("spy-vs-level"); if (lv) lv.style.color = pctLvl >= 0? "#56d49f": "rgba(255,140,120,0.95)";
-          set("spy-vs-level-sub", (pctLvl >= 0? "above": "below") + " $" + LEVEL + " level (" + (diff >= 0? "+$": "−$") + Math.abs(diff).toFixed(2) + ")");
+          set("spy-vs-level", (pctLvl >= 0 ? "+" : "") + pctLvl.toFixed(1) + "%");
+          var lv = document.getElementById("spy-vs-level"); if (lv) lv.style.color = pctLvl >= 0 ? "#56d49f" : "rgba(255,140,120,0.95)";
+          set("spy-vs-level-sub", (pctLvl >= 0 ? "above" : "below") + " $" + LEVEL + " level (" + (diff >= 0 ? "+$" : "−$") + Math.abs(diff).toFixed(2) + ")");
           set("spy-to-ceiling", "~" + pctCeil.toFixed(1) + "%");
-          var ce = document.getElementById("spy-to-ceiling"); if (ce) ce.style.color = within? "#ff5c5c": "rgba(255,200,80,0.9)";
-          set("spy-to-ceiling-sub", (within? "⚠ within 1% of ": "to ") + "calculated ceiling (~$" + Math.round(ceiling) + ")");
+          var ce = document.getElementById("spy-to-ceiling"); if (ce) ce.style.color = within ? "#ff5c5c" : "rgba(255,200,80,0.9)";
+          set("spy-to-ceiling-sub", (within ? "⚠ within 1% of " : "to ") + "calculated ceiling (~$" + Math.round(ceiling) + ")");
           set("spy-friction", friction + " days");
-          set("spy-lead", price >= LEVEL? "The $" + LEVEL + " level was crossed.": "SPY is below the $" + LEVEL + " level.");
+          set("spy-lead", price >= LEVEL ? "The $" + LEVEL + " level was crossed." : "SPY is below the $" + LEVEL + " level.");
           set("spy-ceiling-prose", "$" + Math.round(ceiling));
           set("spy-asof-prose", fD(d));
           set("spy-friction-prose", String(friction));
@@ -254,23 +254,23 @@
           }
           if (!a.complete) {
             var rem = POST_PEAK_N - a.since;
-            var v = a.ratio != null? verdict(a.ratio): null;
-            var bc = v? v[1]: 'rgba(71,96,255,0.5)';
+            var v = a.ratio != null ? verdict(a.ratio) : null;
+            var bc = v ? v[1] : 'rgba(71,96,255,0.5)';
             el.style.borderLeftColor = bc;
-            var sn = v? (v[0].indexOf('distribution') >= 0? 'Distribution': v[0].indexOf('breakout') >= 0? (price >= LEVEL? 'Breakout': 'Consolidation'): 'Watch zone'): '';
-            tEl.textContent = (rem <= 1? 'DECISION TOMORROW': 'SIGNAL UPDATE') + ' · ' + ds + (sn? ' (' + sn + ')': ''); tEl.style.color = bc;
-            var html = 'The post-peak volume signal becomes final in <strong style="color:rgba(255,255,255,0.95)">' + rem + '</strong> trading session' + (rem !== 1? 's': '') + '. ';
+            var sn = v ? (v[0].indexOf('distribution') >= 0 ? 'Distribution' : v[0].indexOf('breakout') >= 0 ? (price >= LEVEL ? 'Breakout' : 'Consolidation') : 'Watch zone') : '';
+            tEl.textContent = (rem <= 1 ? 'DECISION TOMORROW' : 'SIGNAL UPDATE') + ' · ' + ds + (sn ? ' (' + sn + ')' : ''); tEl.style.color = bc;
+            var html = 'The post-peak volume signal becomes final in <strong style="color:rgba(255,255,255,0.95)">' + rem + '</strong> trading session' + (rem !== 1 ? 's' : '') + '. ';
             html += a.sessions + ' of ' + POST_PEAK_N + ' sessions counted since the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + '). ';
             if (v && a.ratio != null) html += 'Provisional ratio: <strong style="color:' + v[1] + '">' + a.ratio.toFixed(2) + '×</strong>. Volume rules out distribution.';
             bEl.innerHTML = html;
           } else {
-            var v = a.ratio != null? verdict(a.ratio): ['insufficient data', 'rgba(255,255,255,0.5)'];
+            var v = a.ratio != null ? verdict(a.ratio) : ['insufficient data', 'rgba(255,255,255,0.5)'];
             el.style.borderLeftColor = v[1];
-            var sn = v[0].indexOf('distribution') >= 0? 'Distribution': v[0].indexOf('breakout') >= 0? 'No distribution': 'Watch zone';
+            var sn = v[0].indexOf('distribution') >= 0 ? 'Distribution' : v[0].indexOf('breakout') >= 0 ? 'No distribution' : 'Watch zone';
             tEl.textContent = 'SIGNAL FINALIZED · ' + ds + ' · ' + sn; tEl.style.color = v[1];
-            var verdictLabel = v[0].indexOf('distribution') >= 0? v[0]: 'volume rules out distribution';
+            var verdictLabel = v[0].indexOf('distribution') >= 0 ? v[0] : 'volume rules out distribution';
             var pctAbove = ((price - LEVEL) / LEVEL * 100).toFixed(1);
-            bEl.innerHTML = 'Post-peak volume signal is final. Ratio: <strong style="color:' + v[1] + '">' + (a.ratio != null? a.ratio.toFixed(2): '?') + '×</strong> over ' + POST_PEAK_N + ' sessions following the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + '). Verdict: <strong style="color:' + v[1] + '">' + verdictLabel + '</strong>. The reading falls below the ≤1.24× threshold: no distribution on the exit from the cycle high. This rules out a confirmed top but does not confirm a breakout. Price sits ' + pctAbove + '% above $' + LEVEL + ' and remains within the buffer zone. Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.';
+            bEl.innerHTML = 'Post-peak volume signal is final. Ratio: <strong style="color:' + v[1] + '">' + (a.ratio != null ? a.ratio.toFixed(2) : '?') + '×</strong> over ' + POST_PEAK_N + ' sessions following the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + '). Verdict: <strong style="color:' + v[1] + '">' + verdictLabel + '</strong>. The reading falls below the ≤1.24× threshold: no distribution on the exit from the cycle high. This rules out a confirmed top but does not confirm a breakout. Price sits ' + pctAbove + '% above $' + LEVEL + ' and remains within the buffer zone. Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.';
           }
         }
         function renderPriceChart(timestamps, allCloses, hh) {
@@ -297,7 +297,7 @@
             if (cfc < 0 && pr[i] >= LEVEL) cfc = i;
             if (pr[i] > cpv) { cpv = pr[i]; cp = i; }
           }
-          var cw = cp + 1, ds = hh? hh.since: 0;
+          var cw = cp + 1, ds = hh ? hh.since : 0;
           var mn = pr[0], mx = pr[0];
           for (i = 1; i < pr.length; i++) { if (pr[i] < mn) mn = pr[i]; if (pr[i] > mx) mx = pr[i]; }
           Chart.defaults.font.family = "'Space Grotesk',system-ui,sans-serif";
@@ -394,7 +394,7 @@
         function boot() {
           var u = PROXY + encodeURIComponent(CHART + "SPY?range=2y&interval=1d");
           fetch(u, { cache: "no-store" })
-            .then(function (r) { return r.ok? r.json(): Promise.reject(r.status); })
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
             .then(function (j) {
               var res = j && j.chart && j.chart.result && j.chart.result[0]; if (!res) throw 0;
               var ts = res.timestamp || [];
@@ -413,7 +413,7 @@
               // tiles count the same day.
               if (t && p != null && ts.length) {
                 var dayU = function (sec) { var x = new Date(sec * 1000); return Date.UTC(x.getUTCFullYear(), x.getUTCMonth(), x.getUTCDate()); };
-                var metaVol = res.meta && res.meta.regularMarketVolume != null? res.meta.regularMarketVolume: null;
+                var metaVol = res.meta && res.meta.regularMarketVolume != null ? res.meta.regularMarketVolume : null;
                 var lnn = closes.length - 1;
                 while (lnn >= 0 && closes[lnn] == null) lnn--;
                 var dMeta = dayU(t);
@@ -428,7 +428,7 @@
                   }
                 }
               }
-              var dd = t? new Date(t * 1000): new Date();
+              var dd = t ? new Date(t * 1000) : new Date();
               render(p, dd);
               var hh = analyze(ts, closes, vols);
               renderHH(hh);
@@ -502,7 +502,7 @@
           for (var i = 0; i < n; i++) {
             var b = bars[i], x = mL + i * cand, cx = x + cand / 2;
             var yO = py(b.o), yH = py(b.h), yL = py(b.l), yC = py(b.c);
-            var col = b.c >= b.o? '#26a69a': '#ef5350';
+            var col = b.c >= b.o ? '#26a69a' : '#ef5350';
             ctx.strokeStyle = col; ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(cx, yH); ctx.lineTo(cx, yL); ctx.stroke();
             ctx.fillStyle = col;
@@ -535,7 +535,7 @@
         function bootCandles() {
           var u = PROXY + encodeURIComponent(CHART + "SPY?range=7y&interval=1wk");
           fetch(u, { cache: "no-store" })
-            .then(function(r) { return r.ok? r.json(): Promise.reject(r.status); })
+            .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
             .then(function(j) {
               var res = j && j.chart && j.chart.result && j.chart.result[0]; if (!res) throw 0;
               var q = res.indicators && res.indicators.quote && res.indicators.quote[0] || {};
