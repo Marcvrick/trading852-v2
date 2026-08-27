@@ -4,7 +4,7 @@ tags: [trading852, wiki, editorial, writing]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-25
+updated: 2026-08-27
 ---
 
 # Trading852 v2, Editorial Workflow
@@ -21,6 +21,13 @@ The full, canonical style guide is [style-guide.md](style-guide.md): voice, the 
 - **7-section escalator:** Hook, Company/Context, Discount, Catalyst, Valuation, Risks, Decision.
 - **Sentences 15 to 25 words, never over 30.** Max 3 consecutive number-sentences, then an interpretation sentence.
 - **Anchor price live** before writing; every price figure carries its adjacent date.
+- **China GDP: the World Bank series, always.** `NY.GDP.MKTP.CD`, current US dollars, from the
+  World Bank API. Not the IMF WEO, and never a mix. The two differ by enough to change a
+  headline: for 2010 the World Bank gives 6.193 trillion and the IMF 6.139, so one rounds to
+  $6.2 and the other to $6.1. Decided 2026-08-27 after two articles shipped on different
+  series and a reader comparing them would have seen two figures for the same economy.
+  The API answers directly, so there is no reason to quote a remembered number:
+  `https://api.worldbank.org/v2/country/CHN/indicator/NY.GDP.MKTP.CD?format=json&date=2010:2025`
 - **No internal-pipeline references** (Sophie, FinRatios, expert-analysis, "our prior note"). The article is the analyst's view.
 - **No financial advice:** no buy/sell timing, no position sizing.
 - **Every new article gets a homepage card** in the same commit that publishes it.
