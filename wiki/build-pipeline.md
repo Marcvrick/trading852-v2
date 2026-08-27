@@ -378,6 +378,15 @@ update workflow, is the whole manual step; the next `node build.js` picks it up.
 `CONFIG.updateBannerLabel` overrides the tab's text when the article title is too long for one
 line. Omitted, the title is used.
 
+**`CONFIG.quietUpdate: true` separates the crawler signal from the reader signal.** Both used to
+ride on `modDate` alone, so an author who wanted Google to re-read a corrected page had to accept
+an "Updated" tag on the card and a banner at the top, and an author who did not want the tag had to
+drop `modDate` and lose the sitemap `<lastmod>` too. With the flag set, `modDate` still drives
+`<lastmod>` and `article:modified_time`, while `isRecentUpdate()` returns false, so no tag and no
+banner. Use it for a factual correction that does not warrant announcing, not to hide a substantive
+rewrite from readers. Covered by `scripts/test-update-tag.js`; first use is
+`hsi-35-year-trendline` (three figures corrected 2026-08-26).
+
 **Dismissal.** `localStorage` key `t852_update_dismissed` holds `slug-modDate`. Closing the tab
 stores that key, so it stays closed for that specific update and returns on the next one. A reader
 who dismissed the 9988 update sees the next article's banner.

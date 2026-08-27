@@ -228,6 +228,7 @@ function getAllArticles() {
       contextLine: config.contextLine || config.description || '', // fallback to description if no contextLine
       section: config.articleSection || null, // raw tag, unlike eyebrow this is null (not 'Analysis') when unset
       updateBannerLabel: config.updateBannerLabel || '', // optional short label for the homepage update banner
+      quietUpdate: config.quietUpdate === true, // bump modDate for crawlers, show no "Updated" tag
     });
   }
   articles.sort((a, b) => (b.date < a.date ? -1 : b.date > a.date ? 1 : 0));
@@ -292,6 +293,10 @@ function generateRecentAnalysesHTML() {
 const UPDATE_MIN_GAP_DAYS = 7;
 const UPDATE_FRESH_DAYS = 30;
 function isRecentUpdate(a, now = Date.now()) {
+  // A quiet update still moves the sitemap <lastmod> and article:modified_time,
+  // so crawlers learn the page changed, but the reader-facing "Updated" tag stays
+  // off. For a factual correction the author does not want to advertise.
+  if (a.quietUpdate) return false;
   if (!a.modDate || !a.date) return false;
   const DAY = 86400000;
   const mod = parseConfigDate(a.modDate);

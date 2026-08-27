@@ -22,5 +22,10 @@ assert.strictEqual(t('2026-06-24', '2026-07-01'), true);
 assert.strictEqual(t('2026-06-23', '2026-06-30'), false);
 // Malformed date -> no crash, no tag.
 assert.strictEqual(t('2026-04-12', 'not-a-date'), false);
+// quietUpdate: a real revisit that would otherwise tag, silenced on purpose.
+// The sitemap still reads modDate; only the reader-facing tag is suppressed.
+assert.strictEqual(isRecentUpdate({ date: '2026-04-12', modDate: '2026-07-30', quietUpdate: true }, NOW), false);
+// ... and the flag absent or false leaves the rule untouched.
+assert.strictEqual(isRecentUpdate({ date: '2026-04-12', modDate: '2026-07-30', quietUpdate: false }, NOW), true);
 
-console.log('update-tag rule: 8 checks passed');
+console.log('update-tag rule: 10 checks passed');
