@@ -20,7 +20,7 @@
   var BOX = document.querySelector(".hsi-quote");
   if (!BOX) return; // no tile on this page, nothing to do
 
-  var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
+  var PROXY = "/api/yahoo-proxy?url=";
   var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
   var SYM = "^HSI";
 

@@ -44,7 +44,7 @@
   // Each entry: { t, company, eyebrow, slug, issueDate, isBenchmark? }.
   var RECOS_URL = "/assets/scorecard-recos.json";
 
-  var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
+  var PROXY = "/api/yahoo-proxy?url=";
   var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
 
   // range=1y (was 3mo until Jul 23, 2026). A rolling 3-month window silently rolls
@@ -721,7 +721,7 @@
   var CEIL_VAL = 781;                      // calculated ceiling at the anchor date
   var CEIL_PER_TD = 0.83;                  // ceiling advance per trading day
   var WITHIN_PCT = 1.0;                    // red when within this % of the ceiling
-  var PROXY = "https://yahoo-proxy.marccharnal.workers.dev/?url=";
+  var PROXY = "/api/yahoo-proxy?url=";
   var CHART = "https://query1.finance.yahoo.com/v8/finance/chart/";
 
   function tdays(a, b) { // weekday count a→b (approx; ignores market holidays)
