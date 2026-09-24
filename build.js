@@ -613,6 +613,7 @@ const SECTION_HUB_SLUG = {
   'Special Situations':     'special-situations',
   'Luxury':                 'luxury',
   'Biotech':                'biotech',
+  'Healthcare':             'healthcare',
   'Technology':             'technology',
   'Consumer Discretionary': 'consumer-discretionary',
   'Electric Vehicles':      'electric-vehicles',
