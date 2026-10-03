@@ -291,5 +291,5 @@ Vercel rebuilds and deploys on push.
 
 Worked example, 2273.HK:
 - White: *GUSHENGTANG (2273.HK): The Company Spent HK$360M Buying Its Own Stock in Six Months. Profit Is Up 44%.*
-- Grey: *Yet the stock has not followed* (30 characters): a teaser that extends the title, not a summary. Never use *cheap* or *just* unless the article's own peer table shows it (12.8x earnings was not cheap against 8.5x and 9.4x peers)
+- Grey: *Growth came from clinics it already had* (40 characters): a teaser that extends the title, not a summary. Never use *cheap* or *just* unless the article's own peer table shows it (12.8x earnings was not cheap against 8.5x and 9.4x peers)
 - Rejected: *Boyu Capital Priced This Stock at HK$37.77. It Trades for Less.* (fund name and its price carry the title, rule 1)
