@@ -286,10 +286,10 @@ Vercel rebuilds and deploys on push.
 3. **Tension in two facts.** The two numbers must pull against each other, or the action must be surprising. Test: cover the ticker. Does the sentence still make a trader want to know why? If not, rewrite.
 4. **Number from the company's own filings**, dated by the body. Never a number from a model or a consensus.
 5. **Plain words.** No `EV/EBIT`, `re-rating`, `convexity` in the white title. Those go in the body.
-6. **Grey line = a second, different fact.** Never repeats the title's number or verb. Third-party views live here, unnamed (e.g. *a private equity bond converts at HK$37.77*, fund unnamed on the card).
+6. **Grey line = one short fact, 45 characters max** (the card cuts at about 47 with "…"; Gushengtang's first draft ran 66 and was cut). Different from the title. Never repeats the title's number or verb. Third-party views live here, unnamed (e.g. *a private equity bond converts at HK$37.77*, fund unnamed on the card).
 7. **Drafting method.** Write 5 titles, one per angle: action, contrast, quality of growth, long history, price gap. Keep the one with an action and a number. Show Dany the 5 with the angle named.
 
 Worked example, 2273.HK:
 - White: *GUSHENGTANG (2273.HK): The Company Spent HK$360M Buying Its Own Stock in Six Months. Profit Is Up 44%.*
-- Grey: *A private equity bond converts at HK$37.77. The stock is at HK$27.66.*
+- Grey: *A private bond converts at HK$37.77* (35 characters)
 - Rejected: *Boyu Capital Priced This Stock at HK$37.77. It Trades for Less.* (fund name and its price carry the title, rule 1)
