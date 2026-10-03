@@ -1,13 +1,13 @@
-# CLAUDE.md – Trading852-v2
+# CLAUDE.md: Trading852-v2
 
 ## ⚠️ READ BEFORE WRITING OR PUBLISHING ANY ARTICLE
 
 Before drafting, editing, or publishing any Trading852 article, Claude reads, in this order:
 
-1. [wiki/editorial.md](wiki/editorial.md) — workflow (DRAFT-first, never publish directly), hard rules digest
-2. [wiki/style-guide.md](wiki/style-guide.md) — canonical structure, jargon pass, sentence-length/number-density rules
-3. `/Users/mc/Library/Mobile Documents/com~apple~CloudDocs/MarcOS/Voix Marc/VOIX-Marc.md` — voice cadence, anti-AI-slop rules (em dash ban, etc.), applies alongside style-guide.md
-4. [wiki/knowledge/index.md](wiki/knowledge/index.md) : the facts gate. What the site has already claimed: reusable frames, published peer multiples, HSI/peg/banks/gold, and [open-questions.md](wiki/knowledge/open-questions.md), the contradictions between published articles. **Read it after fetching the live price, never instead of it.** It is a consistency check on a fresh number, never a source of numbers: style-guide.md test 4 forbids reusing a price found in any prior document, and this layer is made of prior documents.
+1. [wiki/editorial.md](wiki/editorial.md), workflow (DRAFT-first, never publish directly), hard rules digest
+2. [wiki/style-guide.md](wiki/style-guide.md), canonical structure, jargon pass, sentence-length/number-density rules
+3. `/Users/mc/Library/Mobile Documents/com~apple~CloudDocs/MarcOS/Voix Marc/VOIX-Marc.md`, voice cadence, anti-AI-slop rules (em dash ban, etc.), applies alongside style-guide.md
+4. [wiki/knowledge/index.md](wiki/knowledge/index.md): the facts gate. What the site has already claimed: reusable frames, published peer multiples, HSI/peg/banks/gold, and [open-questions.md](wiki/knowledge/open-questions.md), the contradictions between published articles. **Read it after fetching the live price, never instead of it.** It is a consistency check on a fresh number, never a source of numbers: style-guide.md test 4 forbids reusing a price found in any prior document, and this layer is made of prior documents.
 
 **Non-negotiable:** articles are drafted into `DRAFT/`, never written or committed straight to `publish/analyses/`. Dany reviews the DRAFT file; only on his explicit go does Claude move it to `publish/analyses/`, update the homepage/feed/sitemap, and commit. Skipping this sequence is the single most common failure mode in this repo and has shipped jargon-heavy, bullet-listed, unreviewed articles before (2026-07-10 incident, USD-HK transmission draft).
 
@@ -21,14 +21,14 @@ This section is checked first, every session, regardless of what task in this re
 
 ### ⚠️ MANDATORY: Every ticker links to its scorecard row
 
-**Rule:** Every mention of a tracked HK ticker — in the hero pill and at every occurrence in the article body — links to that ticker's row on the scorecard, `/scorecard#t-<ticker>`.
+**Rule:** Every mention of a tracked HK ticker, in the hero pill and at every occurrence in the article body, links to that ticker's row on the scorecard, `/scorecard#t-<ticker>`.
 
 **Claude writes none of these links by hand.** `build.js` inserts them on every build (`linkifyHeroTicker` + `linkifyBodyTickers`), so a new article picks them up automatically the moment its ticker has a scorecard row. Writing `<a href="/scorecard#...">` into the source by hand is wrong: the prose pass skips existing anchors, so a hand-written link silently opts that mention out of the automation and will not follow a ticker rename.
 
 **What Claude must do when publishing a new article:**
-1. Write the ticker as plain text — `9973.HK`, and `<span class="meta-ticker">9973.HK</span>` in the hero. Nothing else.
+1. Write the ticker as plain text, `9973.HK`, and `<span class="meta-ticker">9973.HK</span>` in the hero. Nothing else.
 2. Run `node build.js`, then `python3 scripts/test-ticker-links.py http://localhost:3000` with the preview server up. It fails if any tracked ticker is left unlinked in a body, if a link lands in a script or comment, if anchors nest, or if a JSON-LD block stops parsing.
-3. A ticker with no scorecard row stays plain text on purpose — that is how peers get named without minting dead links (9973-chery mentions 0175.HK and 1211.HK, neither tracked, neither linked). A pick only gets a row once its article carries both `meta-ticker` and `meta-verdict`, so the article and its links arrive together.
+3. A ticker with no scorecard row stays plain text on purpose, that is how peers get named without minting dead links (9973-chery mentions 0175.HK and 1211.HK, neither tracked, neither linked). A pick only gets a row once its article carries both `meta-ticker` and `meta-verdict`, so the article and its links arrive together.
 
 **Not linked, deliberately:** the hero standfirst (`.article-subtitle`). It sits on the dark hero where an inherited-colour link renders at 55% white and cannot be seen, and the linked pill is directly above it. This was the 2026-07-31 miss: the first version linked only the first mention, that mention happened to be the standfirst, and the article body carried no visible link at all.
 
@@ -51,14 +51,14 @@ Mechanics and rationale: [wiki/scorecard.md](wiki/scorecard.md) § "Article tick
 **Build validation:** The build.js will warn if an article has zero internal links to other published articles (check the console output).
 
 **Edge cases:**
-- Market-thesis hubs (like market-thesis.html) are exempt—they aggregate cards, not articles.
+- Market-thesis hubs (like market-thesis.html) are exempt-they aggregate cards, not articles.
 - Articles can link to sector hubs or static pages, but should prefer linking to sibling analyses.
 
 ### Article Structure
 
 Every article must have:
 - CONFIG with `pubDate`, `ogTitle`, `articleSection`, `description`
-  - **NEW:** add `contextLine` — a one-line insight/frame that will appear in grey on the card (never repeat the title)
+  - **NEW:** add `contextLine`, a one-line insight/frame that will appear in grey on the card (never repeat the title)
 - JSONLD schema block (Article type)
 - Article hero (breadcrumb, metadata, title)
 - Article body with at least one internal cross-reference
@@ -68,9 +68,9 @@ Every article must have:
 
 **One line, ~50 chars max.** Two sentences overflow the featured card and get truncated with "…". Write one crisp insight with no period-space-sentence chaining.
 
-✅ `"42% of market cap in net cash. Yield at 7.7%."` — fits
-✅ `"Economic growth is not shareholder returns"` — fits
-❌ `"Net cash covers 42% of market cap. The yield is 7.7% while you wait."` — truncated
+✅ `"42% of market cap in net cash. Yield at 7.7%."`, fits
+✅ `"Economic growth is not shareholder returns"`, fits
+❌ `"Net cash covers 42% of market cap. The yield is 7.7% while you wait."`, truncated
 
 **Test:** paste the value into a 50-char ruler. If it wraps, shorten.
 
@@ -79,6 +79,8 @@ Every article must have:
 ### Card Layout: Title + Context (Never Title Twice)
 
 **Rule:** Homepage cards display title (white) + context (grey). The grey text is NEVER the title repeated.
+
+**What goes in each color:** white = action plus result with a number, never a third party's price. Grey = a second, different fact, where a third party's view goes as support, fund unnamed. The fund may be named in the article body, never in the title. Full rules: [wiki/editorial.md](wiki/editorial.md) § Title rules.
 
 **Featured card (2/3 width):** shows title (white, h3) + contextLine (grey)
 
@@ -131,7 +133,7 @@ The homepage (`publish/index.html`) is auto-generated by `build.js`. Articles fl
 - [ ] Article contains at least one internal link to another published article
 - [ ] Linked article exists and URL is correct
 - [ ] Link has clear, descriptive anchor text
-- [ ] `python3 scripts/make_og.py` run — generates the article's social cover from CONFIG (`ogTitle` + `articleSection` + `contextLine`). Without it the X/LinkedIn link card falls back to the shared placeholder. Re-run with `--force <slug>` if the title changed.
+- [ ] `python3 scripts/make_og.py` run, generates the article's social cover from CONFIG (`ogTitle` + `articleSection` + `contextLine`). Without it the X/LinkedIn link card falls back to the shared placeholder. Re-run with `--force <slug>` if the title changed.
 - [ ] `node build.js` runs without warnings
 - [ ] Build output shows no "orphan article" or "missing link" warnings
-- [ ] Card preview: grey text is contextLine, white text is title—no duplication
+- [ ] Card preview: grey text is contextLine, white text is title-no duplication

@@ -4,7 +4,7 @@ tags: [trading852, wiki, editorial, writing]
 category: Trading/Blog
 type: wiki
 created: 2026-06-24
-updated: 2026-08-27
+updated: 2026-10-03
 ---
 
 # Trading852 v2, Editorial Workflow
@@ -49,6 +49,7 @@ Open the local style guide at [style-guide.md](style-guide.md) and the voice gui
 - **No superlatifs**, no conditional mou, no disclaimers
 - **Numbers always precise**: `HKD 2 354 millions`, `+14 %`, never "environ"
 - **Title formula**: `[Subject]: [Concrete arithmetic fact that surprises]`
+- **Compelling title: see [Title rules](#title-rules-compelling-white-title--grey-line) below.** A title that fails them does not ship.
 - **Target length**: 1 000-1 400 words (ideal ~1 200)
 - **Marc's voice**: accessible, direct, "montrer sans dire"
 
@@ -253,7 +254,7 @@ Vercel rebuilds and deploys on push.
 - [ ] Scenario table present (3 rows max)
 - [ ] Risks: exactly 2, named in bold
 - [ ] Word count between 1 000 and 1 400
-- [ ] Title contains a concrete number
+- [ ] Title contains a concrete number and passes the 7 Title rules below (no third-party price, action plus result, grey line differs)
 - [ ] At least one H2 contains the entity name
 - [ ] First paragraph of `What X Does` establishes ticker + HKEX listing
 - [ ] At least one inline link to a sector hub (`/analyses/{sector}`)
@@ -273,3 +274,22 @@ Vercel rebuilds and deploys on push.
 
 ---
 [Wiki index](TRADING/Trading852-v2/wiki/index.md)
+
+## Title rules: compelling white title + grey line
+
+*Dany, 2026-10-03:* the Gushengtang title led with a fund's bond price. Rejected: a title built on someone else's price target is not our claim. Then: the fund may be named in the article, never in the title or on the card as our selling point. A title must make the reader see what is compelling before opening.
+
+**White = the title** (`ogTitle`, `h1`, `headline`, card title). **Grey = `contextLine`** (homepage card second line). They carry different facts.
+
+1. **Never a third party's name or price as the selling point of the title.** No fund, bond, analyst or sell-side target or conversion price in the title, and no fund name there. The body, the sources and the infographic may name the fund: it supports our original idea, it does not carry it. The grey card line stays unnamed.
+2. **One action plus one result.** Something the company or its owners did, with a number (*spent HK$360M buying its own stock*), then what it produced (*profit up 44%*). A level, a multiple or an opinion alone is not an action.
+3. **Tension in two facts.** The two numbers must pull against each other, or the action must be surprising. Test: cover the ticker. Does the sentence still make a trader want to know why? If not, rewrite.
+4. **Number from the company's own filings**, dated by the body. Never a number from a model or a consensus.
+5. **Plain words.** No `EV/EBIT`, `re-rating`, `convexity` in the white title. Those go in the body.
+6. **Grey line = a second, different fact.** Never repeats the title's number or verb. Third-party views live here, unnamed (e.g. *a private equity bond converts at HK$37.77*, fund unnamed on the card).
+7. **Drafting method.** Write 5 titles, one per angle: action, contrast, quality of growth, long history, price gap. Keep the one with an action and a number. Show Dany the 5 with the angle named.
+
+Worked example, 2273.HK:
+- White: *GUSHENGTANG (2273.HK): The Company Spent HK$360M Buying Its Own Stock in Six Months. Profit Is Up 44%.*
+- Grey: *A private equity bond converts at HK$37.77. The stock is at HK$27.66.*
+- Rejected: *Boyu Capital Priced This Stock at HK$37.77. It Trades for Less.* (fund name and its price carry the title, rule 1)
