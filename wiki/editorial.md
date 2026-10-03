@@ -289,6 +289,15 @@ Vercel rebuilds and deploys on push.
 6. **Grey line = a punchy teaser, 35 characters is the target, 45 the hard max** (the card cuts at about 47 with "…"; Gushengtang's first draft ran 66 and was cut). Different from the title. Never repeats the title's number or verb. Third-party views live here, unnamed (e.g. *a private equity bond converts at HK$37.77*, fund unnamed on the card).
 7. **Drafting method.** Write 5 titles, one per angle: action, contrast, quality of growth, long history, price gap. Keep the one with an action and a number. Show Dany the 5 with the angle named.
 
+### Balanced pair (white + grey)
+
+*Dany, 2026-10-03:* "12.8x earnings is not cheap", and the peers are not in the same business. The title pair must not promise more than the article can defend.
+
+8. **No valuation word unless the article proves it.** `cheap`, `undervalued`, `discount`, `bargain`, `just`, `trades for less` are banned in the white title and the grey line. Allowed only when the article's own table shows at least 2 peers in the same business. Our peer sets are rarely pure (2273.HK has no HKEX clinic-chain peer), so default to selling a fact, not a price.
+9. **Strength in white, substance or strain in grey.** White = what the company did + result. Grey = one of three: *quality* of the strength (*Growth came from clinics it already had*), *strain* on it (*Buybacks plus dividends top 2025 cash flow*), or *market memory* (*One slow year, still not forgiven*). Never a second piece of good news stacked on the first.
+10. **The Decision section must defend every word.** Read white + grey, then the article's Decision and Risks. If the article says "no buy or sell signal" or names a risk the pair contradicts, rewrite the pair.
+11. **Test before showing Dany:** (a) cover the ticker, still curious? (b) any valuation word? (c) grey 45 characters or fewer? (d) could a hostile reader say the pair oversells? Fix any yes on (b) and (d).
+
 Worked example, 2273.HK:
 - White: *GUSHENGTANG (2273.HK): The Company Spent HK$360M Buying Its Own Stock in Six Months. Profit Is Up 44%.*
 - Grey: *Growth came from clinics it already had* (40 characters): a teaser that extends the title, not a summary. Never use *cheap* or *just* unless the article's own peer table shows it (12.8x earnings was not cheap against 8.5x and 9.4x peers)
