@@ -225,7 +225,7 @@ function getAllArticles() {
       href, slug, title: config.ogTitle, eyebrow, date: config.pubDate,
       modDate: config.modDate || '',
       description: config.description || '',
-      contextLine: config.contextLine || config.description || '', // fallback to description if no contextLine
+      contextLine: 'contextLine' in config ? config.contextLine : (config.description || ''), // "" = no grey line; absent = fallback to description
       section: config.articleSection || null, // raw tag, unlike eyebrow this is null (not 'Analysis') when unset
       updateBannerLabel: config.updateBannerLabel || '', // optional short label for the homepage update banner
       quietUpdate: config.quietUpdate === true, // bump modDate for crawlers, show no "Updated" tag
@@ -262,8 +262,7 @@ function generateRecentAnalysesHTML() {
           <article class="node-mode-recent_update node-mode-recent_update--featured">
             <a href="${featured.href}" class="recent-update__link">
               <div class="eyebrow">${featured.eyebrow} <span class="eyebrow-date">· ${formatDate(featured.date)}</span></div>
-              <div class="card-key-number">${featured.contextLine}</div>
-              <h3>${featured.title}</h3>
+${featured.contextLine ? `              <div class="card-key-number">${featured.contextLine}</div>\n` : ''}              <h3>${featured.title}</h3>
               <div class="recent-update__see-update">Read the analysis &rarr;</div>
             </a>
           </article>`;
