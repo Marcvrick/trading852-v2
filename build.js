@@ -797,6 +797,10 @@ function build() {
     if (file.endsWith('.html')) {
       let source = fs.readFileSync(file, 'utf8');
       const { config, jsonld, content } = parseSource(source);
+      // layout "raw": a self-contained page shipped as written, with no navbar,
+      // footer or ticker links, so it links to nothing else on the site
+      // (e.g. /subscriber, which is deliberately unlisted).
+      if (config.layout === 'raw') { fs.writeFileSync(outPath, content); built++; continue; }
       config.ogImage = resolveOgImage(rel, config);
       // Drafts ship to dist/ so they can be previewed on the live host, but they
       // are not published: keep them out of Google. Their CONFIG canonical points

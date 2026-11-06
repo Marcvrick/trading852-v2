@@ -1,0 +1,107 @@
+<!-- CONFIG { "layout": "raw" } -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Subscriber access · Trading852</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: "Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #000; color: #fff; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .card { width: 100%; max-width: 380px; }
+    .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+    .tag {
+      display: inline-block; margin-top: .75rem; padding: .15rem .55rem;
+      font-size: .75rem; letter-spacing: .08em; text-transform: uppercase;
+      border: 1px solid #5b6478; border-radius: 999px; color: #d6d5db;
+    }
+    h1 { margin-top: 2rem; font-size: 1.25rem; font-weight: 500; }
+    .sub { margin-top: .25rem; font-size: .875rem; color: #9aa1b2; }
+    form { margin-top: 1.75rem; display: grid; gap: 1.1rem; }
+    label { display: grid; gap: .4rem; font-size: .875rem; color: #d6d5db; }
+    input {
+      font: inherit; font-size: 1rem; color: #fff; background: #0d0e12;
+      border: 1px solid #2a2d36; border-radius: 6px; padding: .7rem .85rem;
+    }
+    input:focus { outline: none; border-color: #fff; }
+    .row { display: flex; justify-content: space-between; align-items: center; font-size: .875rem; }
+    .row label { display: flex; align-items: center; gap: .45rem; color: #9aa1b2; }
+    .row input { padding: 0; width: 1rem; height: 1rem; accent-color: #fff; }
+    .linkish { background: none; border: 0; color: #d6d5db; font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    button[type="submit"] {
+      font: inherit; font-weight: 500; font-size: 1rem; cursor: pointer;
+      background: #fff; color: #000; border: 0; border-radius: 6px; padding: .75rem;
+      transition: opacity .15s;
+    }
+    button[type="submit"]:disabled { opacity: .55; cursor: progress; }
+    .msg { min-height: 1.3rem; font-size: .875rem; }
+    .msg.err { color: #ff6d70; }
+    .msg.ok  { color: #9aa1b2; }
+    .foot { margin-top: 2.25rem; padding-top: 1.25rem; border-top: 1px solid #1e2027; font-size: .8rem; color: #6b7285; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="logo">Trading852</div>
+    <span class="tag">Subscribers</span>
+
+    <h1>Sign in to your account</h1>
+    <p class="sub">Private research notes and model portfolio.</p>
+
+    <form id="login" novalidate>
+      <label>Email
+        <input type="email" name="email" autocomplete="username" required>
+      </label>
+      <label>Password
+        <input type="password" name="password" autocomplete="current-password" required>
+      </label>
+      <div class="row">
+        <label><input type="checkbox" name="remember"> Remember me</label>
+        <button type="button" class="linkish" id="forgot">Forgot password?</button>
+      </div>
+      <button type="submit" id="submit">Sign in</button>
+      <p class="msg" id="msg" role="status" aria-live="polite"></p>
+    </form>
+
+    <p class="foot">Access is by invitation only. New subscriptions are currently closed.</p>
+  </main>
+
+  <script>
+    // Display only: no account system exists, nothing is sent anywhere.
+    const form = document.getElementById('login');
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('submit');
+    const say = (text, cls) => { msg.textContent = text; msg.className = 'msg ' + cls; };
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const { email, password } = form.elements;
+      if (!email.value || !email.checkValidity()) return say('Enter a valid email address.', 'err');
+      if (!password.value) return say('Enter your password.', 'err');
+      btn.disabled = true; btn.textContent = 'Signing in…'; say('', '');
+      setTimeout(() => {
+        btn.disabled = false; btn.textContent = 'Sign in';
+        password.value = '';
+        say('Incorrect email or password.', 'err');
+      }, 1200);
+    });
+
+    document.getElementById('forgot').addEventListener('click', () => {
+      const email = form.elements.email;
+      if (!email.value || !email.checkValidity()) return say('Enter your email above first.', 'err');
+      say('If this address belongs to a subscriber, a reset link is on its way.', 'ok');
+    });
+  </script>
+</body>
+</html>
