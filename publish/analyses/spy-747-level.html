@@ -10,7 +10,8 @@
   "ogImageHeight": "416",
   "ogImageType": "image/jpeg",
   "ogImageAlt": "SPY monthly chart 2020-2026 showing structural price levels at $477.58 and $747",
-  "pubDate": "2026-05-11"
+  "pubDate": "2026-05-11",
+  "modDate": "2026-11-06"
 } -->
 
 <!-- JSONLD {
@@ -19,7 +20,7 @@
   "headline": "The 2022 High Was $0.13 From the Level. SPY Is Now 1.3% From the Next One.",
   "description": "Fixed structural levels have capped SPY at every major top since 1999. Three signals separate tops from breakouts. SPY is 1.3% from $747.",
   "datePublished": "2026-05-11T00:00:00Z",
-  "dateModified": "2026-06-30T00:00:00Z",
+  "dateModified": "2026-11-06T00:00:00Z",
   "image": {
     "@type": "ImageObject",
     "url": "https://trading852.com/analyses/images/spy-747-chart-202605.jpg",
@@ -87,30 +88,54 @@
   <div class="article-body">
     <div class="container">
 
+      <!-- Update notice: November 6, 2026: cycle high in October, first close under $747 since July
+           Same commit: banner ceiling recomputed from daily bars with the Dec 21 reset,
+           zone count from bars, below-level wording.
+           Sources: Yahoo Finance SPY daily, unadjusted (dividends off), closes through 2026-11-05.
+           Zone count = the article's original count, entry 2025-10-03, entry day = session 1
+           (reproduces "roughly 150" on May 8 and 164 on May 29). Ceiling: own construction,
+           recomputed on daily bars. Volume ratios: 20 sessions after the high vs the 252 before it;
+           Nov 5 session vs the 252 before it. -->
+      <div class="update-notice">
+        <div class="update-notice__header">
+          <span class="update-notice__label">Update</span>
+          <span class="update-notice__date">November 6, 2026</span>
+        </div>
+        <p><strong>The high came in October, 4.3% above $747. On November 5, SPY closed back under the level after its biggest one-day drop since April 2025.</strong> The highest close of this cycle so far is $779.09 on October 6, with an intraday peak of $781.62. On November 5, SPY fell 4.4% in a single session to $733.00, 1.9% under $747 and back inside the friction zone. Since 2015, SPY has lost that much in one day on only 11 other days, all inside two episodes: the 2020 COVID crash and the April 2025 tariff selloff. Volume ran 1.97 times its 12-month average, close to double a normal session.</p>
+
+        <p><strong>The volume signal had already read the October high, and it read clean.</strong> The 20-session window after the high closed on November 3. Volume in those sessions averaged 0.59 times the prior 12 months, well inside the clean-breakout group (1.24 times or less) and far from the 1.46 times every confirmed top printed. The November 5 drop landed two sessions after that window closed, so the reading stands: there was no heavy selling on the way out of the high.</p>
+
+        <p><strong>The speed signal now sits on its own dividing line.</strong> On May 8 the approach was about 150 sessions old, against a 252-session line between fast and slow approaches. The October 6 high came on session 253. Today the count is 275. Fast approaches have averaged declines of 37.9% and slow ones 11.7%, and a high set one session past the line belongs cleanly to neither group.</p>
+
+        <p><strong>Why the ceiling now reads 19% overhead.</strong> The calculated ceiling climbs about $0.83 every trading session through its yearly cycle, whether price follows or not. At the November 5 close it sat near $873, 19% above price. At the October 6 high it was $854, about 9% above the peak, when the four prior major tops all landed within 2.1% of it. The ceiling caps how far a high can overshoot; with price this far below it, it sets no useful limit. On December 21 the cycle resets and the ceiling restarts near this year's high, about $782 if SPY sets no new high before then, climbing about $0.60 a session from there. One note on the count: it follows this article's original start in October 2025, which matches a band about 10% below $747 rather than the 7% stated above. Measured strictly at 7%, SPY entered the zone on January 9, 2026 and the high came on session 186, inside the fast group.</p>
+
+        <p><strong>Against the May 11 article.</strong> Holds: $747 is still the line SPY trades around. It closed under the level on 32 of 121 sessions between May 14 and November 4 and came back above each time. Holds: volume on the exit from the October high matched the clean-breakout group. Changed: the approach is no longer fast; the high arrived on the 252-session line. Open: whether November 5 starts a real break. The third signal decides it. A rally that peaks below $747 is the failed-retest pattern behind every bear-market continuation in the record; a move back above $747 that holds makes this close noise. The next date that moves a number is December 21, 2026, when the ceiling resets.</p>
+      </div>
+
       <!-- Live update banner: auto-refreshes on each page load via the yahoo-proxy worker.
-           Static values below are the last manual snapshot (May 29) and serve as the fallback
+           Static values below are the last manual snapshot (Nov 5) and serve as the fallback
            if the live fetch fails. Model constants live in the inline script that follows. -->
       <div style="background:var(--dp-c-black);border-radius:8px;padding:1.5rem 1.75rem;margin-bottom:2rem;">
-        <div id="spy-update-date" style="font-size:11px;font-weight:600;letter-spacing:0.08em;color:rgba(255,255,255,0.55);margin-bottom:0.85rem;">UPDATE &middot; MAY 31, 2026</div>
+        <div id="spy-update-date" style="font-size:11px;font-weight:600;letter-spacing:0.08em;color:rgba(255,255,255,0.55);margin-bottom:0.85rem;">UPDATE &middot; NOVEMBER 5, 2026</div>
         <div style="display:flex;gap:2.5rem;flex-wrap:wrap;margin-bottom:0.9rem;">
           <div>
-            <div id="spy-price" style="font-size:21px;font-weight:700;color:rgba(255,255,255,0.92);line-height:1.1;">$756.48</div>
-            <div id="spy-price-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">SPY &middot; May 29</div>
+            <div id="spy-price" style="font-size:21px;font-weight:700;color:rgba(255,255,255,0.92);line-height:1.1;">$733.00</div>
+            <div id="spy-price-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">SPY &middot; Nov 5</div>
           </div>
           <div>
-            <div id="spy-vs-level" style="font-size:21px;font-weight:700;color:#56d49f;line-height:1.1;">+1.3%</div>
-            <div id="spy-vs-level-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">above $747 level (+$9.48)</div>
+            <div id="spy-vs-level" style="font-size:21px;font-weight:700;color:rgba(255,140,120,0.95);line-height:1.1;">-1.9%</div>
+            <div id="spy-vs-level-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">below $747 level (&minus;$14.00)</div>
           </div>
           <div>
-            <div id="spy-to-ceiling" style="font-size:21px;font-weight:700;color:rgba(255,200,80,0.9);line-height:1.1;">~3.1%</div>
-            <div id="spy-to-ceiling-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">to calculated ceiling (~$781)</div>
+            <div id="spy-to-ceiling" style="font-size:21px;font-weight:700;color:rgba(255,200,80,0.9);line-height:1.1;">~19.0%</div>
+            <div id="spy-to-ceiling-sub" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">to calculated ceiling (~$873)</div>
           </div>
           <div>
-            <div id="spy-friction" style="font-size:21px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.1;">164 days</div>
+            <div id="spy-friction" style="font-size:21px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.1;">275 days</div>
             <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;">in friction zone (fast &lt; 252)</div>
           </div>
         </div>
-        <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.65;"><span id="spy-lead">The $747 level was crossed.</span> The calculated ceiling advances ~$0.83 per trading day and sits near <strong id="spy-ceiling-prose" style="color:rgba(255,255,255,0.92);">$781</strong> as of <span id="spy-asof-prose">May 29</span>, the maximum overshoot the historical envelope allows. No confirmed peak yet: the post-peak volume signal (20 sessions after the high vs. trailing 12-month average) has not triggered. At <span id="spy-friction-prose">164</span> trading days in the friction zone, the approach remains in the fast category (threshold: 252 days). All prices unadjusted. Verify on a chart with dividends off.</p>
+        <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.75);line-height:1.65;"><span id="spy-lead">SPY is below the $747 level.</span> The calculated ceiling rises each trading day until its yearly reset on December 21 and sits near <strong id="spy-ceiling-prose" style="color:rgba(255,255,255,0.92);">$873</strong> as of <span id="spy-asof-prose">Nov 5</span>, the maximum overshoot the historical envelope allows. At <span id="spy-friction-prose">275</span> trading days in the friction zone, <span id="spy-speed-prose">the approach has passed the 252-day line between fast and slow</span>. All prices unadjusted. Verify on a chart with dividends off.</p>
 
         <!-- Post-peak volume tracker: counts trading sessions since the cycle-high close.
              At 20 sessions, the post-peak vs trailing-12-month volume ratio is final
@@ -137,10 +162,8 @@
         "use strict";
         // --- Model parameters (IPO Fork SPY framework) ---
         var LEVEL = 747;                      // structural level (1/1 line), fixed target
-        var CEIL_ANCHOR = Date.UTC(2026, 4, 29); // 2026-05-29 anchor
-        var CEIL_VAL = 781;                   // calculated ceiling at the anchor date
-        var CEIL_PER_TD = 0.83;               // ceiling advance per trading day
-        var FRICTION_ANCHOR_DAYS = 164;       // friction-zone trading days at the anchor
+        var FRICTION_START = Date.UTC(2025, 9, 3); // friction-zone entry (session 1), the article's count
+        var RESET_M = 11, RESET_D = 21;       // ceiling cycle resets every Dec 21
         var FAST_MAX = 252;                   // "fast approach" threshold (days)
         var WITHIN_PCT = 1.0;                 // highlight when within this % of the ceiling
         var PROXY = "/api/yahoo-proxy?url=";
@@ -148,10 +171,27 @@
         var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
         function set(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; }
         function fD(d) { return MON[d.getUTCMonth()] + " " + d.getUTCDate(); }
-        function tdays(a, b) { // weekday count a→b (approx; ignores market holidays)
-          if (b <= a) return 0;
-          var n = 0, c = a + 86400000;
-          while (c <= b) { var w = new Date(c).getUTCDay(); if (w !== 0 && w !== 6) n++; c += 86400000; }
+        // Calculated ceiling at bar i, from daily bars: the cycle box is the year
+        // ending at the latest Dec 21 on or before bar i. Rises linearly through the
+        // cycle and restarts at the new box's high on each reset. Needs ~1y before
+        // the reset in the array (range=2y covers it). Own construction.
+        function ceilingAt(ts, highs, lows, i) {
+          if (i < 0 || !ts[i]) return null;
+          var t0 = ts[i] * 1000, y = new Date(t0).getUTCFullYear();
+          var reset = Date.UTC(y, RESET_M, RESET_D); if (t0 < reset) reset = Date.UTC(y - 1, RESET_M, RESET_D);
+          var from = Date.UTC(new Date(reset).getUTCFullYear() - 1, RESET_M, RESET_D);
+          var s = -1, n = 0, LL = Infinity, HH = -Infinity, k;
+          for (k = 0; k < ts.length; k++) {
+            var t = ts[k] * 1000; if (t < from) continue; if (t >= reset) break;
+            if (s < 0) s = k; n++;
+            if (lows[k] != null && lows[k] < LL) LL = lows[k];
+            if (highs[k] != null && highs[k] > HH) HH = highs[k];
+          }
+          if (s < 0 || n < 200 || !isFinite(LL) || !isFinite(HH)) return null;
+          return LL + (i - s) * (HH - LL) / n;
+        }
+        function frictionDays(ts, i) { // sessions since zone entry, entry day = 1
+          var n = 0, k; for (k = 0; k <= i; k++) if (ts[k] * 1000 >= FRICTION_START) n++;
           return n;
         }
         var POST_PEAK_N = 20;                 // sessions after the high to average
@@ -215,27 +255,25 @@
             set("spy-hh-prose", "Cycle high $" + a.peakClose.toFixed(2) + " on " + fD(a.peakDate) + ", " + a.since + " sessions ago. Volume data incomplete for the ratio.");
           }
         }
-        function render(price, d) {
-          var dUTC = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-          var td = tdays(CEIL_ANCHOR, dUTC);
-          var ceiling = CEIL_VAL + CEIL_PER_TD * td;
+        function render(price, d, ceiling, friction) {
           var pctLvl = (price - LEVEL) / LEVEL * 100, diff = price - LEVEL;
-          var pctCeil = (ceiling - price) / price * 100, friction = FRICTION_ANCHOR_DAYS + td;
-          var within = pctCeil <= WITHIN_PCT && pctCeil >= -WITHIN_PCT;
+          var pctCeil = ceiling != null ? (ceiling - price) / price * 100 : null;
+          var within = pctCeil != null && pctCeil <= WITHIN_PCT && pctCeil >= -WITHIN_PCT;
           set("spy-update-date", "UPDATE · " + (MON[d.getUTCMonth()] + " " + d.getUTCDate() + ", " + d.getUTCFullYear()).toUpperCase());
           set("spy-price", "$" + price.toFixed(2));
           set("spy-price-sub", "SPY · " + fD(d));
           set("spy-vs-level", (pctLvl >= 0 ? "+" : "") + pctLvl.toFixed(1) + "%");
           var lv = document.getElementById("spy-vs-level"); if (lv) lv.style.color = pctLvl >= 0 ? "#56d49f" : "rgba(255,140,120,0.95)";
           set("spy-vs-level-sub", (pctLvl >= 0 ? "above" : "below") + " $" + LEVEL + " level (" + (diff >= 0 ? "+$" : "−$") + Math.abs(diff).toFixed(2) + ")");
-          set("spy-to-ceiling", "~" + pctCeil.toFixed(1) + "%");
+          set("spy-to-ceiling", pctCeil != null ? "~" + pctCeil.toFixed(1) + "%" : "·");
           var ce = document.getElementById("spy-to-ceiling"); if (ce) ce.style.color = within ? "#ff5c5c" : "rgba(255,200,80,0.9)";
-          set("spy-to-ceiling-sub", (within ? "⚠ within 1% of " : "to ") + "calculated ceiling (~$" + Math.round(ceiling) + ")");
+          set("spy-to-ceiling-sub", (within ? "⚠ within 1% of " : "to ") + "calculated ceiling" + (ceiling != null ? " (~$" + Math.round(ceiling) + ")" : ""));
           set("spy-friction", friction + " days");
           set("spy-lead", price >= LEVEL ? "The $" + LEVEL + " level was crossed." : "SPY is below the $" + LEVEL + " level.");
-          set("spy-ceiling-prose", "$" + Math.round(ceiling));
+          if (ceiling != null) set("spy-ceiling-prose", "$" + Math.round(ceiling));
           set("spy-asof-prose", fD(d));
           set("spy-friction-prose", String(friction));
+          set("spy-speed-prose", friction <= FAST_MAX ? "the approach remains in the fast category (threshold: " + FAST_MAX + " days)" : "the approach has passed the " + FAST_MAX + "-day line between fast and slow");
           set("spy-live-note", "Live · refreshed from Yahoo Finance on page load (" + fD(d) + ").");
         }
         function renderDecision(a, d, price) {
@@ -261,7 +299,7 @@
             tEl.textContent = (rem <= 1 ? 'DECISION TOMORROW' : 'SIGNAL UPDATE') + ' · ' + ds + (sn ? ' (' + sn + ')' : ''); tEl.style.color = bc;
             var html = 'The post-peak volume signal becomes final in <strong style="color:rgba(255,255,255,0.95)">' + rem + '</strong> trading session' + (rem !== 1 ? 's' : '') + '. ';
             html += a.sessions + ' of ' + POST_PEAK_N + ' sessions counted since the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + '). ';
-            if (v && a.ratio != null) html += 'Provisional ratio: <strong style="color:' + v[1] + '">' + a.ratio.toFixed(2) + '×</strong>. Volume rules out distribution.';
+            if (v && a.ratio != null) html += 'Provisional ratio: <strong style="color:' + v[1] + '">' + a.ratio.toFixed(2) + '×</strong>.' + (v[0].indexOf('breakout') >= 0 ? ' Volume rules out distribution.' : '');
             bEl.innerHTML = html;
           } else {
             var v = a.ratio != null ? verdict(a.ratio) : ['insufficient data', 'rgba(255,255,255,0.5)'];
@@ -269,8 +307,13 @@
             var sn = v[0].indexOf('distribution') >= 0 ? 'Distribution' : v[0].indexOf('breakout') >= 0 ? 'No distribution' : 'Watch zone';
             tEl.textContent = 'SIGNAL FINALIZED · ' + ds + ' · ' + sn; tEl.style.color = v[1];
             var verdictLabel = v[0].indexOf('distribution') >= 0 ? v[0] : 'volume rules out distribution';
-            var pctAbove = ((price - LEVEL) / LEVEL * 100).toFixed(1);
-            bEl.innerHTML = 'Post-peak volume signal is final. Ratio: <strong style="color:' + v[1] + '">' + (a.ratio != null ? a.ratio.toFixed(2) : '?') + '×</strong> over ' + POST_PEAK_N + ' sessions following the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + '). Verdict: <strong style="color:' + v[1] + '">' + verdictLabel + '</strong>. The reading falls below the ≤1.24× threshold: no distribution on the exit from the cycle high. This rules out a confirmed top but does not confirm a breakout. Price sits ' + pctAbove + '% above $' + LEVEL + ' and remains within the buffer zone. Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.';
+            var pl = (price - LEVEL) / LEVEL * 100;
+            var readNote = v[0].indexOf('breakout') >= 0 ? 'The reading falls below the ≤1.24× threshold: no distribution on the exit from the cycle high. This rules out a confirmed top but does not confirm a breakout.'
+              : v[0].indexOf('distribution') >= 0 ? 'The reading clears the ≥1.46× threshold: distribution on the exit from the cycle high, the volume pattern of every confirmed top.'
+              : 'The reading falls between the two historical groups, where the record has no observations.';
+            var sideNote = pl >= 0 ? 'Price sits ' + pl.toFixed(1) + '% above $' + LEVEL + '.'
+              : 'Price sits ' + Math.abs(pl).toFixed(1) + '% below $' + LEVEL + (price >= LEVEL * 0.93 ? ', inside the friction zone.' : '.') + ' The failed-retest signal now applies: a rally that peaks below $' + LEVEL + ' fits the pattern of past bear-market continuations.';
+            bEl.innerHTML = 'Post-peak volume signal is final. Ratio: <strong style="color:' + v[1] + '">' + (a.ratio != null ? a.ratio.toFixed(2) : '?') + '×</strong> over ' + POST_PEAK_N + ' sessions following the cycle high ($' + a.peakClose.toFixed(2) + ' on ' + fD(a.peakDate) + '). Verdict: <strong style="color:' + v[1] + '">' + verdictLabel + '</strong>. ' + readNote + ' ' + sideNote + ' Historical reference: confirmed tops ≥1.46×, clean breakouts ≤1.24×.';
           }
         }
         function renderPriceChart(timestamps, allCloses, hh) {
@@ -399,7 +442,7 @@
               var res = j && j.chart && j.chart.result && j.chart.result[0]; if (!res) throw 0;
               var ts = res.timestamp || [];
               var quote = res.indicators && res.indicators.quote && res.indicators.quote[0] || {};
-              var closes = quote.close || [], vols = quote.volume || [];
+              var closes = quote.close || [], vols = quote.volume || [], highs = quote.high || [], lows = quote.low || [];
               var p = res.meta && res.meta.regularMarketPrice, t = res.meta && res.meta.regularMarketTime;
               if (p == null) {
                 for (var i = closes.length - 1; i >= 0; i--) { if (closes[i] != null) { p = closes[i]; t = ts[i]; break; } }
@@ -429,7 +472,8 @@
                 }
               }
               var dd = t ? new Date(t * 1000) : new Date();
-              render(p, dd);
+              var li = closes.length - 1; while (li >= 0 && closes[li] == null) li--;
+              render(p, dd, ceilingAt(ts, highs, lows, li), frictionDays(ts, li));
               var hh = analyze(ts, closes, vols);
               renderHH(hh);
               renderDecision(hh, dd, p);

@@ -173,6 +173,12 @@ Coincidental identical magnitude, opposite sign, same published page, 18 days ap
 
 $769 in the article body, risk callout and scenario table (as_of 2026-05-11). $781 in the live banner and the script constant `CEIL_VAL = 781`, anchored at `CEIL_ANCHOR = 2026-05-29`. Internally consistent with the $0.83-per-trading-day advance (about 13 sessions), so **not a data conflict**, but the prose was never re-anchored when the banner was. Both are stale now. Recompute from the anchor, and remember the math resets after December 2026.
 
+**Resolved 2026-11-06:** the banner now recomputes the ceiling from daily bars (no anchor constant), about $873 on 2026-11-05, with the December 21 reset built in. The $769 in the body stays as the May 11 snapshot.
+
+### 24. Friction zone: 7% stated, about 10% counted
+
+[spy-747-level.html](../../publish/analyses/spy-747-level.html). The body defines the zone as within 7% of $747, but dates entry to October 2025 (about 150 sessions on May 8, 164 on May 29). Those counts reproduce only with a band about 10% below the level (entry 2025-10-03); at 7%, SPY first entered on 2026-01-09. The speed reading depends on it: the 2026-10-06 high is session 253 on the published count, session 186 at 7%. **Disclosed in the November 6, 2026 update; the published count was kept.** Any reuse of a session count must say which band.
+
 ## Omissions and gaps
 
 ### 20. The Tencent in-kind precedent is incomplete
